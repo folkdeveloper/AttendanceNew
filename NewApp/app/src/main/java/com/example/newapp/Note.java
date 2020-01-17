@@ -7,7 +7,7 @@ public class Note {
             url, occupation, program, category, branch, organization, college, source, res_interest,
             fg_call, leave_agreed, msg_confirm, status, comment;
 
-    long edate, probability;
+    long edate, probability, last_updated;
 
     Long origin;
 
@@ -275,5 +275,13 @@ public class Note {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public long getLast_updated() {
+        return last_updated;
+    }
+
+    public void setLast_updated(long last_updated) {
+        this.last_updated = last_updated;
     }
 }

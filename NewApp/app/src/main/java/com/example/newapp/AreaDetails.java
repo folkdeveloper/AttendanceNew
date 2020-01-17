@@ -173,6 +173,9 @@ public class AreaDetails extends AppCompatActivity {
                 bundle.putString("Category",adapterD.getItem(position).getCategory());
                 bundle.putLong("Edate",adapterD.getItem(position).getEdate());
                 bundle.putLong("Probability",adapterD.getItem(position).getProbability());
+                bundle.putLong("LU",adapterD.getItem(position).getLast_updated());
+                bundle.putString("Date",adapterD.getItem(position).getZzdate());
+                bundle.putString("Mobile",adapterD.getItem(position).getZmob());
                 if (adapterD.getItem(position).getRes_interest() != null)
                     bundle.putString("Res",adapterD.getItem(position).getRes_interest());
                 else
@@ -201,6 +204,10 @@ public class AreaDetails extends AppCompatActivity {
                     bundle.putString("Comment",adapterD.getItem(position).getComment());
                 else
                     bundle.putString("Comment","No");
+//                if (adapterD.getItem(position).getLast_updated() != null)
+//                    bundle.putString("LU",adapterD.getItem(position).getLast_updated());
+//                else
+//                    bundle.putString("LU","No");
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -254,6 +261,7 @@ public class AreaDetails extends AppCompatActivity {
                                 Log.d("Details", "onEvent: Event" + note.area + note.fg);
                                 details.add(note);
                             }
+
                             if (collection.equals("Attendancedemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){

@@ -40,20 +40,28 @@
 
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/list_item"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="718dp"
-        android:layout_below="@+id/toolbar"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="-1dp"
-        android:layout_marginLeft="-1dp"
-        android:layout_marginTop="86dp"
-        android:layout_marginEnd="2dp"
-        android:layout_marginBottom="-129dp"></ListView>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"
+        android:orientation="vertical">
+
+        <ListView
+            android:id="@+id/list_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/toolbar"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="-1dp"
+            android:layout_marginLeft="-1dp"
+            android:layout_marginTop="86dp"
+            android:layout_marginEnd="2dp"
+            android:layout_marginBottom="-129dp"></ListView>
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/textView2"

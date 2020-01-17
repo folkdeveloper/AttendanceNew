@@ -172,6 +172,7 @@ public class PaymentDetails  extends AppCompatActivity {
                 bundle.putString("Category",adapterD.getItem(position).getCategory());
                 bundle.putLong("Edate",adapterD.getItem(position).getEdate());
                 bundle.putLong("Probability",adapterD.getItem(position).getProbability());
+                bundle.putLong("LU",adapterD.getItem(position).getLast_updated());
                 if (adapterD.getItem(position).getRes_interest() != null)
                     bundle.putString("Res",adapterD.getItem(position).getRes_interest());
                 else
@@ -200,6 +201,10 @@ public class PaymentDetails  extends AppCompatActivity {
                     bundle.putString("Comment",adapterD.getItem(position).getComment());
                 else
                     bundle.putString("Comment","No");
+//                if (adapterD.getItem(position).getLast_updated() != null)
+//                    bundle.putString("LU",adapterD.getItem(position).getLast_updated());
+//                else
+//                    bundle.putString("LU","No");
                 intent.putExtras(bundle);
                 startActivity(intent);
             }

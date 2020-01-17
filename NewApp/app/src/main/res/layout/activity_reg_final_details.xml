@@ -368,14 +368,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Yes" />
+                        android:text="Yes"
+                        android:inputType="textCapWords"
+                        android:background="@drawable/button_shape"/>
 
                     <Button
                         android:id="@+id/button2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="No" />
+                        android:text="No"
+                        android:inputType="textCapWords"
+                        android:background="@drawable/button_shape"/>
 
                 </LinearLayout>
 
@@ -400,14 +404,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Yes" />
+                        android:text="Yes"
+                        android:inputType="textCapWords"
+                        android:background="@drawable/button_shape"/>
 
                     <Button
                         android:id="@+id/button4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="No" />
+                        android:text="No"
+                        android:inputType="textCapWords"
+                        android:background="@drawable/button_shape"/>
 
                 </LinearLayout>
 
@@ -432,14 +440,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Yes" />
+                        android:text="Yes"
+                        android:inputType="textCapWords"
+                        android:background="@drawable/button_shape"/>
 
                     <Button
                         android:id="@+id/button6"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="No" />
+                        android:text="No"
+                        android:inputType="textCapWords"
+                        android:background="@drawable/button_shape"/>
 
                 </LinearLayout>
 
@@ -464,14 +476,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Coming" />
+                        android:text="Coming"
+                        android:inputType="textCapWords"
+                        android:background="@drawable/button_shape"/>
 
                     <Button
                         android:id="@+id/button8"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Not coming" />
+                        android:text="Not Coming"
+                        android:inputType="textCapWords"
+                        android:background="@drawable/button_shape"/>
 
                 </LinearLayout>
             </LinearLayout>
@@ -509,15 +525,26 @@
                         android:textSize="15dp"
                         android:textStyle="bold" />
 
-                    <EditText
-                        android:id="@+id/textView36"
+                    <ScrollView
                         android:layout_width="match_parent"
-                        android:layout_height="150dp"
-                        android:gravity="center"
-                        android:text="Comment"
-                        android:textSize="17dp"
-                        android:textStyle="bold"
-                        android:background="@drawable/customborder"/>
+                        android:layout_height="150dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                        <EditText
+                            android:id="@+id/textView36"
+                            android:layout_width="match_parent"
+                            android:layout_height="150dp"
+                            android:background="@drawable/comment_border"
+                            android:gravity="center"
+                            android:text="Comment"
+                            android:textSize="17dp"
+                            android:textStyle="bold"
+                            />
+                        </LinearLayout>
+                    </ScrollView>
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -530,19 +557,32 @@
                         android:id="@+id/textView37"
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"
-                        android:layout_weight="1"
+                        android:layout_weight="0.5"
                         android:gravity="center"
                         android:text="Last Updated:"
                         android:textSize="17dp"
                         android:textStyle="bold" />
 
-                    <Button
-                        android:id="@+id/button15"
+                    <TextView
+                        android:id="@+id/textView22"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Update" />
+                        android:layout_height="40dp"
+                        android:layout_weight="1.5"
+                        android:gravity="center"
+                        android:textSize="17dp"
+                        android:textStyle="bold" />
+
                 </LinearLayout>
+
+                <Button
+                    android:id="@+id/button15"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Update"
+                    android:background="@drawable/button_shape"/>
             </LinearLayout>
 
         </LinearLayout>

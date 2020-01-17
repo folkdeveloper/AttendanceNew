@@ -34,16 +34,20 @@ import javax.annotation.Nullable;
 
 public class TurnoutActivity extends AppCompatActivity {
 
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference fgboys = db.collection("RegistrationDemo");
+    private FirebaseFirestore db;
+    private CollectionReference fgboys;
+    private String collection = "";
     private static final String TAG = "MainActivity";
     ListView mListView;
     private TextView mTextView;
     private long date1 = 0, date2 = 0;
     private int total = 0;
-    private int number0=0, number10=0, number20=0, number30=0, number40=0, number50=0;
-    private double total0=0.0, total10=0.0, total20=0.0, total30=0.0, total40=0.0, total50=0.0;
-    private double per0=0.0, per10=0.0, per20=0.0, per30=0.0, per40=0.0, per50=0.0;
+    private int number0=0, number10=0, number20=0, number30=0, number40=0, number50=0, number60=0, number70=0,
+                number80=0, number90=0;
+    private double total0=0.0, total10=0.0, total20=0.0, total30=0.0, total40=0.0, total50=0.0, total60=0.0,
+                   total70=0.0, total80=0.0, total90=0.0;
+    private double per0=0.0, per10=0.0, per20=0.0, per30=0.0, per40=0.0, per50=0.0, per60=0.0, per70=0.0,
+                   per80=0.0, per90=0.0;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     private String spinnerPrograms = "";
     private String spinnerCategories = "";
@@ -66,10 +70,137 @@ public class TurnoutActivity extends AppCompatActivity {
     Spinner program, category, session;
     int posProgram, posCategory, posSession;
 
+    public void populateTurnoutsAdapter(TreeMap<String, JapaClass> count) {
+        DecimalFormat df = new DecimalFormat("##.#");
+        df.setRoundingMode(RoundingMode.DOWN);
+
+        per0 = Double.parseDouble(df.format(total0 / number0));
+        per10 = Double.parseDouble(df.format(total10 / number10));
+        per20 = Double.parseDouble(df.format(total20 / number20));
+        per30 = Double.parseDouble(df.format(total30 / number30));
+        per40 = Double.parseDouble(df.format(total40 / number40));
+        per50 = Double.parseDouble(df.format(total50 / number50));
+        per60 = Double.parseDouble(df.format(total60 / number60));
+        per70 = Double.parseDouble(df.format(total70 / number70));
+        per80 = Double.parseDouble(df.format(total80 / number80));
+        per90 = Double.parseDouble(df.format(total90 / number90));
+
+        if (number0 > 0) {
+            count.put("0-10", new JapaClass(number0, per0));
+        }
+
+        if (number10 > 0) {
+            count.put("10-20", new JapaClass(number10, per10));
+        }
+
+        if (number20 > 0) {
+            count.put("20-30", new JapaClass(number20, per20));
+        }
+
+        if (number30 > 0) {
+            count.put("30-40", new JapaClass(number30, per40));
+        }
+
+        if (number40 > 0) {
+            count.put("40-50", new JapaClass(number40, per40));
+        }
+
+        if (number50 > 0) {
+            count.put("50-60", new JapaClass(number50, per50));
+        }
+
+        if (number60 > 0) {
+            count.put("60-70", new JapaClass(number60, per60));
+        }
+
+        if (number70 > 0) {
+            count.put("70-80", new JapaClass(number70, per70));
+        }
+
+        if (number80 > 0) {
+            count.put("80-90", new JapaClass(number80, per80));
+        }
+
+        if (number90 > 0) {
+            count.put("90-100", new JapaClass(number90, per90));
+        }
+
+        count.put("ALL", new JapaClass(total,
+                Double.parseDouble(df.format((total0+total10+total20+total30+total40+total50+total60+total70+total80+total90)/
+                        (number0+number10+number20+number30+number40+number50+number60+number70+number80+number90)))));
+
+        final JapaActivityAdapter adapter = new JapaActivityAdapter(count);
+        mListView.setAdapter((ListAdapter) adapter);
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String turnout = adapter.getItem(position).getKey();
+                int lower = 0, higher = 0;
+                switch (turnout) {
+                    case "0-10":
+                        lower = 0;
+                        higher = 10;
+                        break;
+                    case "10-20":
+                        lower = 10;
+                        higher = 20;
+                        break;
+                    case "20-30":
+                        lower = 20;
+                        higher = 30;
+                        break;
+                    case "30-40":
+                        lower = 30;
+                        higher = 40;
+                        break;
+                    case "40-50":
+                        lower = 40;
+                        higher = 50;
+                        break;
+                    case "60-70":
+                        lower = 60;
+                        higher = 70;
+                        break;
+                    case "70-80":
+                        lower = 70;
+                        higher = 80;
+                        break;
+                    case "80-90":
+                        lower = 80;
+                        higher = 90;
+                        break;
+                    case "90-100":
+                        lower = 90;
+                        higher = 100;
+                        break;
+                    case "ALL":
+                        lower = 0;
+                        higher = 100;
+                }
+                Intent intent = new Intent(TurnoutActivity.this, TurnoutDetails.class);
+                Bundle bundle = new Bundle();
+                bundle.putLong("Date1", date1);
+                bundle.putLong("Date2", date2);
+                bundle.putInt("Lower", lower);
+                bundle.putInt("Higher", higher);
+                bundle.putString("SpinPrograms", spinnerPrograms);
+                bundle.putString("SpinCategories", spinnerCategories);
+                bundle.putString("SpinSessions", spinnerSessions);
+                bundle.putString("Collection",collection);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_turnout);
+        collection = getIntent().getStringExtra("Collection");
+        db = FirebaseFirestore.getInstance();
+        fgboys = db.collection(collection);
         mTextView = findViewById(R.id.textView2);
         mTextView.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
         mListView = findViewById(R.id.list_item);
@@ -319,8 +450,10 @@ public class TurnoutActivity extends AppCompatActivity {
 
                     if (spinnerSessions.equals("ALL")) {
                         total=0;
-                        number0=0; number10=0; number20=0; number30=0; number40=0; number50=0;
+                        number0=0; number10=0; number20=0; number30=0; number40=0; number50=0; number60=0;
+                        number70=0; number80=0; number90=0;
                         total0=0.0; total10=0.0; total20=0.0; total30=0.0; total40=0.0; total50=0.0;
+                        total60=0.0; total70=0.0; total80=0.0; total90=0.0;
 
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate",date1)
@@ -359,106 +492,33 @@ public class TurnoutActivity extends AppCompatActivity {
                                             } else if ((turnout >= 40) && (turnout <= 50)) {
                                                 number40++;
                                                 total40 += turnout;
-                                            } else {
+                                            } else if ((turnout >= 50) && (turnout <= 60)) {
                                                 number50++;
                                                 total50 += turnout;
+                                            } else if ((turnout >= 60) && (turnout <= 70)) {
+                                                number60++;
+                                                total60 += turnout;
+                                            } else if ((turnout >= 70) && (turnout <= 80)) {
+                                                number70++;
+                                                total70 += turnout;
+                                            } else if ((turnout >= 80) && (turnout <= 90)) {
+                                                number80++;
+                                                total80 += turnout;
+                                            }
+                                            else if ((turnout >= 90) && (turnout <= 100)) {
+                                                number90++;
+                                                total90 += turnout;
                                             }
                                         }
-
-                                        DecimalFormat df = new DecimalFormat("##.#");
-                                        df.setRoundingMode(RoundingMode.DOWN);
-
-                                        per0 = Double.parseDouble(df.format(total0 / number0));
-                                        per10 = Double.parseDouble(df.format(total10 / number10));
-                                        per20 = Double.parseDouble(df.format(total20 / number20));
-                                        per30 = Double.parseDouble(df.format(total30 / number30));
-                                        per40 = Double.parseDouble(df.format(total40 / number40));
-                                        per50 = Double.parseDouble(df.format(total50 / number50));
-
-                                        if (number0 > 0) {
-                                            count.put("0-10", new JapaClass(number0, per0));
-                                        }
-
-                                        if (number10 > 0) {
-                                            count.put("10-20", new JapaClass(number10, per10));
-                                        }
-
-                                        if (number20 > 0) {
-                                            count.put("20-30", new JapaClass(number20, per20));
-                                        }
-
-                                        if (number30 > 0) {
-                                            count.put("30-40", new JapaClass(number30, per40));
-                                        }
-
-                                        if (number40 > 0) {
-                                            count.put("40-50", new JapaClass(number40, per40));
-                                        }
-
-                                        if (number50 > 0) {
-                                            count.put("50-60", new JapaClass(number50, per50));
-                                        }
-                                        per50 = Double.parseDouble(df.format(total50 / number50));
-                                        count.put("ALL", new JapaClass(total,
-                                                Double.parseDouble(df.format((total0+total10+total20+total30+total40+total50)/
-                                                        (number0+number10+number20+number30+number40+number50)))));
-
-                                        final JapaActivityAdapter adapter = new JapaActivityAdapter(count);
-                                        mListView.setAdapter((ListAdapter) adapter);
-
-                                        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                            @Override
-                                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                                String turnout = adapter.getItem(position).getKey();
-                                                int lower = 0, higher = 0;
-                                                switch (turnout) {
-                                                    case "0-10":
-                                                        lower = 0;
-                                                        higher = 10;
-                                                        break;
-                                                    case "10-20":
-                                                        lower = 10;
-                                                        higher = 20;
-                                                        break;
-                                                    case "20-30":
-                                                        lower = 20;
-                                                        higher = 30;
-                                                        break;
-                                                    case "30-40":
-                                                        lower = 30;
-                                                        higher = 40;
-                                                        break;
-                                                    case "40-50":
-                                                        lower = 40;
-                                                        higher = 50;
-                                                        break;
-                                                    case "50-60":
-                                                        lower = 50;
-                                                        higher = 60;
-                                                        break;
-                                                    case "ALL":
-                                                        lower = 0;
-                                                        higher = 100;
-                                                }
-                                                Intent intent = new Intent(TurnoutActivity.this, TurnoutDetails.class);
-                                                Bundle bundle = new Bundle();
-                                                bundle.putLong("Date1", date1);
-                                                bundle.putLong("Date2", date2);
-                                                bundle.putInt("Lower", lower);
-                                                bundle.putInt("Higher", higher);
-                                                bundle.putString("SpinPrograms", spinPrograms);
-                                                bundle.putString("SpinCategories", spinnerCategories);
-                                                bundle.putString("SpinSessions", spinnerSessions);
-                                                intent.putExtras(bundle);
-                                                startActivity(intent);
-                                            }
-                                        });
+                                        populateTurnoutsAdapter(count);
                                     }
                                 });
                     } else {
                         total=0;
-                        number0=0; number10=0; number20=0; number30=0; number40=0; number50=0;
+                        number0=0; number10=0; number20=0; number30=0; number40=0; number50=0; number60=0;
+                        number70=0; number80=0; number90=0;
                         total0=0.0; total10=0.0; total20=0.0; total30=0.0; total40=0.0; total50=0.0;
+                        total60=0.0; total70=0.0; total80=0.0; total90=0.0;
 
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate",date1)
@@ -498,98 +558,26 @@ public class TurnoutActivity extends AppCompatActivity {
                                             } else if ((turnout >= 40) && (turnout <= 50)) {
                                                 number40++;
                                                 total40 += turnout;
-                                            } else {
+                                            } else if ((turnout >= 50) && (turnout <= 60)) {
                                                 number50++;
                                                 total50 += turnout;
+                                            } else if ((turnout >= 60) && (turnout <= 70)) {
+                                                number60++;
+                                                total60 += turnout;
+                                            } else if ((turnout >= 70) && (turnout <= 80)) {
+                                                number70++;
+                                                total70 += turnout;
+                                            } else if ((turnout >= 80) && (turnout <= 90)) {
+                                                number80++;
+                                                total80 += turnout;
+                                            }
+                                            else if ((turnout >= 90) && (turnout <= 100)) {
+                                                number90++;
+                                                total90 += turnout;
                                             }
                                         }
 
-                                        DecimalFormat df = new DecimalFormat("##.#");
-                                        df.setRoundingMode(RoundingMode.DOWN);
-
-                                        per0 = Double.parseDouble(df.format(total0 / number0));
-                                        per10 = Double.parseDouble(df.format(total10 / number10));
-                                        per20 = Double.parseDouble(df.format(total20 / number20));
-                                        per30 = Double.parseDouble(df.format(total30 / number30));
-                                        per40 = Double.parseDouble(df.format(total40 / number40));
-                                        per50 = Double.parseDouble(df.format(total50 / number50));
-
-                                        if (number0 > 0) {
-                                            count.put("0-10", new JapaClass(number0, per0));
-                                        }
-
-                                        if (number10 > 0) {
-                                            count.put("10-20", new JapaClass(number10, per10));
-                                        }
-
-                                        if (number20 > 0) {
-                                            count.put("20-30", new JapaClass(number20, per20));
-                                        }
-
-                                        if (number30 > 0) {
-                                            count.put("30-40", new JapaClass(number30, per40));
-                                        }
-
-                                        if (number40 > 0) {
-                                            count.put("40-50", new JapaClass(number40, per40));
-                                        }
-
-                                        if (number50 > 0) {
-                                            count.put("50-60", new JapaClass(number50, per50));
-                                        }
-
-                                        count.put("ALL", new JapaClass(total, 100));
-
-                                        final JapaActivityAdapter adapter = new JapaActivityAdapter(count);
-                                        mListView.setAdapter((ListAdapter) adapter);
-
-                                        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                            @Override
-                                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                                String turnout = adapter.getItem(position).getKey();
-                                                int lower = 0, higher = 0;
-                                                switch (turnout) {
-                                                    case "0-10":
-                                                        lower = 0;
-                                                        higher = 10;
-                                                        break;
-                                                    case "10-20":
-                                                        lower = 10;
-                                                        higher = 20;
-                                                        break;
-                                                    case "20-30":
-                                                        lower = 20;
-                                                        higher = 30;
-                                                        break;
-                                                    case "30-40":
-                                                        lower = 30;
-                                                        higher = 40;
-                                                        break;
-                                                    case "40-50":
-                                                        lower = 40;
-                                                        higher = 50;
-                                                        break;
-                                                    case "50-60":
-                                                        lower = 50;
-                                                        higher = 60;
-                                                        break;
-                                                    case "ALL":
-                                                        lower = 0;
-                                                        higher = 100;
-                                                }
-                                                Intent intent = new Intent(TurnoutActivity.this, TurnoutDetails.class);
-                                                Bundle bundle = new Bundle();
-                                                bundle.putLong("Date1", date1);
-                                                bundle.putLong("Date2", date2);
-                                                bundle.putInt("Lower", lower);
-                                                bundle.putInt("Higher", higher);
-                                                bundle.putString("SpinPrograms", spinPrograms);
-                                                bundle.putString("SpinCategories", spinnerCategories);
-                                                bundle.putString("SpinSessions", spinnerSessions);
-                                                intent.putExtras(bundle);
-                                                startActivity(intent);
-                                            }
-                                        });
+                                        populateTurnoutsAdapter(count);
                                     }
                                 });
                     }
@@ -647,8 +635,10 @@ public class TurnoutActivity extends AppCompatActivity {
 
                     if (spinnerSessions.equals("ALL")) {
                         total=0;
-                        number0=0; number10=0; number20=0; number30=0; number40=0; number50=0;
+                        number0=0; number10=0; number20=0; number30=0; number40=0; number50=0; number60=0;
+                        number70=0; number80=0; number90=0;
                         total0=0.0; total10=0.0; total20=0.0; total30=0.0; total40=0.0; total50=0.0;
+                        total60=0.0; total70=0.0; total80=0.0; total90=0.0;
 
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate",date1)
@@ -688,104 +678,34 @@ public class TurnoutActivity extends AppCompatActivity {
                                             } else if ((turnout >= 40) && (turnout <= 50)) {
                                                 number40++;
                                                 total40 += turnout;
-                                            } else {
+                                            } else if ((turnout >= 50) && (turnout <= 60)) {
                                                 number50++;
                                                 total50 += turnout;
+                                            } else if ((turnout >= 60) && (turnout <= 70)) {
+                                                number60++;
+                                                total60 += turnout;
+                                            } else if ((turnout >= 70) && (turnout <= 80)) {
+                                                number70++;
+                                                total70 += turnout;
+                                            } else if ((turnout >= 80) && (turnout <= 90)) {
+                                                number80++;
+                                                total80 += turnout;
+                                            }
+                                            else if ((turnout >= 90) && (turnout <= 100)) {
+                                                number90++;
+                                                total90 += turnout;
                                             }
                                         }
 
-                                        DecimalFormat df = new DecimalFormat("##.#");
-                                        df.setRoundingMode(RoundingMode.DOWN);
-
-                                        per0 = Double.parseDouble(df.format(total0 / number0));
-                                        per10 = Double.parseDouble(df.format(total10 / number10));
-                                        per20 = Double.parseDouble(df.format(total20 / number20));
-                                        per30 = Double.parseDouble(df.format(total30 / number30));
-                                        per40 = Double.parseDouble(df.format(total40 / number40));
-                                        per50 = Double.parseDouble(df.format(total50 / number50));
-
-                                        if (number0 > 0) {
-                                            count.put("0-10", new JapaClass(number0, per0));
-                                        }
-
-                                        if (number10 > 0) {
-                                            count.put("10-20", new JapaClass(number10, per10));
-                                        }
-
-                                        if (number20 > 0) {
-                                            count.put("20-30", new JapaClass(number20, per20));
-                                        }
-
-                                        if (number30 > 0) {
-                                            count.put("30-40", new JapaClass(number30, per40));
-                                        }
-
-                                        if (number40 > 0) {
-                                            count.put("40-50", new JapaClass(number40, per40));
-                                        }
-
-                                        if (number50 > 0) {
-                                            count.put("50-60", new JapaClass(number50, per50));
-                                        }
-
-                                        count.put("ALL", new JapaClass(total, 100));
-
-                                        final JapaActivityAdapter adapter = new JapaActivityAdapter(count);
-                                        mListView.setAdapter((ListAdapter) adapter);
-
-                                        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                            @Override
-                                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                                String turnout = adapter.getItem(position).getKey();
-                                                int lower = 0, higher = 0;
-                                                switch (turnout) {
-                                                    case "0-10":
-                                                        lower = 0;
-                                                        higher = 10;
-                                                        break;
-                                                    case "10-20":
-                                                        lower = 10;
-                                                        higher = 20;
-                                                        break;
-                                                    case "20-30":
-                                                        lower = 20;
-                                                        higher = 30;
-                                                        break;
-                                                    case "30-40":
-                                                        lower = 30;
-                                                        higher = 40;
-                                                        break;
-                                                    case "40-50":
-                                                        lower = 40;
-                                                        higher = 50;
-                                                        break;
-                                                    case "50-60":
-                                                        lower = 50;
-                                                        higher = 60;
-                                                        break;
-                                                    case "ALL":
-                                                        lower = 0;
-                                                        higher = 100;
-                                                }
-                                                Intent intent = new Intent(TurnoutActivity.this, TurnoutDetails.class);
-                                                Bundle bundle = new Bundle();
-                                                bundle.putLong("Date1", date1);
-                                                bundle.putLong("Date2", date2);
-                                                bundle.putInt("Lower", lower);
-                                                bundle.putInt("Higher", higher);
-                                                bundle.putString("SpinPrograms", spinPrograms);
-                                                bundle.putString("SpinCategories", spinnerCategories);
-                                                bundle.putString("SpinSessions", spinnerSessions);
-                                                intent.putExtras(bundle);
-                                                startActivity(intent);
-                                            }
-                                        });
+                                        populateTurnoutsAdapter(count);
                                     }
                                 });
                     } else {
                         total=0;
-                        number0=0; number10=0; number20=0; number30=0; number40=0; number50=0;
+                        number0=0; number10=0; number20=0; number30=0; number40=0; number50=0; number60=0;
+                        number70=0; number80=0; number90=0;
                         total0=0.0; total10=0.0; total20=0.0; total30=0.0; total40=0.0; total50=0.0;
+                        total60=0.0; total70=0.0; total80=0.0; total90=0.0;
 
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate",date1)
@@ -826,99 +746,26 @@ public class TurnoutActivity extends AppCompatActivity {
                                             } else if ((turnout >= 40) && (turnout <= 50)) {
                                                 number40++;
                                                 total40 += turnout;
-                                            } else {
+                                            } else if ((turnout >= 50) && (turnout <= 60)) {
                                                 number50++;
                                                 total50 += turnout;
+                                            } else if ((turnout >= 60) && (turnout <= 70)) {
+                                                number60++;
+                                                total60 += turnout;
+                                            } else if ((turnout >= 70) && (turnout <= 80)) {
+                                                number70++;
+                                                total70 += turnout;
+                                            } else if ((turnout >= 80) && (turnout <= 90)) {
+                                                number80++;
+                                                total80 += turnout;
+                                            }
+                                            else if ((turnout >= 90) && (turnout <= 100)) {
+                                                number90++;
+                                                total90 += turnout;
                                             }
                                         }
 
-                                        DecimalFormat df = new DecimalFormat("##.#");
-                                        df.setRoundingMode(RoundingMode.DOWN);
-
-                                        per0 = Double.parseDouble(df.format(total0 / number0));
-                                        per10 = Double.parseDouble(df.format(total10 / number10));
-                                        per20 = Double.parseDouble(df.format(total20 / number20));
-                                        per30 = Double.parseDouble(df.format(total30 / number30));
-                                        per40 = Double.parseDouble(df.format(total40 / number40));
-                                        per50 = Double.parseDouble(df.format(total50 / number50));
-
-
-                                        if (number0 > 0) {
-                                            count.put("0-10", new JapaClass(number0, per0));
-                                        }
-
-                                        if (number10 > 0) {
-                                            count.put("10-20", new JapaClass(number10, per10));
-                                        }
-
-                                        if (number20 > 0) {
-                                            count.put("20-30", new JapaClass(number20, per20));
-                                        }
-
-                                        if (number30 > 0) {
-                                            count.put("30-40", new JapaClass(number30, per40));
-                                        }
-
-                                        if (number40 > 0) {
-                                            count.put("40-50", new JapaClass(number40, per40));
-                                        }
-
-                                        if (number50 > 0) {
-                                            count.put("50-60", new JapaClass(number50, per50));
-                                        }
-
-                                        count.put("ALL", new JapaClass(total, 100));
-
-                                        final JapaActivityAdapter adapter = new JapaActivityAdapter(count);
-                                        mListView.setAdapter((ListAdapter) adapter);
-
-                                        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                            @Override
-                                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                                String turnout = adapter.getItem(position).getKey();
-                                                int lower = 0, higher = 0;
-                                                switch (turnout) {
-                                                    case "0-10":
-                                                        lower = 0;
-                                                        higher = 10;
-                                                        break;
-                                                    case "10-20":
-                                                        lower = 10;
-                                                        higher = 20;
-                                                        break;
-                                                    case "20-30":
-                                                        lower = 20;
-                                                        higher = 30;
-                                                        break;
-                                                    case "30-40":
-                                                        lower = 30;
-                                                        higher = 40;
-                                                        break;
-                                                    case "40-50":
-                                                        lower = 40;
-                                                        higher = 50;
-                                                        break;
-                                                    case "50-60":
-                                                        lower = 50;
-                                                        higher = 60;
-                                                        break;
-                                                    case "ALL":
-                                                        lower = 0;
-                                                        higher = 100;
-                                                }
-                                                Intent intent = new Intent(TurnoutActivity.this, TurnoutDetails.class);
-                                                Bundle bundle = new Bundle();
-                                                bundle.putLong("Date1", date1);
-                                                bundle.putLong("Date2", date2);
-                                                bundle.putInt("Lower", lower);
-                                                bundle.putInt("Higher", higher);
-                                                bundle.putString("SpinPrograms", spinPrograms);
-                                                bundle.putString("SpinCategories", spinnerCategories);
-                                                bundle.putString("SpinSessions", spinnerSessions);
-                                                intent.putExtras(bundle);
-                                                startActivity(intent);
-                                            }
-                                        });
+                                        populateTurnoutsAdapter(count);
                                     }
                                 });
                     }
@@ -983,19 +830,11 @@ public class TurnoutActivity extends AppCompatActivity {
                     posSession = position;
 
                     if (spinnerSessions.equals("ALL")) {
-                        total = 0;
-                        number0 = 0;
-                        number10 = 0;
-                        number20 = 0;
-                        number30 = 0;
-                        number40 = 0;
-                        number50 = 0;
-                        total0 = 0.0;
-                        total10 = 0.0;
-                        total20 = 0.0;
-                        total30 = 0.0;
-                        total40 = 0.0;
-                        total50 = 0.0;
+                        total=0;
+                        number0=0; number10=0; number20=0; number30=0; number40=0; number50=0; number60=0;
+                        number70=0; number80=0; number90=0;
+                        total0=0.0; total10=0.0; total20=0.0; total30=0.0; total40=0.0; total50=0.0;
+                        total60=0.0; total70=0.0; total80=0.0; total90=0.0;
 
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate", date1)
@@ -1035,115 +874,34 @@ public class TurnoutActivity extends AppCompatActivity {
                                             } else if ((turnout >= 40) && (turnout <= 50)) {
                                                 number40++;
                                                 total40 += turnout;
-                                            } else {
+                                            } else if ((turnout >= 50) && (turnout <= 60)) {
                                                 number50++;
                                                 total50 += turnout;
+                                            } else if ((turnout >= 60) && (turnout <= 70)) {
+                                                number60++;
+                                                total60 += turnout;
+                                            } else if ((turnout >= 70) && (turnout <= 80)) {
+                                                number70++;
+                                                total70 += turnout;
+                                            } else if ((turnout >= 80) && (turnout <= 90)) {
+                                                number80++;
+                                                total80 += turnout;
+                                            }
+                                            else if ((turnout >= 90) && (turnout <= 100)) {
+                                                number90++;
+                                                total90 += turnout;
                                             }
                                         }
 
-                                        DecimalFormat df = new DecimalFormat("##.#");
-                                        df.setRoundingMode(RoundingMode.DOWN);
-
-                                        per0 = Double.parseDouble(df.format(total0 / number0));
-                                        per10 = Double.parseDouble(df.format(total10 / number10));
-                                        per20 = Double.parseDouble(df.format(total20 / number20));
-                                        per30 = Double.parseDouble(df.format(total30 / number30));
-                                        per40 = Double.parseDouble(df.format(total40 / number40));
-                                        per50 = Double.parseDouble(df.format(total50 / number50));
-
-
-                                        if (number0 > 0) {
-                                            count.put("0-10", new JapaClass(number0, per0));
-                                        }
-
-                                        if (number10 > 0) {
-                                            count.put("10-20", new JapaClass(number10, per10));
-                                        }
-
-                                        if (number20 > 0) {
-                                            count.put("20-30", new JapaClass(number20, per20));
-                                        }
-
-                                        if (number30 > 0) {
-                                            count.put("30-40", new JapaClass(number30, per40));
-                                        }
-
-                                        if (number40 > 0) {
-                                            count.put("40-50", new JapaClass(number40, per40));
-                                        }
-
-                                        if (number50 > 0) {
-                                            count.put("50-60", new JapaClass(number50, per50));
-                                        }
-
-                                        count.put("ALL", new JapaClass(total, 100));
-
-                                        final JapaActivityAdapter adapter = new JapaActivityAdapter(count);
-                                        mListView.setAdapter((ListAdapter) adapter);
-
-                                        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                            @Override
-                                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                                String turnout = adapter.getItem(position).getKey();
-                                                int lower = 0, higher = 0;
-                                                switch (turnout) {
-                                                    case "0-10":
-                                                        lower = 0;
-                                                        higher = 10;
-                                                        break;
-                                                    case "10-20":
-                                                        lower = 10;
-                                                        higher = 20;
-                                                        break;
-                                                    case "20-30":
-                                                        lower = 20;
-                                                        higher = 30;
-                                                        break;
-                                                    case "30-40":
-                                                        lower = 30;
-                                                        higher = 40;
-                                                        break;
-                                                    case "40-50":
-                                                        lower = 40;
-                                                        higher = 50;
-                                                        break;
-                                                    case "50-60":
-                                                        lower = 50;
-                                                        higher = 60;
-                                                        break;
-                                                    case "ALL":
-                                                        lower = 0;
-                                                        higher = 100;
-                                                }
-                                                Intent intent = new Intent(TurnoutActivity.this, TurnoutDetails.class);
-                                                Bundle bundle = new Bundle();
-                                                bundle.putLong("Date1", date1);
-                                                bundle.putLong("Date2", date2);
-                                                bundle.putInt("Lower", lower);
-                                                bundle.putInt("Higher", higher);
-                                                bundle.putString("SpinPrograms", spinPrograms);
-                                                bundle.putString("SpinCategories", spinnerCategories);
-                                                bundle.putString("SpinSessions", spinnerSessions);
-                                                intent.putExtras(bundle);
-                                                startActivity(intent);
-                                            }
-                                        });
+                                        populateTurnoutsAdapter(count);
                                     }
                                 });
                     } else {
-                        total = 0;
-                        number0 = 0;
-                        number10 = 0;
-                        number20 = 0;
-                        number30 = 0;
-                        number40 = 0;
-                        number50 = 0;
-                        total0 = 0.0;
-                        total10 = 0.0;
-                        total20 = 0.0;
-                        total30 = 0.0;
-                        total40 = 0.0;
-                        total50 = 0.0;
+                        total=0;
+                        number0=0; number10=0; number20=0; number30=0; number40=0; number50=0; number60=0;
+                        number70=0; number80=0; number90=0;
+                        total0=0.0; total10=0.0; total20=0.0; total30=0.0; total40=0.0; total50=0.0;
+                        total60=0.0; total70=0.0; total80=0.0; total90=0.0;
 
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate", date1)
@@ -1184,99 +942,26 @@ public class TurnoutActivity extends AppCompatActivity {
                                             } else if ((turnout >= 40) && (turnout <= 50)) {
                                                 number40++;
                                                 total40 += turnout;
-                                            } else {
+                                            } else if ((turnout >= 50) && (turnout <= 60)) {
                                                 number50++;
                                                 total50 += turnout;
+                                            } else if ((turnout >= 60) && (turnout <= 70)) {
+                                                number60++;
+                                                total60 += turnout;
+                                            } else if ((turnout >= 70) && (turnout <= 80)) {
+                                                number70++;
+                                                total70 += turnout;
+                                            } else if ((turnout >= 80) && (turnout <= 90)) {
+                                                number80++;
+                                                total80 += turnout;
+                                            }
+                                            else if ((turnout >= 90) && (turnout <= 100)) {
+                                                number90++;
+                                                total90 += turnout;
                                             }
                                         }
 
-                                        DecimalFormat df = new DecimalFormat("##.#");
-                                        df.setRoundingMode(RoundingMode.DOWN);
-
-                                        per0 = Double.parseDouble(df.format(total0 / number0));
-                                        per10 = Double.parseDouble(df.format(total10 / number10));
-                                        per20 = Double.parseDouble(df.format(total20 / number20));
-                                        per30 = Double.parseDouble(df.format(total30 / number30));
-                                        per40 = Double.parseDouble(df.format(total40 / number40));
-                                        per50 = Double.parseDouble(df.format(total50 / number50));
-
-
-                                        if (number0 > 0) {
-                                            count.put("0-10", new JapaClass(number0, per0));
-                                        }
-
-                                        if (number10 > 0) {
-                                            count.put("10-20", new JapaClass(number10, per10));
-                                        }
-
-                                        if (number20 > 0) {
-                                            count.put("20-30", new JapaClass(number20, per20));
-                                        }
-
-                                        if (number30 > 0) {
-                                            count.put("30-40", new JapaClass(number30, per40));
-                                        }
-
-                                        if (number40 > 0) {
-                                            count.put("40-50", new JapaClass(number40, per40));
-                                        }
-
-                                        if (number50 > 0) {
-                                            count.put("50-60", new JapaClass(number50, per50));
-                                        }
-
-                                        count.put("ALL", new JapaClass(total, 100));
-
-                                        final JapaActivityAdapter adapter = new JapaActivityAdapter(count);
-                                        mListView.setAdapter((ListAdapter) adapter);
-
-                                        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                            @Override
-                                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                                String turnout = adapter.getItem(position).getKey();
-                                                int lower = 0, higher = 0;
-                                                switch (turnout) {
-                                                    case "0-10":
-                                                        lower = 0;
-                                                        higher = 10;
-                                                        break;
-                                                    case "10-20":
-                                                        lower = 10;
-                                                        higher = 20;
-                                                        break;
-                                                    case "20-30":
-                                                        lower = 20;
-                                                        higher = 30;
-                                                        break;
-                                                    case "30-40":
-                                                        lower = 30;
-                                                        higher = 40;
-                                                        break;
-                                                    case "40-50":
-                                                        lower = 40;
-                                                        higher = 50;
-                                                        break;
-                                                    case "50-60":
-                                                        lower = 50;
-                                                        higher = 60;
-                                                        break;
-                                                    case "ALL":
-                                                        lower = 0;
-                                                        higher = 100;
-                                                }
-                                                Intent intent = new Intent(TurnoutActivity.this, TurnoutDetails.class);
-                                                Bundle bundle = new Bundle();
-                                                bundle.putLong("Date1", date1);
-                                                bundle.putLong("Date2", date2);
-                                                bundle.putInt("Lower", lower);
-                                                bundle.putInt("Higher", higher);
-                                                bundle.putString("SpinPrograms", spinPrograms);
-                                                bundle.putString("SpinCategories", spinnerCategories);
-                                                bundle.putString("SpinSessions", spinnerSessions);
-                                                intent.putExtras(bundle);
-                                                startActivity(intent);
-                                            }
-                                        });
+                                        populateTurnoutsAdapter(count);
                                     }
                                 });
                     }
@@ -1335,19 +1020,11 @@ public class TurnoutActivity extends AppCompatActivity {
                     posSession = position;
 
                     if (spinnerSessions.equals("ALL")) {
-                        total = 0;
-                        number0 = 0;
-                        number10 = 0;
-                        number20 = 0;
-                        number30 = 0;
-                        number40 = 0;
-                        number50 = 0;
-                        total0 = 0.0;
-                        total10 = 0.0;
-                        total20 = 0.0;
-                        total30 = 0.0;
-                        total40 = 0.0;
-                        total50 = 0.0;
+                        total=0;
+                        number0=0; number10=0; number20=0; number30=0; number40=0; number50=0; number60=0;
+                        number70=0; number80=0; number90=0;
+                        total0=0.0; total10=0.0; total20=0.0; total30=0.0; total40=0.0; total50=0.0;
+                        total60=0.0; total70=0.0; total80=0.0; total90=0.0;
 
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate", date1)
@@ -1394,109 +1071,15 @@ public class TurnoutActivity extends AppCompatActivity {
                                             }
                                         }
 
-                                        DecimalFormat df = new DecimalFormat("##.#");
-                                        df.setRoundingMode(RoundingMode.DOWN);
-
-                                        per0 = Double.parseDouble(df.format(total0 / number0));
-                                        per10 = Double.parseDouble(df.format(total10 / number10));
-                                        per20 = Double.parseDouble(df.format(total20 / number20));
-                                        per30 = Double.parseDouble(df.format(total30 / number30));
-                                        per40 = Double.parseDouble(df.format(total40 / number40));
-                                        per50 = Double.parseDouble(df.format(total50 / number50));
-
-
-                                        if (number0 > 0) {
-                                            count.put("0-10", new JapaClass(number0, per0));
-                                        }
-
-                                        if (number10 > 0) {
-                                            count.put("10-20", new JapaClass(number10, per10));
-                                        }
-
-                                        if (number20 > 0) {
-                                            count.put("20-30", new JapaClass(number20, per20));
-                                        }
-
-                                        if (number30 > 0) {
-                                            count.put("30-40", new JapaClass(number30, per40));
-                                        }
-
-                                        if (number40 > 0) {
-                                            count.put("40-50", new JapaClass(number40, per40));
-                                        }
-
-                                        if (number50 > 0) {
-                                            count.put("50-60", new JapaClass(number50, per50));
-                                        }
-
-                                        count.put("ALL", new JapaClass(total, 100));
-
-                                        final JapaActivityAdapter adapter = new JapaActivityAdapter(count);
-                                        mListView.setAdapter((ListAdapter) adapter);
-
-                                        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                            @Override
-                                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                                String turnout = adapter.getItem(position).getKey();
-                                                int lower = 0, higher = 0;
-                                                switch (turnout) {
-                                                    case "0-10":
-                                                        lower = 0;
-                                                        higher = 10;
-                                                        break;
-                                                    case "10-20":
-                                                        lower = 10;
-                                                        higher = 20;
-                                                        break;
-                                                    case "20-30":
-                                                        lower = 20;
-                                                        higher = 30;
-                                                        break;
-                                                    case "30-40":
-                                                        lower = 30;
-                                                        higher = 40;
-                                                        break;
-                                                    case "40-50":
-                                                        lower = 40;
-                                                        higher = 50;
-                                                        break;
-                                                    case "50-60":
-                                                        lower = 50;
-                                                        higher = 60;
-                                                        break;
-                                                    case "ALL":
-                                                        lower = 0;
-                                                        higher = 100;
-                                                }
-                                                Intent intent = new Intent(TurnoutActivity.this, TurnoutDetails.class);
-                                                Bundle bundle = new Bundle();
-                                                bundle.putLong("Date1", date1);
-                                                bundle.putLong("Date2", date2);
-                                                bundle.putInt("Lower", lower);
-                                                bundle.putInt("Higher", higher);
-                                                bundle.putString("SpinPrograms", spinPrograms);
-                                                bundle.putString("SpinCategories", spinnerCategories);
-                                                bundle.putString("SpinSessions", spinnerSessions);
-                                                intent.putExtras(bundle);
-                                                startActivity(intent);
-                                            }
-                                        });
+                                        populateTurnoutsAdapter(count);
                                     }
                                 });
                     } else {
-                        total = 0;
-                        number0 = 0;
-                        number10 = 0;
-                        number20 = 0;
-                        number30 = 0;
-                        number40 = 0;
-                        number50 = 0;
-                        total0 = 0.0;
-                        total10 = 0.0;
-                        total20 = 0.0;
-                        total30 = 0.0;
-                        total40 = 0.0;
-                        total50 = 0.0;
+                        total=0;
+                        number0=0; number10=0; number20=0; number30=0; number40=0; number50=0; number60=0;
+                        number70=0; number80=0; number90=0;
+                        total0=0.0; total10=0.0; total20=0.0; total30=0.0; total40=0.0; total50=0.0;
+                        total60=0.0; total70=0.0; total80=0.0; total90=0.0;
 
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate", date1)
@@ -1538,99 +1121,26 @@ public class TurnoutActivity extends AppCompatActivity {
                                             } else if ((turnout >= 40) && (turnout <= 50)) {
                                                 number40++;
                                                 total40 += turnout;
-                                            } else {
+                                            } else if ((turnout >= 50) && (turnout <= 60)) {
                                                 number50++;
                                                 total50 += turnout;
+                                            } else if ((turnout >= 60) && (turnout <= 70)) {
+                                                number60++;
+                                                total60 += turnout;
+                                            } else if ((turnout >= 70) && (turnout <= 80)) {
+                                                number70++;
+                                                total70 += turnout;
+                                            } else if ((turnout >= 80) && (turnout <= 90)) {
+                                                number80++;
+                                                total80 += turnout;
+                                            }
+                                            else if ((turnout >= 90) && (turnout <= 100)) {
+                                                number90++;
+                                                total90 += turnout;
                                             }
                                         }
 
-                                        DecimalFormat df = new DecimalFormat("##.#");
-                                        df.setRoundingMode(RoundingMode.DOWN);
-
-                                        per0 = Double.parseDouble(df.format(total0 / number0));
-                                        per10 = Double.parseDouble(df.format(total10 / number10));
-                                        per20 = Double.parseDouble(df.format(total20 / number20));
-                                        per30 = Double.parseDouble(df.format(total30 / number30));
-                                        per40 = Double.parseDouble(df.format(total40 / number40));
-                                        per50 = Double.parseDouble(df.format(total50 / number50));
-
-
-                                        if (number0 > 0) {
-                                            count.put("0-10", new JapaClass(number0, per0));
-                                        }
-
-                                        if (number10 > 0) {
-                                            count.put("10-20", new JapaClass(number10, per10));
-                                        }
-
-                                        if (number20 > 0) {
-                                            count.put("20-30", new JapaClass(number20, per20));
-                                        }
-
-                                        if (number30 > 0) {
-                                            count.put("30-40", new JapaClass(number30, per40));
-                                        }
-
-                                        if (number40 > 0) {
-                                            count.put("40-50", new JapaClass(number40, per40));
-                                        }
-
-                                        if (number50 > 0) {
-                                            count.put("50-60", new JapaClass(number50, per50));
-                                        }
-
-                                        count.put("ALL", new JapaClass(total, 100));
-
-                                        final JapaActivityAdapter adapter = new JapaActivityAdapter(count);
-                                        mListView.setAdapter((ListAdapter) adapter);
-
-                                        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                            @Override
-                                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                                String turnout = adapter.getItem(position).getKey();
-                                                int lower = 0, higher = 0;
-                                                switch (turnout) {
-                                                    case "0-10":
-                                                        lower = 0;
-                                                        higher = 10;
-                                                        break;
-                                                    case "10-20":
-                                                        lower = 10;
-                                                        higher = 20;
-                                                        break;
-                                                    case "20-30":
-                                                        lower = 20;
-                                                        higher = 30;
-                                                        break;
-                                                    case "30-40":
-                                                        lower = 30;
-                                                        higher = 40;
-                                                        break;
-                                                    case "40-50":
-                                                        lower = 40;
-                                                        higher = 50;
-                                                        break;
-                                                    case "50-60":
-                                                        lower = 50;
-                                                        higher = 60;
-                                                        break;
-                                                    case "ALL":
-                                                        lower = 0;
-                                                        higher = 100;
-                                                }
-                                                Intent intent = new Intent(TurnoutActivity.this, TurnoutDetails.class);
-                                                Bundle bundle = new Bundle();
-                                                bundle.putLong("Date1", date1);
-                                                bundle.putLong("Date2", date2);
-                                                bundle.putInt("Lower", lower);
-                                                bundle.putInt("Higher", higher);
-                                                bundle.putString("SpinPrograms", spinPrograms);
-                                                bundle.putString("SpinCategories", spinnerCategories);
-                                                bundle.putString("SpinSessions", spinnerSessions);
-                                                intent.putExtras(bundle);
-                                                startActivity(intent);
-                                            }
-                                        });
+                                        populateTurnoutsAdapter(count);
                                     }
                                 });
                     }
