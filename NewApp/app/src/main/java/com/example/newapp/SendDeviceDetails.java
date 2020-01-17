@@ -3,6 +3,8 @@ package com.example.newapp;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.json.JSONObject;
+
 import java.io.DataOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;

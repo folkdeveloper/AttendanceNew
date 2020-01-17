@@ -18,6 +18,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 
 import org.json.JSONException;
@@ -26,6 +33,7 @@ import org.json.JSONObject;
 import java.io.DataOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
@@ -71,6 +79,8 @@ public class RegFinalDetails extends AppCompatActivity {
     private Button buttonmsg_Yes, buttonmsg_No;
     private Button buttonstatus_com, buttonstatus_notcom;
     private Button update;
+
+    private RequestQueue requestQueue;
 
     private TextView mTextView1, mTextView2, mTextView3, mTextView4, mTextView5, mTextView6,
             mTextView7, mTextView8, mTextView9, mTextView10, mTextView11, mTextView12, mTextView13,
@@ -183,7 +193,7 @@ public class RegFinalDetails extends AppCompatActivity {
             mTextView20.setBackgroundResource(R.color.colorPrimary);
         }
 
-        mTextView33.setText("Probability: " + String.valueOf(probability));
+        mTextView33.setText("Probability: " + String.valueOf(probability) + "%");
 
         String originValue = String.valueOf(origin);
         String edateValue = String.valueOf(edate);
@@ -191,12 +201,12 @@ public class RegFinalDetails extends AppCompatActivity {
 
         long originFinal = Long.valueOf(originValue) * 1000;
         long edateFinal = Long.valueOf(edateValue) * 1000;
-        long luFinal = Long.valueOf(edateValue) * 1000;
+        long luFinal = Long.valueOf(luValue) * 1000;
 
         Date date1 = new Date(Long.valueOf(originFinal));
         Date date2 = new Date(Long.valueOf(edateFinal));
         Date date3 = new Date(Long.valueOf(luFinal));
-        DateFormat format = new SimpleDateFormat("dd-MMM-yyyy HH:mm a");
+        DateFormat format = new SimpleDateFormat("dd-MMM-yyyy hh:mm a");
 //        format.setTimeZone(TimeZone.getTimeZone("Australia/Sydney"));
         String formatted1 = format.format(date1);
         String formatted2 = format.format(date2);
@@ -254,7 +264,8 @@ public class RegFinalDetails extends AppCompatActivity {
                 }catch(JSONException e) {
                     e.printStackTrace();
                 }
-                Toast.makeText(RegFinalDetails.this, "" + postData.toString(), Toast.LENGTH_SHORT).show();
+                fg_call = "Yes";
+//                Toast.makeText(RegFinalDetails.this, "" + postData.toString(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -269,7 +280,8 @@ public class RegFinalDetails extends AppCompatActivity {
                 }catch(JSONException e) {
                     e.printStackTrace();
                 }
-                Toast.makeText(RegFinalDetails.this, "" + postData.toString(), Toast.LENGTH_SHORT).show();
+                fg_call = "No";
+//                Toast.makeText(RegFinalDetails.this, "" + postData.toString(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -284,7 +296,8 @@ public class RegFinalDetails extends AppCompatActivity {
                 }catch(JSONException e) {
                     e.printStackTrace();
                 }
-                Toast.makeText(RegFinalDetails.this, "" + postData.toString(), Toast.LENGTH_SHORT).show();
+                leave_agreed = "Yes";
+//                Toast.makeText(RegFinalDetails.this, "" + postData.toString(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -299,7 +312,8 @@ public class RegFinalDetails extends AppCompatActivity {
                 }catch(JSONException e) {
                     e.printStackTrace();
                 }
-                Toast.makeText(RegFinalDetails.this, "" + postData.toString(), Toast.LENGTH_SHORT).show();
+                leave_agreed = "No";
+//                Toast.makeText(RegFinalDetails.this, "" + postData.toString(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -314,7 +328,8 @@ public class RegFinalDetails extends AppCompatActivity {
                 }catch(JSONException e) {
                     e.printStackTrace();
                 }
-                Toast.makeText(RegFinalDetails.this, "" + postData.toString(), Toast.LENGTH_SHORT).show();
+                msg_confirm = "Yes";
+//                Toast.makeText(RegFinalDetails.this, "" + postData.toString(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -329,7 +344,8 @@ public class RegFinalDetails extends AppCompatActivity {
                 }catch(JSONException e) {
                     e.printStackTrace();
                 }
-                Toast.makeText(RegFinalDetails.this, "" + postData.toString(), Toast.LENGTH_SHORT).show();
+                msg_confirm = "No";
+//                Toast.makeText(RegFinalDetails.this, "" + postData.toString(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -344,7 +360,8 @@ public class RegFinalDetails extends AppCompatActivity {
                 }catch(JSONException e) {
                     e.printStackTrace();
                 }
-                Toast.makeText(RegFinalDetails.this, "" + postData.toString(), Toast.LENGTH_SHORT).show();
+                status = "Yes";
+//                Toast.makeText(RegFinalDetails.this, "" + postData.toString(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -359,7 +376,31 @@ public class RegFinalDetails extends AppCompatActivity {
                 }catch(JSONException e) {
                     e.printStackTrace();
                 }
-                Toast.makeText(RegFinalDetails.this, "" + postData.toString(), Toast.LENGTH_SHORT).show();
+                status = "No";
+//                Toast.makeText(RegFinalDetails.this, "" + postData.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+                mTextView36.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                try {
+                    postData.put("comment", mTextView36.getText().toString());
+                }catch(JSONException e) {
+                    e.printStackTrace();
+                }
+                comment = mTextView36.getText().toString();
+//                Toast.makeText(RegFinalDetails.this, "" + postData.toString(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
 
@@ -369,36 +410,25 @@ public class RegFinalDetails extends AppCompatActivity {
                 try {
                     postData.put("comment", mTextView36.getText().toString());
                     postDataFinal.put("comment", mTextView36.getText().toString());
-                    new SendDeviceDetails().execute("https://us-central1-folk-demo.cloudfunctions.net/fgInputToRegistrations", postDataFinal.toString());
+//                    new SendDeviceDetails().execute("https://us-central1-folk-demo.cloudfunctions.net/fgInputToRegistrations", postDataFinal.toString());
+                    String data = "{"+
+                            "\"zzdate\"" + ":" + "\"" + date + "\","+
+                            "\"session\"" + ":" + "\"" + session + "\","+
+                            "\"zmob\"" + ":" + "\"" + phone + "\","+
+                            "\"leave_agreed\"" + ":" + "\"" + leave_agreed + "\","+
+                            "\"fg_call\"" + ":" + "\"" + fg_call + "\","+
+                            "\"msg_confirm\"" + ":" + "\"" + msg_confirm + "\","+
+                            "\"comment\"" + ":" + "\"" + comment + "\","+
+                            "\"status\"" + ":" + "\"" + buttonstatus_com.getText().toString() + "\""+
+                            "}";
+                    Submit(data);
                 }catch(JSONException e) {
                     e.printStackTrace();
+
                 }
-                Toast.makeText(RegFinalDetails.this, "" + postData.toString(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(RegFinalDetails.this, "" + postData.toString(), Toast.LENGTH_SHORT).show();
             }
         });
-
-//        mTextView36.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                try {
-//                    postData.put("comment", mTextView36.getText().toString());
-//                }catch(JSONException e) {
-//                    e.printStackTrace();
-//                }
-//                Toast.makeText(RegFinalDetails.this, "" + postData.toString(), Toast.LENGTH_SHORT).show();
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//
-//            }
-//        });
-
 
         if(url.equals("")) {
             url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
@@ -426,5 +456,54 @@ public class RegFinalDetails extends AppCompatActivity {
                 startActivity(callIntent);
             }
         });
+    }
+
+    private void Submit(String data)
+    {
+        final String savedata= data;
+        String URL="https://us-central1-folk-demo.cloudfunctions.net/fgInputToRegistrations";
+
+        Toast.makeText(this, "" + data, Toast.LENGTH_SHORT).show();
+        requestQueue = Volley.newRequestQueue(getApplicationContext());
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject objres=new JSONObject(response);
+                    Toast.makeText(getApplicationContext(),objres.toString(),Toast.LENGTH_LONG).show();
+
+
+                } catch (JSONException e) {
+                    Toast.makeText(getApplicationContext(),"Server Error",Toast.LENGTH_LONG).show();
+
+                }
+                //Log.i("VOLLEY", response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+
+                //Log.v("VOLLEY", error.toString());
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return savedata == null ? null : savedata.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    //Log.v("Unsupported Encoding while trying to get the bytes", data);
+                    return null;
+                }
+            }
+
+        };
+        requestQueue.add(stringRequest);
     }
 }

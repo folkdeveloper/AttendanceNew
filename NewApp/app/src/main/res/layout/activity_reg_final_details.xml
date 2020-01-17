@@ -498,16 +498,6 @@
                 android:orientation="vertical"
                 android:background="#FFFFE8">
 
-                <TextView
-                    android:id="@+id/textView33"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="Probability"
-                    android:textSize="17dp"
-                    android:textStyle="bold" />
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -532,20 +522,30 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
-                        <EditText
-                            android:id="@+id/textView36"
-                            android:layout_width="match_parent"
-                            android:layout_height="150dp"
-                            android:background="@drawable/comment_border"
-                            android:gravity="center"
-                            android:text="Comment"
-                            android:textSize="17dp"
-                            android:textStyle="bold"
-                            />
+
+                            <EditText
+                                android:id="@+id/textView36"
+                                android:layout_width="match_parent"
+                                android:layout_height="150dp"
+                                android:background="@drawable/comment_border"
+                                android:gravity="center"
+                                android:text="Comment"
+                                android:textSize="17dp"
+                                android:textStyle="bold" />
                         </LinearLayout>
                     </ScrollView>
 
                 </LinearLayout>
+
+                <TextView
+                    android:id="@+id/textView33"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Probability"
+                    android:textSize="17dp"
+                    android:textStyle="bold" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -576,13 +576,13 @@
 
                 <Button
                     android:id="@+id/button15"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="Update"
-                    android:background="@drawable/button_shape"/>
+                    android:background="@drawable/update_button"/>
             </LinearLayout>
 
         </LinearLayout>
