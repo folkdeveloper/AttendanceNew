@@ -2,6 +2,7 @@ package com.example.newapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -340,7 +341,7 @@ public class DateSelector extends AppCompatActivity {
         else if (date2.equals("")) {
             Toast.makeText(this, "Please select a to date", Toast.LENGTH_SHORT).show();
         } else {
-            Intent intent = new Intent(DateSelector.this, UniqueActivity.class);
+            Intent intent = new Intent(DateSelector.this, TLViewActivity.class);
             Bundle bundle = new Bundle();
             bundle.putLong("Date1",epoch1);
             bundle.putLong("Date2",epoch2);
@@ -377,6 +378,25 @@ public class DateSelector extends AppCompatActivity {
             Toast.makeText(this, "Please select a to date", Toast.LENGTH_SHORT).show();
         } else {
             Intent intent = new Intent(DateSelector.this, ResActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putLong("Date1",epoch1);
+            bundle.putLong("Date2",epoch2);
+            bundle.putString("Date1Str",date1);
+            bundle.putString("Date2Str",date2);
+            bundle.putString("Collection",collection);
+            intent.putExtras(bundle);
+            startActivity(intent);
+        }
+    }
+
+    public void select14(View v) {
+        if (date1.equals("")) {
+            Toast.makeText(this, "Please select a from date", Toast.LENGTH_SHORT).show();
+        }
+        else if (date2.equals("")) {
+            Toast.makeText(this, "Please select a to date", Toast.LENGTH_SHORT).show();
+        } else {
+            Intent intent = new Intent(DateSelector.this, UniqueActivity.class);
             Bundle bundle = new Bundle();
             bundle.putLong("Date1",epoch1);
             bundle.putLong("Date2",epoch2);

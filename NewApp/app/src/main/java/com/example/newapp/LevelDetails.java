@@ -267,7 +267,7 @@ public class LevelDetails extends AppCompatActivity {
                                 details.add(note);
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -306,7 +306,7 @@ public class LevelDetails extends AppCompatActivity {
                                 details.add(note);
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -349,7 +349,7 @@ public class LevelDetails extends AppCompatActivity {
                                 details.add(note);
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -389,7 +389,7 @@ public class LevelDetails extends AppCompatActivity {
                                 details.add(note);
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -432,7 +432,7 @@ public class LevelDetails extends AppCompatActivity {
                                 details.add(note);
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -472,7 +472,7 @@ public class LevelDetails extends AppCompatActivity {
                                 details.add(note);
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -515,7 +515,7 @@ public class LevelDetails extends AppCompatActivity {
                                 details.add(note);
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -555,7 +555,7 @@ public class LevelDetails extends AppCompatActivity {
                                 details.add(note);
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendancedDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -599,7 +599,7 @@ public class LevelDetails extends AppCompatActivity {
                                 details.add(note);
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -640,7 +640,7 @@ public class LevelDetails extends AppCompatActivity {
                                 details.add(note);
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -684,7 +684,7 @@ public class LevelDetails extends AppCompatActivity {
                                 details.add(note);
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -725,7 +725,7 @@ public class LevelDetails extends AppCompatActivity {
                                 details.add(note);
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -769,7 +769,7 @@ public class LevelDetails extends AppCompatActivity {
                                 details.add(note);
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -810,7 +810,7 @@ public class LevelDetails extends AppCompatActivity {
                                 details.add(note);
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -855,7 +855,7 @@ public class LevelDetails extends AppCompatActivity {
                                 details.add(note);
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -897,7 +897,7 @@ public class LevelDetails extends AppCompatActivity {
                                 details.add(note);
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);

@@ -2,14 +2,11 @@ package com.example.newapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,12 +27,7 @@ import com.bumptech.glide.Glide;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.DataOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -219,27 +211,27 @@ public class RegFinalDetails extends AppCompatActivity {
         mTextView36.setText(comment);
 
         if (fg_call.equals("Yes")) {
-            buttonfg_CallYes.setBackgroundResource(R.color.colorPrimary);
+            buttonfg_CallYes.setBackgroundResource(R.drawable.button_selected);
         } else {
-            buttonfg_CallNo.setBackgroundResource(R.color.colorPrimary);
+            buttonfg_CallNo.setBackgroundResource(R.drawable.button_selected);
         }
 
         if (leave_agreed.equals("Yes")) {
-            buttonLeave_Yes.setBackgroundResource(R.color.colorPrimary);
+            buttonLeave_Yes.setBackgroundResource(R.drawable.button_selected);
         } else {
-            buttonLeave_No.setBackgroundResource(R.color.colorPrimary);
+            buttonLeave_No.setBackgroundResource(R.drawable.button_selected);
         }
 
         if (msg_confirm.equals("Yes")) {
-            buttonmsg_Yes.setBackgroundResource(R.color.colorPrimary);
+            buttonmsg_Yes.setBackgroundResource(R.drawable.button_selected);
         } else {
-            buttonmsg_No.setBackgroundResource(R.color.colorPrimary);
+            buttonmsg_No.setBackgroundResource(R.drawable.button_selected);
         }
 
         if (status.equals("Coming")) {
-            buttonstatus_com.setBackgroundResource(R.color.colorPrimary);
+            buttonstatus_com.setBackgroundResource(R.drawable.button_selected);
         } else if (status.equals("Not Coming")){
-            buttonstatus_notcom.setBackgroundResource(R.color.colorPrimary);
+            buttonstatus_notcom.setBackgroundResource(R.drawable.button_selected);
         } else {
 
         }
@@ -256,8 +248,8 @@ public class RegFinalDetails extends AppCompatActivity {
         buttonfg_CallYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                buttonfg_CallYes.setBackgroundResource(R.color.colorPrimary);
-                buttonfg_CallNo.setBackgroundResource(android.R.drawable.btn_default);
+                buttonfg_CallYes.setBackgroundResource(R.drawable.button_selected);
+                buttonfg_CallNo.setBackgroundResource(R.drawable.button_notselected);
                 try {
                     postData.put("fg_call", "Yes");
                     postDataFinal.put("fg_call", "Yes");
@@ -272,8 +264,8 @@ public class RegFinalDetails extends AppCompatActivity {
         buttonfg_CallNo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                buttonfg_CallNo.setBackgroundResource(R.color.colorPrimary);
-                buttonfg_CallYes.setBackgroundResource(android.R.drawable.btn_default);
+                buttonfg_CallNo.setBackgroundResource(R.drawable.button_selected);
+                buttonfg_CallYes.setBackgroundResource(R.drawable.button_notselected);
                 try {
                     postData.put("fg_call", "No");
                     postDataFinal.put("fg_call", "Yes");
@@ -288,8 +280,8 @@ public class RegFinalDetails extends AppCompatActivity {
         buttonLeave_Yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                buttonLeave_Yes.setBackgroundResource(R.color.colorPrimary);
-                buttonLeave_No.setBackgroundResource(android.R.drawable.btn_default);
+                buttonLeave_Yes.setBackgroundResource(R.drawable.button_selected);
+                buttonLeave_No.setBackgroundResource(R.drawable.button_notselected);
                 try {
                     postData.put("leave_agreed", "Yes");
                     postDataFinal.put("fg_call", "Yes");
@@ -304,8 +296,8 @@ public class RegFinalDetails extends AppCompatActivity {
         buttonLeave_No.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                buttonLeave_No.setBackgroundResource(R.color.colorPrimary);
-                buttonLeave_Yes.setBackgroundResource(android.R.drawable.btn_default);
+                buttonLeave_No.setBackgroundResource(R.drawable.button_selected);
+                buttonLeave_Yes.setBackgroundResource(R.drawable.button_notselected);
                 try {
                     postData.put("leave_agreed", "No");
                     postDataFinal.put("fg_call", "Yes");
@@ -320,8 +312,8 @@ public class RegFinalDetails extends AppCompatActivity {
         buttonmsg_Yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                buttonmsg_Yes.setBackgroundResource(R.color.colorPrimary);
-                buttonmsg_No.setBackgroundResource(android.R.drawable.btn_default);
+                buttonmsg_Yes.setBackgroundResource(R.drawable.button_selected);
+                buttonmsg_No.setBackgroundResource(R.drawable.button_notselected);
                 try {
                     postData.put("msg_confirm", "Yes");
                     postDataFinal.put("fg_call", "Yes");
@@ -336,8 +328,8 @@ public class RegFinalDetails extends AppCompatActivity {
         buttonmsg_No.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                buttonmsg_No.setBackgroundResource(R.color.colorPrimary);
-                buttonmsg_Yes.setBackgroundResource(android.R.drawable.btn_default);
+                buttonmsg_No.setBackgroundResource(R.drawable.button_selected);
+                buttonmsg_Yes.setBackgroundResource(R.drawable.button_notselected);
                 try {
                     postData.put("msg_confirm", "no");
                     postDataFinal.put("fg_call", "Yes");
@@ -352,8 +344,8 @@ public class RegFinalDetails extends AppCompatActivity {
         buttonstatus_com.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                buttonstatus_com.setBackgroundResource(R.color.colorPrimary);
-                buttonstatus_notcom.setBackgroundResource(android.R.drawable.btn_default);
+                buttonstatus_com.setBackgroundResource(R.drawable.button_selected);
+                buttonstatus_notcom.setBackgroundResource(R.drawable.button_notselected);
                 try {
                     postData.put("status", "Yes");
                     postDataFinal.put("fg_call", "Yes");
@@ -368,8 +360,8 @@ public class RegFinalDetails extends AppCompatActivity {
         buttonstatus_notcom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                buttonstatus_notcom.setBackgroundResource(R.color.colorPrimary);
-                buttonstatus_com.setBackgroundResource(android.R.drawable.btn_default);
+                buttonstatus_notcom.setBackgroundResource(R.drawable.button_selected);
+                buttonstatus_com.setBackgroundResource(R.drawable.button_notselected);
                 try {
                     postData.put("status", "No");
                     postDataFinal.put("fg_call", "Yes");

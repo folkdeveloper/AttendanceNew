@@ -31,7 +31,6 @@ public class FGActivity extends AppCompatActivity {
     ListView mListView;
     public static String session = "";
 //    public static String sub_purpose = "";
-    public static String tl = "";
     public static String date = "";
     public static String spinPrograms = "";
     public static String spinCategories = "";
@@ -48,7 +47,6 @@ public class FGActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         session = extras.getString("Session");
-        tl = extras.getString("TL");
         date1 = getIntent().getLongExtra("Date1",date1);
         date2 = getIntent().getLongExtra("Date2",date2);
         date = extras.getString("Date");
@@ -82,7 +80,6 @@ public class FGActivity extends AppCompatActivity {
 //                    .whereEqualTo("zzdate",date)
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
-                    .whereEqualTo("ztl",tl)
                     .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -116,7 +113,6 @@ public class FGActivity extends AppCompatActivity {
                                     extras.putString("Session",session);
                                     extras.putLong("Date1",date1);
                                     extras.putLong("Date2",date2);
-                                    extras.putString("TL",tl);
                                     extras.putString("FG",fg);
                                     extras.putString("SpinPrograms",spinPrograms);
                                     extras.putString("SpinCategories",spinCategories);
@@ -133,7 +129,6 @@ public class FGActivity extends AppCompatActivity {
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
                     .whereEqualTo("session",session)
-                    .whereEqualTo("ztl",tl)
                     .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -165,7 +160,7 @@ public class FGActivity extends AppCompatActivity {
                                     Intent intent = new Intent(FGActivity.this,LevelActivity.class);
                                     Bundle extras = new Bundle();
                                     extras.putString("Session",session);
-                                    extras.putString("TL",tl);
+
                                     extras.putString("FG",fg);
                                     extras.putLong("Date1",date1);
                                     extras.putLong("Date2",date2);
@@ -188,7 +183,6 @@ public class FGActivity extends AppCompatActivity {
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
                     .whereEqualTo("category",spinCategories)
-                    .whereEqualTo("ztl",tl)
                     .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -222,7 +216,6 @@ public class FGActivity extends AppCompatActivity {
                                     extras.putString("Session",session);
                                     extras.putLong("Date1",date1);
                                     extras.putLong("Date2",date2);
-                                    extras.putString("TL",tl);
                                     extras.putString("FG",fg);
                                     extras.putString("SpinPrograms",spinPrograms);
                                     extras.putString("SpinCategories",spinCategories);
@@ -240,7 +233,6 @@ public class FGActivity extends AppCompatActivity {
                     .whereLessThanOrEqualTo("edate", date2)
                     .whereEqualTo("session",session)
                     .whereEqualTo("category",spinCategories)
-                    .whereEqualTo("ztl",tl)
                     .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -274,7 +266,6 @@ public class FGActivity extends AppCompatActivity {
                                     extras.putString("Session",session);
                                     extras.putLong("Date1",date1);
                                     extras.putLong("Date2",date2);
-                                    extras.putString("TL",tl);
                                     extras.putString("FG",fg);
                                     extras.putString("SpinPrograms",spinPrograms);
                                     extras.putString("SpinCategories",spinCategories);
@@ -295,7 +286,6 @@ public class FGActivity extends AppCompatActivity {
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
                     .whereEqualTo("program",spinPrograms)
-                    .whereEqualTo("ztl",tl)
                     .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -329,7 +319,6 @@ public class FGActivity extends AppCompatActivity {
                                     extras.putString("Session",session);
                                     extras.putLong("Date1",date1);
                                     extras.putLong("Date2",date2);
-                                    extras.putString("TL",tl);
                                     extras.putString("FG",fg);
                                     extras.putString("SpinPrograms",spinPrograms);
                                     extras.putString("SpinCategories",spinCategories);
@@ -347,7 +336,6 @@ public class FGActivity extends AppCompatActivity {
                     .whereLessThanOrEqualTo("edate", date2)
                     .whereEqualTo("session",session)
                     .whereEqualTo("program",spinPrograms)
-                    .whereEqualTo("ztl",tl)
                     .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -381,7 +369,6 @@ public class FGActivity extends AppCompatActivity {
                                     extras.putString("Session",session);
                                     extras.putLong("Date1",date1);
                                     extras.putLong("Date2",date2);
-                                    extras.putString("TL",tl);
                                     extras.putString("FG",fg);
                                     extras.putString("SpinPrograms",spinPrograms);
                                     extras.putString("SpinCategories",spinCategories);
@@ -403,7 +390,6 @@ public class FGActivity extends AppCompatActivity {
                     .whereLessThanOrEqualTo("edate", date2)
                     .whereEqualTo("program",spinPrograms)
                     .whereEqualTo("category",spinCategories)
-                    .whereEqualTo("ztl",tl)
                     .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -437,7 +423,6 @@ public class FGActivity extends AppCompatActivity {
                                     extras.putString("Session",session);
                                     extras.putLong("Date1",date1);
                                     extras.putLong("Date2",date2);
-                                    extras.putString("TL",tl);
                                     extras.putString("FG",fg);
                                     extras.putString("SpinPrograms",spinPrograms);
                                     extras.putString("SpinCategories",spinCategories);
@@ -456,7 +441,6 @@ public class FGActivity extends AppCompatActivity {
                     .whereEqualTo("session",session)
                     .whereEqualTo("program",spinPrograms)
                     .whereEqualTo("category",spinCategories)
-                    .whereEqualTo("ztl",tl)
                     .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -490,7 +474,6 @@ public class FGActivity extends AppCompatActivity {
                                     extras.putString("Session",session);
                                     extras.putLong("Date1",date1);
                                     extras.putLong("Date2",date2);
-                                    extras.putString("TL",tl);
                                     extras.putString("FG",fg);
                                     extras.putString("SpinPrograms",spinPrograms);
                                     extras.putString("SpinCategories",spinCategories);

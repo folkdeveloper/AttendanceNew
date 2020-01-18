@@ -390,8 +390,8 @@ public class OccupationActivity extends AppCompatActivity {
                                                 note.setOccupation("Not updated");
                                             }
 
-                                            if (count.containsKey(note.getZtl())) {
-                                                Occupation occupation = count.get(note.getZtl());
+                                            if (count.containsKey(note.getFg())) {
+                                                Occupation occupation = count.get(note.getFg());
                                                 int students = occupation.getStudents();
                                                 int working = occupation.getWorking();
                                                 int self = occupation.getSelf();
@@ -400,33 +400,33 @@ public class OccupationActivity extends AppCompatActivity {
                                                 if (note.getOccupation().equals("Student")) {
                                                     students++;
                                                     totalStudents++;
-                                                    count.put(note.getZtl(), new Occupation(students, working, self, others));
+                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
                                                 } else if (note.getOccupation().equals("Working")) {
                                                     working++;
                                                     totalWorking++;
-                                                    count.put(note.getZtl(), new Occupation(students, working, self, others));
+                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
                                                 } else if (note.getOccupation().equals("Business/Self Employed")) {
                                                     self++;
                                                     totalSelf++;
-                                                    count.put(note.getZtl(), new Occupation(students, working, self, others));
+                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
                                                 } else {
                                                     others++;
                                                     totalOthers++;
-                                                    count.put(note.getZtl(), new Occupation(students, working, self, others));
+                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
                                                 }
                                             } else {
                                                 if (note.getOccupation().equals("Student")) {
                                                     totalStudents++;
-                                                    count.put(note.getZtl(), new Occupation(1, 0, 0, 0));
+                                                    count.put(note.getFg(), new Occupation(1, 0, 0, 0));
                                                 } else if (note.getOccupation().equals("Working")) {
                                                     totalWorking++;
-                                                    count.put(note.getZtl(), new Occupation(0, 1, 0, 0));
+                                                    count.put(note.getFg(), new Occupation(0, 1, 0, 0));
                                                 } else if (note.getOccupation().equals("Business/Self Employed")) {
                                                     totalSelf++;
-                                                    count.put(note.getZtl(), new Occupation(0, 0, 1, 0));
+                                                    count.put(note.getFg(), new Occupation(0, 0, 1, 0));
                                                 } else {
                                                     totalOthers++;
-                                                    count.put(note.getZtl(), new Occupation(0, 0, 0, 1));
+                                                    count.put(note.getFg(), new Occupation(0, 0, 0, 1));
                                                 }
                                             }
                                         }
@@ -455,19 +455,15 @@ public class OccupationActivity extends AppCompatActivity {
                                         mTextView14.setText(p7.toString());
                                         mTextView15.setText(p8.toString());
 
-//                        headerView = getLayoutInflater().inflate(R.layout.details_header,null);
-//                        mListView.addHeaderView(headerView);
-
-
                                         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                             @Override
                                             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                                String tl = adapter.getItem(i).getKey();
-                                                Intent intent = new Intent(OccupationActivity.this, OccupationFG.class);
+                                                String fg = adapter.getItem(i).getKey();
+                                                Intent intent = new Intent(OccupationActivity.this, OccupationDetails.class);
                                                 Bundle bundle = new Bundle();
                                                 bundle.putLong("Date1",date1);
                                                 bundle.putLong("Date2",date2);
-                                                bundle.putString("TL", tl);
+                                                bundle.putString("FG", fg);
                                                 Log.d("OccupationActivity", "onItemClick: Main: " + spinnerCategories);
                                                 bundle.putString("SpinPrograms", spinnerPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
@@ -479,7 +475,6 @@ public class OccupationActivity extends AppCompatActivity {
                                         });
 
                                         count.clear();
-//                        mListView.setAdapter(null);
                                     }
                                 });
                     } else {
@@ -498,20 +493,17 @@ public class OccupationActivity extends AppCompatActivity {
                                         }
 
                                         String data = "";
-//                                        Log.d(TAG, "onEvent: Out");
 
                                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                             Note note = documentSnapshot.toObject(Note.class);
                                             total++;
-//                                            Log.d(TAG, "onEvent: Occupation"
-//                                                    + note.getOccupation() + " " + note.getZtl());
 
                                             if (note.getOccupation() == null) {
                                                 note.setOccupation("Not updated");
                                             }
 
-                                            if (count.containsKey(note.getZtl())) {
-                                                Occupation occupation = count.get(note.getZtl());
+                                            if (count.containsKey(note.getFg())) {
+                                                Occupation occupation = count.get(note.getFg());
                                                 int students = occupation.getStudents();
                                                 int working = occupation.getWorking();
                                                 int self = occupation.getSelf();
@@ -520,33 +512,33 @@ public class OccupationActivity extends AppCompatActivity {
                                                 if (note.getOccupation().equals("Student")) {
                                                     students++;
                                                     totalStudents++;
-                                                    count.put(note.getZtl(), new Occupation(students, working, self, others));
+                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
                                                 } else if (note.getOccupation().equals("Working")) {
                                                     working++;
                                                     totalWorking++;
-                                                    count.put(note.getZtl(), new Occupation(students, working, self, others));
+                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
                                                 } else if (note.getOccupation().equals("Business/Self Employed")) {
                                                     self++;
                                                     totalSelf++;
-                                                    count.put(note.getZtl(), new Occupation(students, working, self, others));
+                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
                                                 } else {
                                                     others++;
                                                     totalOthers++;
-                                                    count.put(note.getZtl(), new Occupation(students, working, self, others));
+                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
                                                 }
                                             } else {
                                                 if (note.getOccupation().equals("Student")) {
                                                     totalStudents++;
-                                                    count.put(note.getZtl(), new Occupation(1, 0, 0, 0));
+                                                    count.put(note.getFg(), new Occupation(1, 0, 0, 0));
                                                 } else if (note.getOccupation().equals("Working")) {
                                                     totalWorking++;
-                                                    count.put(note.getZtl(), new Occupation(0, 1, 0, 0));
+                                                    count.put(note.getFg(), new Occupation(0, 1, 0, 0));
                                                 } else if (note.getOccupation().equals("Business/Self Employed")) {
                                                     totalSelf++;
-                                                    count.put(note.getZtl(), new Occupation(0, 0, 1, 0));
+                                                    count.put(note.getFg(), new Occupation(0, 0, 1, 0));
                                                 } else {
                                                     totalOthers++;
-                                                    count.put(note.getZtl(), new Occupation(0, 0, 0, 1));
+                                                    count.put(note.getFg(), new Occupation(0, 0, 0, 1));
                                                 }
                                             }
                                         }
@@ -582,12 +574,12 @@ public class OccupationActivity extends AppCompatActivity {
                                         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                             @Override
                                             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                                String tl = adapter.getItem(i).getKey();
-                                                Intent intent = new Intent(OccupationActivity.this, OccupationFG.class);
+                                                String fg = adapter.getItem(i).getKey();
+                                                Intent intent = new Intent(OccupationActivity.this, OccupationDetails.class);
                                                 Bundle bundle = new Bundle();
                                                 bundle.putLong("Date1",date1);
                                                 bundle.putLong("Date2",date2);
-                                                bundle.putString("TL", tl);
+                                                bundle.putString("FG", fg);
                                                 Log.d("OccupationActivity", "onItemClick: Main: " + spinPrograms);
                                                 bundle.putString("SpinPrograms", spinnerPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
@@ -685,8 +677,8 @@ public class OccupationActivity extends AppCompatActivity {
                                                 note.setOccupation("Not updated");
                                             }
 
-                                            if (count.containsKey(note.getZtl())) {
-                                                Occupation occupation = count.get(note.getZtl());
+                                            if (count.containsKey(note.getFg())) {
+                                                Occupation occupation = count.get(note.getFg());
                                                 int students = occupation.getStudents();
                                                 int working = occupation.getWorking();
                                                 int self = occupation.getSelf();
@@ -695,33 +687,33 @@ public class OccupationActivity extends AppCompatActivity {
                                                 if (note.getOccupation().equals("Student")) {
                                                     students++;
                                                     totalStudents++;
-                                                    count.put(note.getZtl(), new Occupation(students, working, self, others));
+                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
                                                 } else if (note.getOccupation().equals("Working")) {
                                                     working++;
                                                     totalWorking++;
-                                                    count.put(note.getZtl(), new Occupation(students, working, self, others));
+                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
                                                 } else if (note.getOccupation().equals("Business/Self Employed")) {
                                                     self++;
                                                     totalSelf++;
-                                                    count.put(note.getZtl(), new Occupation(students, working, self, others));
+                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
                                                 } else {
                                                     others++;
                                                     totalOthers++;
-                                                    count.put(note.getZtl(), new Occupation(students, working, self, others));
+                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
                                                 }
                                             } else {
                                                 if (note.getOccupation().equals("Student")) {
                                                     totalStudents++;
-                                                    count.put(note.getZtl(), new Occupation(1, 0, 0, 0));
+                                                    count.put(note.getFg(), new Occupation(1, 0, 0, 0));
                                                 } else if (note.getOccupation().equals("Working")) {
                                                     totalWorking++;
-                                                    count.put(note.getZtl(), new Occupation(0, 1, 0, 0));
+                                                    count.put(note.getFg(), new Occupation(0, 1, 0, 0));
                                                 } else if (note.getOccupation().equals("Business/Self Employed")) {
                                                     totalSelf++;
-                                                    count.put(note.getZtl(), new Occupation(0, 0, 1, 0));
+                                                    count.put(note.getFg(), new Occupation(0, 0, 1, 0));
                                                 } else {
                                                     totalOthers++;
-                                                    count.put(note.getZtl(), new Occupation(0, 0, 0, 1));
+                                                    count.put(note.getFg(), new Occupation(0, 0, 0, 1));
                                                 }
                                             }
                                         }
@@ -757,12 +749,12 @@ public class OccupationActivity extends AppCompatActivity {
                                         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                             @Override
                                             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                                String tl = adapter.getItem(i).getKey();
-                                                Intent intent = new Intent(OccupationActivity.this, OccupationFG.class);
+                                                String fg = adapter.getItem(i).getKey();
+                                                Intent intent = new Intent(OccupationActivity.this, OccupationDetails.class);
                                                 Bundle bundle = new Bundle();
                                                 bundle.putLong("Date1",date1);
                                                 bundle.putLong("Date2",date2);
-                                                bundle.putString("TL", tl);
+                                                bundle.putString("FG", fg);
                                                 Log.d("OccupationActivity", "onItemClick: Main: " + spinPrograms);
                                                 bundle.putString("SpinPrograms", spinnerPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
@@ -805,8 +797,8 @@ public class OccupationActivity extends AppCompatActivity {
                                                 note.setOccupation("Not updated");
                                             }
 
-                                            if (count.containsKey(note.getZtl())) {
-                                                Occupation occupation = count.get(note.getZtl());
+                                            if (count.containsKey(note.getFg())) {
+                                                Occupation occupation = count.get(note.getFg());
                                                 int students = occupation.getStudents();
                                                 int working = occupation.getWorking();
                                                 int self = occupation.getSelf();
@@ -815,33 +807,33 @@ public class OccupationActivity extends AppCompatActivity {
                                                 if (note.getOccupation().equals("Student")) {
                                                     students++;
                                                     totalStudents++;
-                                                    count.put(note.getZtl(), new Occupation(students, working, self, others));
+                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
                                                 } else if (note.getOccupation().equals("Working")) {
                                                     working++;
                                                     totalWorking++;
-                                                    count.put(note.getZtl(), new Occupation(students, working, self, others));
+                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
                                                 } else if (note.getOccupation().equals("Business/Self Employed")) {
                                                     self++;
                                                     totalSelf++;
-                                                    count.put(note.getZtl(), new Occupation(students, working, self, others));
+                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
                                                 } else {
                                                     others++;
                                                     totalOthers++;
-                                                    count.put(note.getZtl(), new Occupation(students, working, self, others));
+                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
                                                 }
                                             } else {
                                                 if (note.getOccupation().equals("Student")) {
                                                     totalStudents++;
-                                                    count.put(note.getZtl(), new Occupation(1, 0, 0, 0));
+                                                    count.put(note.getFg(), new Occupation(1, 0, 0, 0));
                                                 } else if (note.getOccupation().equals("Working")) {
                                                     totalWorking++;
-                                                    count.put(note.getZtl(), new Occupation(0, 1, 0, 0));
+                                                    count.put(note.getFg(), new Occupation(0, 1, 0, 0));
                                                 } else if (note.getOccupation().equals("Business/Self Employed")) {
                                                     totalSelf++;
-                                                    count.put(note.getZtl(), new Occupation(0, 0, 1, 0));
+                                                    count.put(note.getFg(), new Occupation(0, 0, 1, 0));
                                                 } else {
                                                     totalOthers++;
-                                                    count.put(note.getZtl(), new Occupation(0, 0, 0, 1));
+                                                    count.put(note.getFg(), new Occupation(0, 0, 0, 1));
                                                 }
                                             }
                                         }
@@ -877,12 +869,12 @@ public class OccupationActivity extends AppCompatActivity {
                                         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                             @Override
                                             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                                String tl = adapter.getItem(i).getKey();
-                                                Intent intent = new Intent(OccupationActivity.this, OccupationFG.class);
+                                                String fg = adapter.getItem(i).getKey();
+                                                Intent intent = new Intent(OccupationActivity.this, OccupationDetails.class);
                                                 Bundle bundle = new Bundle();
                                                 bundle.putLong("Date1",date1);
                                                 bundle.putLong("Date2",date2);
-                                                bundle.putString("TL", tl);
+                                                bundle.putString("FG", fg);
                                                 Log.d("OccupationActivity", "onItemClick: Main: " + spinPrograms);
                                                 bundle.putString("SpinPrograms", spinnerPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
@@ -984,8 +976,8 @@ public class OccupationActivity extends AppCompatActivity {
                                                 note.setOccupation("Not updated");
                                             }
 
-                                            if (count.containsKey(note.getZtl())) {
-                                                Occupation occupation = count.get(note.getZtl());
+                                            if (count.containsKey(note.getFg())) {
+                                                Occupation occupation = count.get(note.getFg());
                                                 int students = occupation.getStudents();
                                                 int working = occupation.getWorking();
                                                 int self = occupation.getSelf();
@@ -994,33 +986,33 @@ public class OccupationActivity extends AppCompatActivity {
                                                 if (note.getOccupation().equals("Student")) {
                                                     students++;
                                                     totalStudents++;
-                                                    count.put(note.getZtl(), new Occupation(students, working, self, others));
+                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
                                                 } else if (note.getOccupation().equals("Working")) {
                                                     working++;
                                                     totalWorking++;
-                                                    count.put(note.getZtl(), new Occupation(students, working, self, others));
+                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
                                                 } else if (note.getOccupation().equals("Business/Self Employed")) {
                                                     self++;
                                                     totalSelf++;
-                                                    count.put(note.getZtl(), new Occupation(students, working, self, others));
+                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
                                                 } else {
                                                     others++;
                                                     totalOthers++;
-                                                    count.put(note.getZtl(), new Occupation(students, working, self, others));
+                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
                                                 }
                                             } else {
                                                 if (note.getOccupation().equals("Student")) {
                                                     totalStudents++;
-                                                    count.put(note.getZtl(), new Occupation(1, 0, 0, 0));
+                                                    count.put(note.getFg(), new Occupation(1, 0, 0, 0));
                                                 } else if (note.getOccupation().equals("Working")) {
                                                     totalWorking++;
-                                                    count.put(note.getZtl(), new Occupation(0, 1, 0, 0));
+                                                    count.put(note.getFg(), new Occupation(0, 1, 0, 0));
                                                 } else if (note.getOccupation().equals("Business/Self Employed")) {
                                                     totalSelf++;
-                                                    count.put(note.getZtl(), new Occupation(0, 0, 1, 0));
+                                                    count.put(note.getFg(), new Occupation(0, 0, 1, 0));
                                                 } else {
                                                     totalOthers++;
-                                                    count.put(note.getZtl(), new Occupation(0, 0, 0, 1));
+                                                    count.put(note.getFg(), new Occupation(0, 0, 0, 1));
                                                 }
                                             }
                                         }
@@ -1056,12 +1048,11 @@ public class OccupationActivity extends AppCompatActivity {
                                         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                             @Override
                                             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                                String tl = adapter.getItem(i).getKey();
-                                                Intent intent = new Intent(OccupationActivity.this, OccupationFG.class);
+                                                String fg = adapter.getItem(i).getKey();
+                                                Intent intent = new Intent(OccupationActivity.this, OccupationDetails.class);
                                                 Bundle bundle = new Bundle();
                                                 bundle.putLong("Date1",date1);
                                                 bundle.putLong("Date2",date2);
-                                                bundle.putString("TL", tl);
                                                 Log.d("OccupationActivity", "onItemClick: Main: " + spinPrograms);
                                                 bundle.putString("SpinPrograms", spinnerPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
@@ -1104,8 +1095,8 @@ public class OccupationActivity extends AppCompatActivity {
                                                 note.setOccupation("Not updated");
                                             }
 
-                                            if (count.containsKey(note.getZtl())) {
-                                                Occupation occupation = count.get(note.getZtl());
+                                            if (count.containsKey(note.getFg())) {
+                                                Occupation occupation = count.get(note.getFg());
                                                 int students = occupation.getStudents();
                                                 int working = occupation.getWorking();
                                                 int self = occupation.getSelf();
@@ -1114,33 +1105,33 @@ public class OccupationActivity extends AppCompatActivity {
                                                 if (note.getOccupation().equals("Student")) {
                                                     students++;
                                                     totalStudents++;
-                                                    count.put(note.getZtl(), new Occupation(students, working, self, others));
+                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
                                                 } else if (note.getOccupation().equals("Working")) {
                                                     working++;
                                                     totalWorking++;
-                                                    count.put(note.getZtl(), new Occupation(students, working, self, others));
+                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
                                                 } else if (note.getOccupation().equals("Business/Self Employed")) {
                                                     self++;
                                                     totalSelf++;
-                                                    count.put(note.getZtl(), new Occupation(students, working, self, others));
+                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
                                                 } else {
                                                     others++;
                                                     totalOthers++;
-                                                    count.put(note.getZtl(), new Occupation(students, working, self, others));
+                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
                                                 }
                                             } else {
                                                 if (note.getOccupation().equals("Student")) {
                                                     totalStudents++;
-                                                    count.put(note.getZtl(), new Occupation(1, 0, 0, 0));
+                                                    count.put(note.getFg(), new Occupation(1, 0, 0, 0));
                                                 } else if (note.getOccupation().equals("Working")) {
                                                     totalWorking++;
-                                                    count.put(note.getZtl(), new Occupation(0, 1, 0, 0));
+                                                    count.put(note.getFg(), new Occupation(0, 1, 0, 0));
                                                 } else if (note.getOccupation().equals("Business/Self Employed")) {
                                                     totalSelf++;
-                                                    count.put(note.getZtl(), new Occupation(0, 0, 1, 0));
+                                                    count.put(note.getFg(), new Occupation(0, 0, 1, 0));
                                                 } else {
                                                     totalOthers++;
-                                                    count.put(note.getZtl(), new Occupation(0, 0, 0, 1));
+                                                    count.put(note.getFg(), new Occupation(0, 0, 0, 1));
                                                 }
                                             }
                                         }
@@ -1176,12 +1167,12 @@ public class OccupationActivity extends AppCompatActivity {
                                         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                             @Override
                                             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                                String tl = adapter.getItem(i).getKey();
-                                                Intent intent = new Intent(OccupationActivity.this, OccupationFG.class);
+                                                String fg = adapter.getItem(i).getKey();
+                                                Intent intent = new Intent(OccupationActivity.this, OccupationDetails.class);
                                                 Bundle bundle = new Bundle();
                                                 bundle.putLong("Date1",date1);
                                                 bundle.putLong("Date2",date2);
-                                                bundle.putString("TL", tl);
+                                                bundle.putString("FG", fg);
                                                 Log.d("OccupationActivity", "onItemClick: Main: " + spinPrograms);
                                                 bundle.putString("SpinPrograms", spinnerPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
@@ -1279,8 +1270,8 @@ public class OccupationActivity extends AppCompatActivity {
                                                 note.setOccupation("Not updated");
                                             }
 
-                                            if (count.containsKey(note.getZtl())) {
-                                                Occupation occupation = count.get(note.getZtl());
+                                            if (count.containsKey(note.getFg())) {
+                                                Occupation occupation = count.get(note.getFg());
                                                 int students = occupation.getStudents();
                                                 int working = occupation.getWorking();
                                                 int self = occupation.getSelf();
@@ -1289,33 +1280,33 @@ public class OccupationActivity extends AppCompatActivity {
                                                 if (note.getOccupation().equals("Student")) {
                                                     students++;
                                                     totalStudents++;
-                                                    count.put(note.getZtl(), new Occupation(students, working, self, others));
+                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
                                                 } else if (note.getOccupation().equals("Working")) {
                                                     working++;
                                                     totalWorking++;
-                                                    count.put(note.getZtl(), new Occupation(students, working, self, others));
+                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
                                                 } else if (note.getOccupation().equals("Business/Self Employed")) {
                                                     self++;
                                                     totalSelf++;
-                                                    count.put(note.getZtl(), new Occupation(students, working, self, others));
+                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
                                                 } else {
                                                     others++;
                                                     totalOthers++;
-                                                    count.put(note.getZtl(), new Occupation(students, working, self, others));
+                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
                                                 }
                                             } else {
                                                 if (note.getOccupation().equals("Student")) {
                                                     totalStudents++;
-                                                    count.put(note.getZtl(), new Occupation(1, 0, 0, 0));
+                                                    count.put(note.getFg(), new Occupation(1, 0, 0, 0));
                                                 } else if (note.getOccupation().equals("Working")) {
                                                     totalWorking++;
-                                                    count.put(note.getZtl(), new Occupation(0, 1, 0, 0));
+                                                    count.put(note.getFg(), new Occupation(0, 1, 0, 0));
                                                 } else if (note.getOccupation().equals("Business/Self Employed")) {
                                                     totalSelf++;
-                                                    count.put(note.getZtl(), new Occupation(0, 0, 1, 0));
+                                                    count.put(note.getFg(), new Occupation(0, 0, 1, 0));
                                                 } else {
                                                     totalOthers++;
-                                                    count.put(note.getZtl(), new Occupation(0, 0, 0, 1));
+                                                    count.put(note.getFg(), new Occupation(0, 0, 0, 1));
                                                 }
                                             }
                                         }
@@ -1351,12 +1342,12 @@ public class OccupationActivity extends AppCompatActivity {
                                         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                             @Override
                                             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                                String tl = adapter.getItem(i).getKey();
-                                                Intent intent = new Intent(OccupationActivity.this, OccupationFG.class);
+                                                String fg = adapter.getItem(i).getKey();
+                                                Intent intent = new Intent(OccupationActivity.this, OccupationDetails.class);
                                                 Bundle bundle = new Bundle();
                                                 bundle.putLong("Date1",date1);
                                                 bundle.putLong("Date2",date2);
-                                                bundle.putString("TL", tl);
+                                                bundle.putString("FG", fg);
                                                 Log.d("OccupationActivity", "onItemClick: Main: " + spinPrograms);
                                                 bundle.putString("SpinPrograms", spinnerPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
@@ -1400,8 +1391,8 @@ public class OccupationActivity extends AppCompatActivity {
                                                 note.setOccupation("Not updated");
                                             }
 
-                                            if (count.containsKey(note.getZtl())) {
-                                                Occupation occupation = count.get(note.getZtl());
+                                            if (count.containsKey(note.getFg())) {
+                                                Occupation occupation = count.get(note.getFg());
                                                 int students = occupation.getStudents();
                                                 int working = occupation.getWorking();
                                                 int self = occupation.getSelf();
@@ -1410,33 +1401,33 @@ public class OccupationActivity extends AppCompatActivity {
                                                 if (note.getOccupation().equals("Student")) {
                                                     students++;
                                                     totalStudents++;
-                                                    count.put(note.getZtl(), new Occupation(students, working, self, others));
+                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
                                                 } else if (note.getOccupation().equals("Working")) {
                                                     working++;
                                                     totalWorking++;
-                                                    count.put(note.getZtl(), new Occupation(students, working, self, others));
+                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
                                                 } else if (note.getOccupation().equals("Business/Self Employed")) {
                                                     self++;
                                                     totalSelf++;
-                                                    count.put(note.getZtl(), new Occupation(students, working, self, others));
+                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
                                                 } else {
                                                     others++;
                                                     totalOthers++;
-                                                    count.put(note.getZtl(), new Occupation(students, working, self, others));
+                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
                                                 }
                                             } else {
                                                 if (note.getOccupation().equals("Student")) {
                                                     totalStudents++;
-                                                    count.put(note.getZtl(), new Occupation(1, 0, 0, 0));
+                                                    count.put(note.getFg(), new Occupation(1, 0, 0, 0));
                                                 } else if (note.getOccupation().equals("Working")) {
                                                     totalWorking++;
-                                                    count.put(note.getZtl(), new Occupation(0, 1, 0, 0));
+                                                    count.put(note.getFg(), new Occupation(0, 1, 0, 0));
                                                 } else if (note.getOccupation().equals("Business/Self Employed")) {
                                                     totalSelf++;
-                                                    count.put(note.getZtl(), new Occupation(0, 0, 1, 0));
+                                                    count.put(note.getFg(), new Occupation(0, 0, 1, 0));
                                                 } else {
                                                     totalOthers++;
-                                                    count.put(note.getZtl(), new Occupation(0, 0, 0, 1));
+                                                    count.put(note.getFg(), new Occupation(0, 0, 0, 1));
                                                 }
                                             }
                                         }
@@ -1472,12 +1463,12 @@ public class OccupationActivity extends AppCompatActivity {
                                         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                             @Override
                                             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                                String tl = adapter.getItem(i).getKey();
-                                                Intent intent = new Intent(OccupationActivity.this, OccupationFG.class);
+                                                String fg = adapter.getItem(i).getKey();
+                                                Intent intent = new Intent(OccupationActivity.this, OccupationDetails.class);
                                                 Bundle bundle = new Bundle();
                                                 bundle.putLong("Date1",date1);
                                                 bundle.putLong("Date2",date2);
-                                                bundle.putString("TL", tl);
+                                                bundle.putString("FG", fg);
                                                 Log.d("OccupationActivity", "onItemClick: Main: " + spinPrograms);
                                                 bundle.putString("SpinPrograms", spinnerPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);

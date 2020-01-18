@@ -128,7 +128,7 @@ public class DetailsFinal extends AppCompatActivity {
         }
         String originValue = String.valueOf(origin);
         Date date = new Date(Long.valueOf(originValue));
-        DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        DateFormat format = new SimpleDateFormat("dd-MMM-yyyy hh:mm a");
 //        format.setTimeZone(TimeZone.getTimeZone("Australia/Sydney"));
         String formatted = format.format(date);
         mTextView21.setText(formatted);

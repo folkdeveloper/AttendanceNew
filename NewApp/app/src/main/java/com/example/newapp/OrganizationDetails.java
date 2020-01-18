@@ -257,7 +257,7 @@ public class OrganizationDetails extends AppCompatActivity {
                                 details.add(note);
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -294,7 +294,7 @@ public class OrganizationDetails extends AppCompatActivity {
                                 details.add(note);
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -335,7 +335,7 @@ public class OrganizationDetails extends AppCompatActivity {
                                 details.add(note);
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -373,7 +373,7 @@ public class OrganizationDetails extends AppCompatActivity {
                                 details.add(note);
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -414,7 +414,7 @@ public class OrganizationDetails extends AppCompatActivity {
                                 details.add(note);
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -452,7 +452,7 @@ public class OrganizationDetails extends AppCompatActivity {
                                 details.add(note);
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -494,7 +494,7 @@ public class OrganizationDetails extends AppCompatActivity {
                                 details.add(note);
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -533,7 +533,7 @@ public class OrganizationDetails extends AppCompatActivity {
                                 details.add(note);
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);

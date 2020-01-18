@@ -2,18 +2,14 @@ package com.example.newapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Spinner;
 
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
@@ -23,8 +19,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.TreeMap;
 
 import javax.annotation.Nullable;
@@ -35,7 +29,6 @@ public class UniqueDetails extends AppCompatActivity {
     private CollectionReference fgboys;
     private String collection = "";
     ListView mListView;
-    public static String tl = "";
     private long date1 = 0, date2 = 0;
     public static String fg = "";
     private String url = "";
@@ -47,12 +40,11 @@ public class UniqueDetails extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_unique);
+        setContentView(R.layout.activity_unique_details);
         collection = getIntent().getStringExtra("Collection");
         db = FirebaseFirestore.getInstance();
         fgboys = db.collection(collection);
         mListView = findViewById(R.id.list_view);
-        tl = getIntent().getStringExtra("TL");
         date1 = getIntent().getLongExtra("Date1",date1);
         date2 = getIntent().getLongExtra("Date2",date2);
         fg = getIntent().getStringExtra("FG");
@@ -60,7 +52,6 @@ public class UniqueDetails extends AppCompatActivity {
         spinCategories = getIntent().getStringExtra("SpinCategories");
         spinSessions = getIntent().getStringExtra("SpinSessions");
         searchFilter = findViewById(R.id.searchFilter);
-
     }
 
     @Override
@@ -244,9 +235,8 @@ public class UniqueDetails extends AppCompatActivity {
     }
 
     public void populateListProgramsAndCategoriesAndSessions() {
-        if (tl.equals("ALL")) {
+        if (fg.equals("ALL")) {
             fgboys
-                    .whereEqualTo("fg",fg)
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
                     .orderBy("edate")
@@ -280,7 +270,7 @@ public class UniqueDetails extends AppCompatActivity {
                                 }
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -289,7 +279,6 @@ public class UniqueDetails extends AppCompatActivity {
                     });
         } else {
             fgboys
-                    .whereEqualTo("ztl",tl)
                     .whereEqualTo("fg",fg)
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
@@ -324,7 +313,7 @@ public class UniqueDetails extends AppCompatActivity {
                                 }
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -335,11 +324,10 @@ public class UniqueDetails extends AppCompatActivity {
     }
 
     public void populateListProgramsAndCategories() {
-        if (tl.equals("ALL")) {
+        if (fg.equals("ALL")) {
             fgboys
                     .orderBy("edate")
                     .orderBy("name")
-                    .whereEqualTo("fg",fg)
                     .whereEqualTo("session",spinSessions)
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
@@ -372,7 +360,7 @@ public class UniqueDetails extends AppCompatActivity {
                                 }
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -383,7 +371,7 @@ public class UniqueDetails extends AppCompatActivity {
             fgboys
                     .orderBy("edate")
                     .orderBy("name")
-                    .whereEqualTo("ztl",tl)
+                    .whereEqualTo("fg",fg)
                     .whereEqualTo("fg",fg)
                     .whereEqualTo("session",spinSessions)
                     .whereGreaterThanOrEqualTo("edate", date1)
@@ -417,7 +405,7 @@ public class UniqueDetails extends AppCompatActivity {
                                 }
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -428,11 +416,10 @@ public class UniqueDetails extends AppCompatActivity {
     }
 
     public void populateListProgramsAndSessions() {
-        if (tl.equals("ALL")) {
+        if (fg.equals("ALL")) {
             fgboys
                     .orderBy("edate")
                     .orderBy("name")
-                    .whereEqualTo("fg",fg)
                     .whereEqualTo("category",spinCategories)
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
@@ -465,7 +452,7 @@ public class UniqueDetails extends AppCompatActivity {
                                 }
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -476,7 +463,7 @@ public class UniqueDetails extends AppCompatActivity {
             fgboys
                     .orderBy("edate")
                     .orderBy("name")
-                    .whereEqualTo("ztl",tl)
+                    .whereEqualTo("fg",fg)
                     .whereEqualTo("fg",fg)
                     .whereEqualTo("category",spinCategories)
                     .whereGreaterThanOrEqualTo("edate", date1)
@@ -510,7 +497,7 @@ public class UniqueDetails extends AppCompatActivity {
                                 }
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -521,11 +508,10 @@ public class UniqueDetails extends AppCompatActivity {
     }
 
     public void populateListCategoriesAndSessions() {
-        if (tl.equals("ALL")) {
+        if (fg.equals("ALL")) {
             fgboys
                     .orderBy("edate")
                     .orderBy("name")
-                    .whereEqualTo("fg",fg)
                     .whereEqualTo("program",spinPrograms)
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
@@ -558,7 +544,7 @@ public class UniqueDetails extends AppCompatActivity {
                                 }
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -569,7 +555,6 @@ public class UniqueDetails extends AppCompatActivity {
             fgboys
                     .orderBy("edate")
                     .orderBy("name")
-                    .whereEqualTo("ztl",tl)
                     .whereEqualTo("fg",fg)
                     .whereEqualTo("program",spinPrograms)
                     .whereGreaterThanOrEqualTo("edate", date1)
@@ -603,7 +588,7 @@ public class UniqueDetails extends AppCompatActivity {
                                 }
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -614,11 +599,10 @@ public class UniqueDetails extends AppCompatActivity {
     }
 
     public void populateListPrograms() {
-        if (tl.equals("ALL")) {
+        if (fg.equals("ALL")) {
             fgboys
                     .orderBy("edate")
                     .orderBy("name")
-                    .whereEqualTo("fg",fg)
                     .whereEqualTo("session",spinSessions)
                     .whereEqualTo("category",spinCategories)
                     .whereGreaterThanOrEqualTo("edate", date1)
@@ -652,7 +636,7 @@ public class UniqueDetails extends AppCompatActivity {
                                 }
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -663,7 +647,6 @@ public class UniqueDetails extends AppCompatActivity {
             fgboys
                     .orderBy("edate")
                     .orderBy("name")
-                    .whereEqualTo("ztl",tl)
                     .whereEqualTo("fg",fg)
                     .whereEqualTo("session",spinSessions)
                     .whereEqualTo("category",spinCategories)
@@ -698,7 +681,7 @@ public class UniqueDetails extends AppCompatActivity {
                                 }
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -709,11 +692,10 @@ public class UniqueDetails extends AppCompatActivity {
     }
 
     public void populateListCategories() {
-        if (tl.equals("ALL")) {
+        if (fg.equals("ALL")) {
             fgboys
                     .orderBy("edate")
                     .orderBy("name")
-                    .whereEqualTo("fg",fg)
                     .whereEqualTo("session",spinSessions)
                     .whereEqualTo("program",spinPrograms)
                     .whereGreaterThanOrEqualTo("edate", date1)
@@ -747,7 +729,7 @@ public class UniqueDetails extends AppCompatActivity {
                                 }
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -758,7 +740,6 @@ public class UniqueDetails extends AppCompatActivity {
             fgboys
                     .orderBy("edate")
                     .orderBy("name")
-                    .whereEqualTo("ztl",tl)
                     .whereEqualTo("fg",fg)
                     .whereEqualTo("session",spinSessions)
                     .whereEqualTo("program",spinPrograms)
@@ -793,7 +774,7 @@ public class UniqueDetails extends AppCompatActivity {
                                 }
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -804,11 +785,10 @@ public class UniqueDetails extends AppCompatActivity {
     }
 
     public void populateListSessions() {
-        if (tl.equals("ALL")) {
+        if (fg.equals("ALL")) {
             fgboys
                     .orderBy("edate")
                     .orderBy("name")
-                    .whereEqualTo("fg",fg)
                     .whereEqualTo("program",spinPrograms)
                     .whereEqualTo("category",spinCategories)
                     .whereGreaterThanOrEqualTo("edate", date1)
@@ -842,7 +822,7 @@ public class UniqueDetails extends AppCompatActivity {
                                 }
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -853,7 +833,6 @@ public class UniqueDetails extends AppCompatActivity {
             fgboys
                     .orderBy("edate")
                     .orderBy("name")
-                    .whereEqualTo("ztl",tl)
                     .whereEqualTo("fg",fg)
                     .whereEqualTo("program",spinPrograms)
                     .whereEqualTo("category",spinCategories)
@@ -888,7 +867,7 @@ public class UniqueDetails extends AppCompatActivity {
                                 }
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -899,11 +878,10 @@ public class UniqueDetails extends AppCompatActivity {
     }
 
     public void populateList() {
-        if (tl.equals("ALL")) {
+        if (fg.equals("ALL")) {
             fgboys
                     .orderBy("edate")
                     .orderBy("name")
-                    .whereEqualTo("fg",fg)
                     .whereEqualTo("session",spinSessions)
                     .whereEqualTo("program",spinPrograms)
                     .whereEqualTo("category",spinCategories)
@@ -938,7 +916,7 @@ public class UniqueDetails extends AppCompatActivity {
                                 }
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -949,7 +927,6 @@ public class UniqueDetails extends AppCompatActivity {
             fgboys
                     .orderBy("edate")
                     .orderBy("name")
-                    .whereEqualTo("ztl",tl)
                     .whereEqualTo("fg",fg)
                     .whereEqualTo("session",spinSessions)
                     .whereEqualTo("program",spinPrograms)
@@ -985,7 +962,7 @@ public class UniqueDetails extends AppCompatActivity {
                                 }
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);

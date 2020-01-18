@@ -436,7 +436,7 @@ public class JapaActivity extends AppCompatActivity {
                                                     case "ALL":
                                                         japa = "5";
                                                 }
-                                                Intent intent = new Intent(JapaActivity.this, Japa.class);
+                                                Intent intent = new Intent(JapaActivity.this, JapaFG.class);
                                                 Bundle bundle = new Bundle();
                                                 bundle.putLong("Date1",date1);
                                                 bundle.putLong("Date2",date2);
@@ -552,7 +552,7 @@ public class JapaActivity extends AppCompatActivity {
                                                     case "ALL":
                                                         japa = "5";
                                                 }
-                                                Intent intent = new Intent(JapaActivity.this, Japa.class);
+                                                Intent intent = new Intent(JapaActivity.this, JapaFG.class);
                                                 Bundle bundle = new Bundle();
                                                 bundle.putLong("Date1",date1);
                                                 bundle.putLong("Date2",date2);
@@ -719,7 +719,7 @@ public class JapaActivity extends AppCompatActivity {
                                                     case "ALL":
                                                         japa = "5";
                                                 }
-                                                Intent intent = new Intent(JapaActivity.this, Japa.class);
+                                                Intent intent = new Intent(JapaActivity.this, JapaFG.class);
                                                 Bundle bundle = new Bundle();
                                                 bundle.putLong("Date1",date1);
                                                 bundle.putLong("Date2",date2);
@@ -836,7 +836,7 @@ public class JapaActivity extends AppCompatActivity {
                                                     case "ALL":
                                                         japa = "5";
                                                 }
-                                                Intent intent = new Intent(JapaActivity.this, Japa.class);
+                                                Intent intent = new Intent(JapaActivity.this, JapaFG.class);
                                                 Bundle bundle = new Bundle();
                                                 bundle.putLong("Date1",date1);
                                                 bundle.putLong("Date2",date2);
@@ -1013,7 +1013,7 @@ public class JapaActivity extends AppCompatActivity {
                                                     case "ALL":
                                                         japa = "5";
                                                 }
-                                                Intent intent = new Intent(JapaActivity.this, Japa.class);
+                                                Intent intent = new Intent(JapaActivity.this, JapaFG.class);
                                                 Bundle bundle = new Bundle();
                                                 bundle.putLong("Date1",date1);
                                                 bundle.putLong("Date2",date2);
@@ -1130,7 +1130,7 @@ public class JapaActivity extends AppCompatActivity {
                                                     case "ALL":
                                                         japa = "5";
                                                 }
-                                                Intent intent = new Intent(JapaActivity.this, Japa.class);
+                                                Intent intent = new Intent(JapaActivity.this, JapaFG.class);
                                                 Bundle bundle = new Bundle();
                                                 bundle.putLong("Date1",date1);
                                                 bundle.putLong("Date2",date2);
@@ -1298,7 +1298,7 @@ public class JapaActivity extends AppCompatActivity {
                                                     case "ALL":
                                                         japa = "5";
                                                 }
-                                                Intent intent = new Intent(JapaActivity.this, Japa.class);
+                                                Intent intent = new Intent(JapaActivity.this, JapaFG.class);
                                                 Bundle bundle = new Bundle();
                                                 bundle.putLong("Date1",date1);
                                                 bundle.putLong("Date2",date2);
@@ -1415,7 +1415,7 @@ public class JapaActivity extends AppCompatActivity {
                                                     case "ALL":
                                                         japa = "5";
                                                 }
-                                                Intent intent = new Intent(JapaActivity.this, Japa.class);
+                                                Intent intent = new Intent(JapaActivity.this, JapaFG.class);
                                                 Bundle bundle = new Bundle();
                                                 bundle.putLong("Date1",date1);
                                                 bundle.putLong("Date2",date2);

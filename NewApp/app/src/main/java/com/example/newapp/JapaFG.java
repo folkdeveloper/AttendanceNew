@@ -29,12 +29,11 @@ public class JapaFG extends AppCompatActivity {
     private FirebaseFirestore db;
     private CollectionReference fgboys;
     private String collection = "";
-    private static final String TAG = "AreaActivity";
+    private static final String TAG = "JapaActivity";
     ListView mListView;
     private TextView mTextView;
     private long date1 = 0, date2 = 0;
     private String japa = "";
-    private String tl = "";
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     public static String spinPrograms = "";
     public static String spinCategories = "";
@@ -53,7 +52,6 @@ public class JapaFG extends AppCompatActivity {
         date1 = getIntent().getLongExtra("Date1",date1);
         date2 = getIntent().getLongExtra("Date2",date2);
         japa = getIntent().getStringExtra("Japa");
-        tl = getIntent().getStringExtra("TL");
         spinPrograms= getIntent().getStringExtra("SpinPrograms");
         spinCategories= getIntent().getStringExtra("SpinCategories");
         spinSessions= getIntent().getStringExtra("SpinSessions");
@@ -89,7 +87,6 @@ public class JapaFG extends AppCompatActivity {
 //                    .whereEqualTo("zzdate", date)
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
-                    .whereEqualTo("ztl",tl)
                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -131,7 +128,6 @@ public class JapaFG extends AppCompatActivity {
                                     Bundle bundle = new Bundle();
                                     bundle.putLong("Date1",date1);
                                     bundle.putLong("Date2",date2);
-                                    bundle.putString("TL", tl);
                                     bundle.putString("FG",fg);
                                     bundle.putString("Japa", japa);
                                     bundle.putString("SpinPrograms", spinPrograms);
@@ -149,7 +145,6 @@ public class JapaFG extends AppCompatActivity {
 //                    .whereEqualTo("zzdate", date)
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
-                    .whereEqualTo("ztl",tl)
                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -267,7 +262,6 @@ public class JapaFG extends AppCompatActivity {
                                     Bundle bundle = new Bundle();
                                     bundle.putLong("Date1",date1);
                                     bundle.putLong("Date2",date2);
-                                    bundle.putString("TL", tl);
                                     bundle.putString("FG",fg);
                                     bundle.putString("Japa", japa);
                                     bundle.putString("SpinPrograms", spinPrograms);
@@ -287,7 +281,6 @@ public class JapaFG extends AppCompatActivity {
         if (japa.equals("5")) {
             fgboys
 //                    .whereEqualTo("zzdate", date)
-                    .whereEqualTo("ztl",tl)
                     .whereEqualTo("session",spinSessions)
                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
@@ -331,7 +324,6 @@ public class JapaFG extends AppCompatActivity {
                                     Bundle bundle = new Bundle();
                                     bundle.putLong("Date1",date1);
                                     bundle.putLong("Date2",date2);
-                                    bundle.putString("TL", tl);
                                     bundle.putString("FG",fg);
                                     bundle.putString("Japa", japa);
                                     bundle.putString("SpinPrograms", spinPrograms);
@@ -349,7 +341,6 @@ public class JapaFG extends AppCompatActivity {
 //                    .whereEqualTo("zzdate", date)
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
-                    .whereEqualTo("ztl",tl)
                     .whereEqualTo("session",spinSessions)
                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
@@ -469,7 +460,6 @@ public class JapaFG extends AppCompatActivity {
                                     Bundle bundle = new Bundle();
                                     bundle.putLong("Date1",date1);
                                     bundle.putLong("Date2",date2);
-                                    bundle.putString("TL", tl);
                                     bundle.putString("FG",fg);
                                     bundle.putString("Japa", japa);
                                     bundle.putString("SpinPrograms", spinPrograms);
@@ -491,7 +481,6 @@ public class JapaFG extends AppCompatActivity {
 //                    .whereEqualTo("zzdate", date)
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
-                    .whereEqualTo("ztl",tl)
                     .whereEqualTo("program",spinPrograms)
                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
@@ -535,7 +524,6 @@ public class JapaFG extends AppCompatActivity {
                                     Bundle bundle = new Bundle();
                                     bundle.putLong("Date1",date1);
                                     bundle.putLong("Date2",date2);
-                                    bundle.putString("TL", tl);
                                     bundle.putString("FG",fg);
                                     bundle.putString("Japa", japa);
                                     bundle.putString("SpinPrograms", spinPrograms);
@@ -553,7 +541,6 @@ public class JapaFG extends AppCompatActivity {
 //                    .whereEqualTo("zzdate", date)
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
-                    .whereEqualTo("ztl",tl)
                     .whereEqualTo("program",spinPrograms)
                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
@@ -673,7 +660,6 @@ public class JapaFG extends AppCompatActivity {
                                     Bundle bundle = new Bundle();
                                     bundle.putLong("Date1",date1);
                                     bundle.putLong("Date2",date2);
-                                    bundle.putString("TL", tl);
                                     bundle.putString("FG",fg);
                                     bundle.putString("Japa", japa);
                                     bundle.putString("SpinPrograms", spinPrograms);
@@ -695,7 +681,6 @@ public class JapaFG extends AppCompatActivity {
 //                    .whereEqualTo("zzdate", date)
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
-                    .whereEqualTo("ztl",tl)
                     .whereEqualTo("category",spinCategories)
                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
@@ -738,7 +723,6 @@ public class JapaFG extends AppCompatActivity {
                                     Bundle bundle = new Bundle();
                                     bundle.putLong("Date1",date1);
                                     bundle.putLong("Date2",date2);
-                                    bundle.putString("TL", tl);
                                     bundle.putString("FG",fg);
                                     bundle.putString("Japa", japa);
                                     bundle.putString("SpinPrograms", spinPrograms);
@@ -756,7 +740,6 @@ public class JapaFG extends AppCompatActivity {
 //                    .whereEqualTo("zzdate", date)
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
-                    .whereEqualTo("ztl",tl)
                     .whereEqualTo("category",spinCategories)
                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
@@ -875,7 +858,6 @@ public class JapaFG extends AppCompatActivity {
                                     Bundle bundle = new Bundle();
                                     bundle.putLong("Date1",date1);
                                     bundle.putLong("Date2",date2);
-                                    bundle.putString("TL", tl);
                                     bundle.putString("FG",fg);
                                     bundle.putString("Japa", japa);
                                     bundle.putString("SpinPrograms", spinPrograms);
@@ -897,7 +879,6 @@ public class JapaFG extends AppCompatActivity {
 //                    .whereEqualTo("zzdate", date)
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
-                    .whereEqualTo("ztl",tl)
                     .whereEqualTo("program",spinPrograms)
                     .whereEqualTo("category",spinCategories)
                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -941,7 +922,6 @@ public class JapaFG extends AppCompatActivity {
                                     Bundle bundle = new Bundle();
                                     bundle.putLong("Date1",date1);
                                     bundle.putLong("Date2",date2);
-                                    bundle.putString("TL", tl);
                                     bundle.putString("FG",fg);
                                     bundle.putString("Japa", japa);
                                     bundle.putString("SpinPrograms", spinPrograms);
@@ -959,7 +939,6 @@ public class JapaFG extends AppCompatActivity {
 //                    .whereEqualTo("zzdate", date)
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
-                    .whereEqualTo("ztl",tl)
                     .whereEqualTo("program",spinPrograms)
                     .whereEqualTo("category",spinCategories)
                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -1079,7 +1058,6 @@ public class JapaFG extends AppCompatActivity {
                                     Bundle bundle = new Bundle();
                                     bundle.putLong("Date1",date1);
                                     bundle.putLong("Date2",date2);
-                                    bundle.putString("TL", tl);
                                     bundle.putString("FG",fg);
                                     bundle.putString("Japa", japa);
                                     bundle.putString("SpinPrograms", spinPrograms);
@@ -1101,7 +1079,6 @@ public class JapaFG extends AppCompatActivity {
 //                    .whereEqualTo("zzdate", date)
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
-                    .whereEqualTo("ztl",tl)
                     .whereEqualTo("session",spinSessions)
                     .whereEqualTo("category",spinCategories)
                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -1145,7 +1122,6 @@ public class JapaFG extends AppCompatActivity {
                                     Bundle bundle = new Bundle();
                                     bundle.putLong("Date1",date1);
                                     bundle.putLong("Date2",date2);
-                                    bundle.putString("TL", tl);
                                     bundle.putString("FG",fg);
                                     bundle.putString("Japa", japa);
                                     bundle.putString("SpinPrograms", spinPrograms);
@@ -1163,7 +1139,6 @@ public class JapaFG extends AppCompatActivity {
 //                    .whereEqualTo("zzdate", date)
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
-                    .whereEqualTo("ztl",tl)
                     .whereEqualTo("session",spinSessions)
                     .whereEqualTo("category",spinCategories)
                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -1283,7 +1258,6 @@ public class JapaFG extends AppCompatActivity {
                                     Bundle bundle = new Bundle();
                                     bundle.putLong("Date1",date1);
                                     bundle.putLong("Date2",date2);
-                                    bundle.putString("TL", tl);
                                     bundle.putString("FG",fg);
                                     bundle.putString("Japa", japa);
                                     bundle.putString("SpinPrograms", spinPrograms);
@@ -1305,7 +1279,6 @@ public class JapaFG extends AppCompatActivity {
 //                    .whereEqualTo("zzdate", date)
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
-                    .whereEqualTo("ztl",tl)
                     .whereEqualTo("program",spinPrograms)
                     .whereEqualTo("session",spinSessions)
                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -1349,7 +1322,6 @@ public class JapaFG extends AppCompatActivity {
                                     Bundle bundle = new Bundle();
                                     bundle.putLong("Date1",date1);
                                     bundle.putLong("Date2",date2);
-                                    bundle.putString("TL", tl);
                                     bundle.putString("FG",fg);
                                     bundle.putString("Japa", japa);
                                     bundle.putString("SpinPrograms", spinPrograms);
@@ -1367,7 +1339,6 @@ public class JapaFG extends AppCompatActivity {
 //                    .whereEqualTo("zzdate", date)
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
-                    .whereEqualTo("ztl",tl)
                     .whereEqualTo("program",spinPrograms)
                     .whereEqualTo("session",spinSessions)
                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -1487,7 +1458,6 @@ public class JapaFG extends AppCompatActivity {
                                     Bundle bundle = new Bundle();
                                     bundle.putLong("Date1",date1);
                                     bundle.putLong("Date2",date2);
-                                    bundle.putString("TL", tl);
                                     bundle.putString("FG",fg);
                                     bundle.putString("Japa", japa);
                                     bundle.putString("SpinPrograms", spinPrograms);
@@ -1509,7 +1479,6 @@ public class JapaFG extends AppCompatActivity {
 //                    .whereEqualTo("zzdate", date)
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
-                    .whereEqualTo("ztl",tl)
                     .whereEqualTo("program",spinPrograms)
                     .whereEqualTo("category",spinCategories)
                     .whereEqualTo("session",spinSessions)
@@ -1554,7 +1523,6 @@ public class JapaFG extends AppCompatActivity {
                                     Bundle bundle = new Bundle();
                                     bundle.putLong("Date1",date1);
                                     bundle.putLong("Date2",date2);
-                                    bundle.putString("TL", tl);
                                     bundle.putString("FG",fg);
                                     bundle.putString("Japa", japa);
                                     bundle.putString("SpinPrograms", spinPrograms);
@@ -1572,7 +1540,6 @@ public class JapaFG extends AppCompatActivity {
 //                    .whereEqualTo("zzdate", date)
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
-                    .whereEqualTo("ztl",tl)
                     .whereEqualTo("program",spinPrograms)
                     .whereEqualTo("category",spinCategories)
                     .whereEqualTo("session",spinSessions)
@@ -1693,7 +1660,6 @@ public class JapaFG extends AppCompatActivity {
                                     Bundle bundle = new Bundle();
                                     bundle.putLong("Date1",date1);
                                     bundle.putLong("Date2",date2);
-                                    bundle.putString("TL", tl);
                                     bundle.putString("FG",fg);
                                     bundle.putString("Japa", japa);
                                     bundle.putString("SpinPrograms", spinPrograms);

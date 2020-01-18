@@ -30,7 +30,6 @@ public class JapaTLDetails extends AppCompatActivity {
     private CollectionReference fgboys;
     private String collection = "";
     ListView mListView;
-    public static String tl = "";
     public static String fg = "";
     private long date1 = 0, date2 = 0;
     public static String japa = "";
@@ -48,7 +47,6 @@ public class JapaTLDetails extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         fgboys = db.collection(collection);
         mListView = findViewById(R.id.list_view);
-        tl = getIntent().getStringExtra("TL");
         fg = getIntent().getStringExtra("FG");
         date1 = getIntent().getLongExtra("Date1",date1);
         date2 = getIntent().getLongExtra("Date2",date2);
@@ -268,7 +266,7 @@ public class JapaTLDetails extends AppCompatActivity {
                                 details.add(note);
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -344,7 +342,7 @@ public class JapaTLDetails extends AppCompatActivity {
                                 }
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -384,7 +382,7 @@ public class JapaTLDetails extends AppCompatActivity {
                                 details.add(note);
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -461,7 +459,7 @@ public class JapaTLDetails extends AppCompatActivity {
                                 }
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -501,7 +499,7 @@ public class JapaTLDetails extends AppCompatActivity {
                                 details.add(note);
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -578,7 +576,7 @@ public class JapaTLDetails extends AppCompatActivity {
                                 }
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -617,7 +615,7 @@ public class JapaTLDetails extends AppCompatActivity {
 
                                 details.add(note);
                             }
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -694,7 +692,7 @@ public class JapaTLDetails extends AppCompatActivity {
                                 }
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -735,7 +733,7 @@ public class JapaTLDetails extends AppCompatActivity {
                                 details.add(note);
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -813,7 +811,7 @@ public class JapaTLDetails extends AppCompatActivity {
                                 }
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -854,7 +852,7 @@ public class JapaTLDetails extends AppCompatActivity {
                                 details.add(note);
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -932,7 +930,7 @@ public class JapaTLDetails extends AppCompatActivity {
                                 }
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -973,7 +971,7 @@ public class JapaTLDetails extends AppCompatActivity {
                                 details.add(note);
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -1051,7 +1049,7 @@ public class JapaTLDetails extends AppCompatActivity {
                                 }
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -1093,7 +1091,7 @@ public class JapaTLDetails extends AppCompatActivity {
                                 details.add(note);
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -1172,7 +1170,7 @@ public class JapaTLDetails extends AppCompatActivity {
                                 }
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);

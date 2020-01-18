@@ -12,7 +12,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".RegFinalDetails"></activity>
+        <activity android:name=".TurnoutFGDetails"></activity>
+        <activity android:name=".TurnoutFGList" />
+        <activity android:name=".TurnoutFGActivity" />
+        <activity android:name=".UniqueDetails" />
+        <activity android:name=".UniqueActivity" />
+        <activity android:name=".RegFinalDetails" />
         <activity android:name=".TurnoutDetails" />
         <activity android:name=".TurnoutActivity" />
         <activity android:name=".DateSelectorReg" />
@@ -23,9 +28,9 @@
         <activity android:name=".ResActivity" />
         <activity android:name=".TimeDetails" />
         <activity android:name=".TimeActivity" />
-        <activity android:name=".UniqueFG" />
-        <activity android:name=".UniqueActivity" />
-        <activity android:name=".UniqueDetails" />
+        <activity android:name=".TLViewFG" />
+        <activity android:name=".TLViewActivity" />
+        <activity android:name=".TLViewDetails" />
         <activity android:name=".SourceDetails" />
         <activity android:name=".SourceActivity" />
         <activity android:name=".CollegeDetails" />

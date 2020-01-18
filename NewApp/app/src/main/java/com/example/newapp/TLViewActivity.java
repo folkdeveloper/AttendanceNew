@@ -29,7 +29,7 @@ import java.util.TreeMap;
 
 import javax.annotation.Nullable;
 
-public class UniqueActivity extends AppCompatActivity {
+public class TLViewActivity extends AppCompatActivity {
 
     private FirebaseFirestore db;
     private CollectionReference fgboys;
@@ -62,11 +62,10 @@ public class UniqueActivity extends AppCompatActivity {
     Spinner program, category, session;
     int posProgram, posCategory, posSession;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_unique);
+        setContentView(R.layout.activity_tlview);
         collection = getIntent().getStringExtra("Collection");
         db = FirebaseFirestore.getInstance();
         fgboys = db.collection(collection);
@@ -305,7 +304,7 @@ public class UniqueActivity extends AppCompatActivity {
                     posSession = position;
 
                     if (spinnerSessions.equals("ALL")) {
-                        total = 0;
+                        total=0;
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate", date1)
                                 .whereLessThanOrEqualTo("edate", date2)
@@ -336,17 +335,19 @@ public class UniqueActivity extends AppCompatActivity {
                                             } else {
                                                 countName.put(note.getName(), 1);
                                                 total++;
-                                                count.put("ALL", total);
+                                                count.put("ALL",total);
                                             }
 
-                                            if (count.containsKey(note.getFg())) {
-                                                int number = count.get(note.getFg());
+                                            if (count.containsKey(note.getZtl())) {
+                                                int number = count.get(note.getZtl());
                                                 number++;
-                                                count.put(note.getFg(), number);
+                                                count.put(note.getZtl(),number);
                                             } else {
-                                                count.put(note.getFg(), 1);
+                                                count.put(note.getZtl(),1);
                                             }
                                         }
+
+//                                        mTextView2.setText(String.valueOf(total));
 
                                         final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
                                         mListView.setAdapter((ListAdapter) adapter);
@@ -354,24 +355,38 @@ public class UniqueActivity extends AppCompatActivity {
                                         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                             @Override
                                             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                                String fg = adapter.getItem(i).getKey();
-                                                Intent intent = new Intent(UniqueActivity.this, UniqueDetails.class);
+                                                String tl = adapter.getItem(i).getKey();
+                                                Intent intent = new Intent(TLViewActivity.this, TLViewFG.class);
                                                 Bundle bundle = new Bundle();
-                                                bundle.putLong("Date1", date1);
-                                                bundle.putLong("Date2", date2);
-                                                bundle.putString("FG", fg);
+                                                bundle.putLong("Date1",date1);
+                                                bundle.putLong("Date2",date2);
+                                                bundle.putString("TL",tl);
                                                 bundle.putString("SpinPrograms", spinPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);
-                                                bundle.putString("Collection", collection);
+                                                bundle.putString("Collection",collection);
                                                 intent.putExtras(bundle);
                                                 startActivity(intent);
                                             }
                                         });
+
+//                                        button.setOnClickListener(new View.OnClickListener() {
+//                                            @Override
+//                                            public void onClick(View v) {
+//                                                Intent intent = new Intent(TLViewActivity.this,TLViewDetails.class);
+//                                                Bundle bundle = new Bundle();
+//                                                bundle.putString("Date", date);
+//                                                bundle.putString("SpinPrograms", spinPrograms);
+//                                                bundle.putString("SpinCategories", spinnerCategories);
+//                                                bundle.putString("SpinSessions", spinnerSessions);
+//                                                intent.putExtras(bundle);
+//                                                startActivity(intent);
+//                                            }
+//                                        });
                                     }
                                 });
                     } else {
-                        total = 0;
+                        total=0;
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate", date1)
                                 .whereLessThanOrEqualTo("edate", date2)
@@ -403,17 +418,19 @@ public class UniqueActivity extends AppCompatActivity {
                                             } else {
                                                 countName.put(note.getName(), 1);
                                                 total++;
-                                                count.put("ALL", total);
+                                                count.put("ALL",total);
                                             }
 
-                                            if (count.containsKey(note.getFg())) {
-                                                int number = count.get(note.getFg());
+                                            if (count.containsKey(note.getZtl())) {
+                                                int number = count.get(note.getZtl());
                                                 number++;
-                                                count.put(note.getFg(), number);
+                                                count.put(note.getZtl(),number);
                                             } else {
-                                                count.put(note.getFg(), 1);
+                                                count.put(note.getZtl(),1);
                                             }
                                         }
+
+//                                        mTextView2.setText(String.valueOf(total));
 
                                         final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
                                         mListView.setAdapter((ListAdapter) adapter);
@@ -421,16 +438,16 @@ public class UniqueActivity extends AppCompatActivity {
                                         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                             @Override
                                             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                                String fg = adapter.getItem(i).getKey();
-                                                Intent intent = new Intent(UniqueActivity.this, UniqueDetails.class);
+                                                String tl = adapter.getItem(i).getKey();
+                                                Intent intent = new Intent(TLViewActivity.this, TLViewFG.class);
                                                 Bundle bundle = new Bundle();
-                                                bundle.putLong("Date1", date1);
-                                                bundle.putLong("Date2", date2);
-                                                bundle.putString("FG", fg);
+                                                bundle.putLong("Date1",date1);
+                                                bundle.putLong("Date2",date2);
+                                                bundle.putString("TL",tl);
                                                 bundle.putString("SpinPrograms", spinPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);
-                                                bundle.putString("Collection", collection);
+                                                bundle.putString("Collection",collection);
                                                 intent.putExtras(bundle);
                                                 startActivity(intent);
                                             }
@@ -522,12 +539,12 @@ public class UniqueActivity extends AppCompatActivity {
                                                 count.put("ALL",total);
                                             }
 
-                                            if (count.containsKey(note.getFg())) {
-                                                int number = count.get(note.getFg());
+                                            if (count.containsKey(note.getZtl())) {
+                                                int number = count.get(note.getZtl());
                                                 number++;
-                                                count.put(note.getFg(),number);
+                                                count.put(note.getZtl(),number);
                                             } else {
-                                                count.put(note.getFg(),1);
+                                                count.put(note.getZtl(),1);
                                             }
                                         }
 
@@ -539,12 +556,12 @@ public class UniqueActivity extends AppCompatActivity {
                                         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                             @Override
                                             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                                String fg = adapter.getItem(i).getKey();
-                                                Intent intent = new Intent(UniqueActivity.this, UniqueDetails.class);
+                                                String tl = adapter.getItem(i).getKey();
+                                                Intent intent = new Intent(TLViewActivity.this, TLViewFG.class);
                                                 Bundle bundle = new Bundle();
                                                 bundle.putLong("Date1",date1);
                                                 bundle.putLong("Date2",date2);
-                                                bundle.putString("FG", fg);
+                                                bundle.putString("TL",tl);
                                                 bundle.putString("SpinPrograms", spinPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);
@@ -592,12 +609,12 @@ public class UniqueActivity extends AppCompatActivity {
                                                 count.put("ALL",total);
                                             }
 
-                                            if (count.containsKey(note.getFg())) {
-                                                int number = count.get(note.getFg());
+                                            if (count.containsKey(note.getZtl())) {
+                                                int number = count.get(note.getZtl());
                                                 number++;
-                                                count.put(note.getFg(),number);
+                                                count.put(note.getZtl(),number);
                                             } else {
-                                                count.put(note.getFg(),1);
+                                                count.put(note.getZtl(),1);
                                             }
                                         }
 
@@ -609,12 +626,12 @@ public class UniqueActivity extends AppCompatActivity {
                                         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                             @Override
                                             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                                String fg = adapter.getItem(i).getKey();
-                                                Intent intent = new Intent(UniqueActivity.this, UniqueDetails.class);
+                                                String tl = adapter.getItem(i).getKey();
+                                                Intent intent = new Intent(TLViewActivity.this, TLViewFG.class);
                                                 Bundle bundle = new Bundle();
                                                 bundle.putLong("Date1",date1);
                                                 bundle.putLong("Date2",date2);
-                                                bundle.putString("FG", fg);
+                                                bundle.putString("TL",tl);
                                                 bundle.putString("SpinPrograms", spinPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);
@@ -717,12 +734,12 @@ public class UniqueActivity extends AppCompatActivity {
                                                 count.put("ALL",total);
                                             }
 
-                                            if (count.containsKey(note.getFg())) {
-                                                int number = count.get(note.getFg());
+                                            if (count.containsKey(note.getZtl())) {
+                                                int number = count.get(note.getZtl());
                                                 number++;
-                                                count.put(note.getFg(),number);
+                                                count.put(note.getZtl(),number);
                                             } else {
-                                                count.put(note.getFg(),1);
+                                                count.put(note.getZtl(),1);
                                             }
                                         }
 
@@ -734,12 +751,12 @@ public class UniqueActivity extends AppCompatActivity {
                                         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                             @Override
                                             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                                String fg = adapter.getItem(i).getKey();
-                                                Intent intent = new Intent(UniqueActivity.this, UniqueDetails.class);
+                                                String tl = adapter.getItem(i).getKey();
+                                                Intent intent = new Intent(TLViewActivity.this, TLViewFG.class);
                                                 Bundle bundle = new Bundle();
                                                 bundle.putLong("Date1",date1);
                                                 bundle.putLong("Date2",date2);
-                                                bundle.putString("FG", fg);
+                                                bundle.putString("TL",tl);
                                                 bundle.putString("SpinPrograms", spinPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);
@@ -787,12 +804,12 @@ public class UniqueActivity extends AppCompatActivity {
                                                 count.put("ALL",total);
                                             }
 
-                                            if (count.containsKey(note.getFg())) {
-                                                int number = count.get(note.getFg());
+                                            if (count.containsKey(note.getZtl())) {
+                                                int number = count.get(note.getZtl());
                                                 number++;
-                                                count.put(note.getFg(),number);
+                                                count.put(note.getZtl(),number);
                                             } else {
-                                                count.put(note.getFg(),1);
+                                                count.put(note.getZtl(),1);
                                             }
                                         }
 
@@ -804,12 +821,12 @@ public class UniqueActivity extends AppCompatActivity {
                                         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                             @Override
                                             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                                String fg = adapter.getItem(i).getKey();
-                                                Intent intent = new Intent(UniqueActivity.this, UniqueDetails.class);
+                                                String tl = adapter.getItem(i).getKey();
+                                                Intent intent = new Intent(TLViewActivity.this, TLViewFG.class);
                                                 Bundle bundle = new Bundle();
                                                 bundle.putLong("Date1",date1);
                                                 bundle.putLong("Date2",date2);
-                                                bundle.putString("FG", fg);
+                                                bundle.putString("TL",tl);
                                                 bundle.putString("SpinPrograms", spinPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);
@@ -907,12 +924,12 @@ public class UniqueActivity extends AppCompatActivity {
                                                 count.put("ALL",total);
                                             }
 
-                                            if (count.containsKey(note.getFg())) {
-                                                int number = count.get(note.getFg());
+                                            if (count.containsKey(note.getZtl())) {
+                                                int number = count.get(note.getZtl());
                                                 number++;
-                                                count.put(note.getFg(),number);
+                                                count.put(note.getZtl(),number);
                                             } else {
-                                                count.put(note.getFg(),1);
+                                                count.put(note.getZtl(),1);
                                             }
                                         }
 
@@ -924,12 +941,12 @@ public class UniqueActivity extends AppCompatActivity {
                                         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                             @Override
                                             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                                String fg = adapter.getItem(i).getKey();
-                                                Intent intent = new Intent(UniqueActivity.this, UniqueDetails.class);
+                                                String tl = adapter.getItem(i).getKey();
+                                                Intent intent = new Intent(TLViewActivity.this, TLViewFG.class);
                                                 Bundle bundle = new Bundle();
                                                 bundle.putLong("Date1",date1);
                                                 bundle.putLong("Date2",date2);
-                                                bundle.putString("FG", fg);
+                                                bundle.putString("TL",tl);
                                                 bundle.putString("SpinPrograms", spinPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);
@@ -978,12 +995,12 @@ public class UniqueActivity extends AppCompatActivity {
                                                 count.put("ALL",total);
                                             }
 
-                                            if (count.containsKey(note.getFg())) {
-                                                int number = count.get(note.getFg());
+                                            if (count.containsKey(note.getZtl())) {
+                                                int number = count.get(note.getZtl());
                                                 number++;
-                                                count.put(note.getFg(),number);
+                                                count.put(note.getZtl(),number);
                                             } else {
-                                                count.put(note.getFg(),1);
+                                                count.put(note.getZtl(),1);
                                             }
                                         }
 
@@ -995,12 +1012,12 @@ public class UniqueActivity extends AppCompatActivity {
                                         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                             @Override
                                             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                                String fg = adapter.getItem(i).getKey();
-                                                Intent intent = new Intent(UniqueActivity.this, UniqueDetails.class);
+                                                String tl = adapter.getItem(i).getKey();
+                                                Intent intent = new Intent(TLViewActivity.this, TLViewFG.class);
                                                 Bundle bundle = new Bundle();
                                                 bundle.putLong("Date1",date1);
                                                 bundle.putLong("Date2",date2);
-                                                bundle.putString("FG", fg);
+                                                bundle.putString("TL",tl);
                                                 bundle.putString("SpinPrograms", spinPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);

@@ -6,12 +6,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
@@ -20,68 +18,42 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.TreeMap;
 
 import javax.annotation.Nullable;
 
-public class TimeDetails extends AppCompatActivity {
+public class TLViewDetails extends AppCompatActivity {
 
     private FirebaseFirestore db;
     private CollectionReference fgboys;
     private String collection = "";
     ListView mListView;
-    TextView mTextView;
-    public static String time = "";
+    public static String tl = "";
     private long date1 = 0, date2 = 0;
-    private String date1Str = "", date2Str = "";
+    public static String fg = "";
     private String url = "";
     public static String spinPrograms = "";
     public static String spinCategories = "";
     public static String spinSessions = "";
     EditText searchFilter;
-    private String time1 = "", time2 = "", str1 = "", str2 = "";
-    private long epoch1 = 0, epoch2 = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_time_details);
+        setContentView(R.layout.activity_tlviewdetails);
         collection = getIntent().getStringExtra("Collection");
         db = FirebaseFirestore.getInstance();
         fgboys = db.collection(collection);
         mListView = findViewById(R.id.list_view);
-        time = getIntent().getStringExtra("Time");
+        tl = getIntent().getStringExtra("TL");
         date1 = getIntent().getLongExtra("Date1",date1);
         date2 = getIntent().getLongExtra("Date2",date2);
-        date1Str = getIntent().getStringExtra("Date1Str");
-        date2Str = getIntent().getStringExtra("Date2Str");
-        spinPrograms= getIntent().getStringExtra("SpinPrograms");
-        spinCategories= getIntent().getStringExtra("SpinCategories");
-        spinSessions= getIntent().getStringExtra("SpinSessions");
+        fg = getIntent().getStringExtra("FG");
+        spinPrograms = getIntent().getStringExtra("SpinPrograms");
+        spinCategories = getIntent().getStringExtra("SpinCategories");
+        spinSessions = getIntent().getStringExtra("SpinSessions");
         searchFilter = findViewById(R.id.searchFilter);
-        mTextView = findViewById(R.id.textView2);
-
-        if (!time.equals("ALL")) {
-            String time1 = time.substring(0, 5);
-            String time2 = time.substring(6, time.length());
-
-            str1 = date1Str + " " + time1 + ":00";
-            str2 = date2Str + " " + time2 + ":00";
-
-            try {
-                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                Date date1 = df.parse(str1);
-                Date date2 = df.parse(str2);
-                epoch1 = (date1.getTime()) / 1000;
-                epoch2 = (date2.getTime()) / 1000;
-//            mTextView.setText(String.valueOf(epoch1 + "      " + epoch2));
-            } catch (java.text.ParseException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     @Override
@@ -108,7 +80,7 @@ public class TimeDetails extends AppCompatActivity {
     }
 
     public void detailsFinal(ArrayList<Note> details) {
-        final DetailsAdapter adapterD = new DetailsAdapter(TimeDetails.this, R.layout.details_layout, details);
+        final DetailsAdapter adapterD = new DetailsAdapter(TLViewDetails.this, R.layout.details_layout, details);
         mListView.setAdapter(adapterD);
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -116,7 +88,7 @@ public class TimeDetails extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String name = adapterD.getItem(position).getName();
 
-                Intent intent = new Intent(TimeDetails.this, DetailsFinal.class);
+                Intent intent = new Intent(TLViewDetails.this, DetailsFinal.class);
                 Bundle bundle = new Bundle();
                 bundle.putLong("Date1",date1);
                 bundle.putLong("Date2",date2);
@@ -173,7 +145,7 @@ public class TimeDetails extends AppCompatActivity {
     }
 
     public void regFinal(ArrayList<Note> details) {
-        final DetailsAdapter adapterD = new DetailsAdapter(TimeDetails.this, R.layout.details_layout, details);
+        final DetailsAdapter adapterD = new DetailsAdapter(TLViewDetails.this, R.layout.details_layout, details);
         mListView.setAdapter(adapterD);
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -181,7 +153,7 @@ public class TimeDetails extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String name = adapterD.getItem(position).getName();
 
-                Intent intent = new Intent(TimeDetails.this, RegFinalDetails.class);
+                Intent intent = new Intent(TLViewDetails.this, RegFinalDetails.class);
                 Bundle bundle = new Bundle();
                 bundle.putLong("Date1",date1);
                 bundle.putLong("Date2",date2);
@@ -265,13 +237,14 @@ public class TimeDetails extends AppCompatActivity {
     }
 
     public void populateListProgramsAndCategoriesAndSessions() {
-        if (time.equals("ALL")) {
+        if (tl.equals("ALL")) {
             fgboys
+                    .whereEqualTo("fg",fg)
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
                     .orderBy("edate")
                     .orderBy("name")
-                    .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                             if (e != null) {
@@ -309,11 +282,13 @@ public class TimeDetails extends AppCompatActivity {
                     });
         } else {
             fgboys
-                    .whereGreaterThan("edate", epoch1)
-                    .whereLessThanOrEqualTo("edate", epoch2)
+                    .whereEqualTo("ztl",tl)
+                    .whereEqualTo("fg",fg)
+                    .whereGreaterThanOrEqualTo("edate", date1)
+                    .whereLessThanOrEqualTo("edate", date2)
                     .orderBy("edate")
                     .orderBy("name")
-                    .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                             if (e != null) {
@@ -353,19 +328,21 @@ public class TimeDetails extends AppCompatActivity {
     }
 
     public void populateListProgramsAndCategories() {
-        if (time.equals("ALL")) {
+        if (tl.equals("ALL")) {
             fgboys
-                    .whereGreaterThanOrEqualTo("edate", date1)
-                    .whereLessThanOrEqualTo("edate", date2)
-                    .whereEqualTo("session",spinSessions)
                     .orderBy("edate")
                     .orderBy("name")
-                    .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+                    .whereEqualTo("fg",fg)
+                    .whereEqualTo("session",spinSessions)
+                    .whereGreaterThanOrEqualTo("edate", date1)
+                    .whereLessThanOrEqualTo("edate", date2)
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                             if (e != null) {
                                 return;
                             }
+
                             TreeMap<String, Integer> count = new TreeMap<>();
                             ArrayList<Note> details = new ArrayList<>();
 
@@ -397,12 +374,14 @@ public class TimeDetails extends AppCompatActivity {
                     });
         } else {
             fgboys
-                    .whereGreaterThan("edate", epoch1)
-                    .whereLessThanOrEqualTo("edate", epoch2)
-                    .whereEqualTo("session",spinSessions)
                     .orderBy("edate")
                     .orderBy("name")
-                    .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+                    .whereEqualTo("ztl",tl)
+                    .whereEqualTo("fg",fg)
+                    .whereEqualTo("session",spinSessions)
+                    .whereGreaterThanOrEqualTo("edate", date1)
+                    .whereLessThanOrEqualTo("edate", date2)
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                             if (e != null) {
@@ -442,19 +421,21 @@ public class TimeDetails extends AppCompatActivity {
     }
 
     public void populateListProgramsAndSessions() {
-        if (time.equals("ALL")) {
+        if (tl.equals("ALL")) {
             fgboys
-                    .whereGreaterThanOrEqualTo("edate", date1)
-                    .whereLessThanOrEqualTo("edate", date2)
-                    .whereEqualTo("category",spinCategories)
                     .orderBy("edate")
                     .orderBy("name")
-                    .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+                    .whereEqualTo("fg",fg)
+                    .whereEqualTo("category",spinCategories)
+                    .whereGreaterThanOrEqualTo("edate", date1)
+                    .whereLessThanOrEqualTo("edate", date2)
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                             if (e != null) {
                                 return;
                             }
+
                             TreeMap<String, Integer> count = new TreeMap<>();
                             ArrayList<Note> details = new ArrayList<>();
 
@@ -486,12 +467,14 @@ public class TimeDetails extends AppCompatActivity {
                     });
         } else {
             fgboys
-                    .whereGreaterThan("edate", epoch1)
-                    .whereLessThanOrEqualTo("edate", epoch2)
-                    .whereEqualTo("category",spinCategories)
                     .orderBy("edate")
                     .orderBy("name")
-                    .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+                    .whereEqualTo("ztl",tl)
+                    .whereEqualTo("fg",fg)
+                    .whereEqualTo("category",spinCategories)
+                    .whereGreaterThanOrEqualTo("edate", date1)
+                    .whereLessThanOrEqualTo("edate", date2)
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                             if (e != null) {
@@ -519,6 +502,7 @@ public class TimeDetails extends AppCompatActivity {
                                     details.add(note);
                                 }
                             }
+
                             if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
@@ -530,19 +514,21 @@ public class TimeDetails extends AppCompatActivity {
     }
 
     public void populateListCategoriesAndSessions() {
-        if (time.equals("ALL")) {
+        if (tl.equals("ALL")) {
             fgboys
-                    .whereGreaterThanOrEqualTo("edate", date1)
-                    .whereLessThanOrEqualTo("edate", date2)
-                    .whereEqualTo("program",spinPrograms)
                     .orderBy("edate")
                     .orderBy("name")
-                    .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+                    .whereEqualTo("fg",fg)
+                    .whereEqualTo("program",spinPrograms)
+                    .whereGreaterThanOrEqualTo("edate", date1)
+                    .whereLessThanOrEqualTo("edate", date2)
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                             if (e != null) {
                                 return;
                             }
+
                             TreeMap<String, Integer> count = new TreeMap<>();
                             ArrayList<Note> details = new ArrayList<>();
 
@@ -564,6 +550,7 @@ public class TimeDetails extends AppCompatActivity {
                                     details.add(note);
                                 }
                             }
+
                             if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
@@ -573,12 +560,14 @@ public class TimeDetails extends AppCompatActivity {
                     });
         } else {
             fgboys
-                    .whereGreaterThan("edate", epoch1)
-                    .whereLessThanOrEqualTo("edate", epoch2)
-                    .whereEqualTo("program",spinPrograms)
                     .orderBy("edate")
                     .orderBy("name")
-                    .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+                    .whereEqualTo("ztl",tl)
+                    .whereEqualTo("fg",fg)
+                    .whereEqualTo("program",spinPrograms)
+                    .whereGreaterThanOrEqualTo("edate", date1)
+                    .whereLessThanOrEqualTo("edate", date2)
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                             if (e != null) {
@@ -618,20 +607,22 @@ public class TimeDetails extends AppCompatActivity {
     }
 
     public void populateListPrograms() {
-        if (time.equals("ALL")) {
+        if (tl.equals("ALL")) {
             fgboys
-                    .whereGreaterThanOrEqualTo("edate", date1)
-                    .whereLessThanOrEqualTo("edate", date2)
-                    .whereEqualTo("category",spinCategories)
-                    .whereEqualTo("session",spinSessions)
                     .orderBy("edate")
                     .orderBy("name")
-                    .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+                    .whereEqualTo("fg",fg)
+                    .whereEqualTo("session",spinSessions)
+                    .whereEqualTo("category",spinCategories)
+                    .whereGreaterThanOrEqualTo("edate", date1)
+                    .whereLessThanOrEqualTo("edate", date2)
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                             if (e != null) {
                                 return;
                             }
+
                             TreeMap<String, Integer> count = new TreeMap<>();
                             ArrayList<Note> details = new ArrayList<>();
 
@@ -663,13 +654,15 @@ public class TimeDetails extends AppCompatActivity {
                     });
         } else {
             fgboys
-                    .whereGreaterThan("edate", epoch1)
-                    .whereLessThanOrEqualTo("edate", epoch2)
-                    .whereEqualTo("category",spinCategories)
-                    .whereEqualTo("session",spinSessions)
                     .orderBy("edate")
                     .orderBy("name")
-                    .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+                    .whereEqualTo("ztl",tl)
+                    .whereEqualTo("fg",fg)
+                    .whereEqualTo("session",spinSessions)
+                    .whereEqualTo("category",spinCategories)
+                    .whereGreaterThanOrEqualTo("edate", date1)
+                    .whereLessThanOrEqualTo("edate", date2)
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                             if (e != null) {
@@ -709,20 +702,22 @@ public class TimeDetails extends AppCompatActivity {
     }
 
     public void populateListCategories() {
-        if (time.equals("ALL")) {
+        if (tl.equals("ALL")) {
             fgboys
-                    .whereGreaterThanOrEqualTo("edate", date1)
-                    .whereLessThanOrEqualTo("edate", date2)
-                    .whereEqualTo("program",spinPrograms)
-                    .whereEqualTo("session",spinSessions)
                     .orderBy("edate")
                     .orderBy("name")
-                    .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+                    .whereEqualTo("fg",fg)
+                    .whereEqualTo("session",spinSessions)
+                    .whereEqualTo("program",spinPrograms)
+                    .whereGreaterThanOrEqualTo("edate", date1)
+                    .whereLessThanOrEqualTo("edate", date2)
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                             if (e != null) {
                                 return;
                             }
+
                             TreeMap<String, Integer> count = new TreeMap<>();
                             ArrayList<Note> details = new ArrayList<>();
 
@@ -754,13 +749,15 @@ public class TimeDetails extends AppCompatActivity {
                     });
         } else {
             fgboys
-                    .whereGreaterThan("edate", epoch1)
-                    .whereLessThanOrEqualTo("edate", epoch2)
-                    .whereEqualTo("program",spinPrograms)
-                    .whereEqualTo("session",spinSessions)
                     .orderBy("edate")
                     .orderBy("name")
-                    .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+                    .whereEqualTo("ztl",tl)
+                    .whereEqualTo("fg",fg)
+                    .whereEqualTo("session",spinSessions)
+                    .whereEqualTo("program",spinPrograms)
+                    .whereGreaterThanOrEqualTo("edate", date1)
+                    .whereLessThanOrEqualTo("edate", date2)
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                             if (e != null) {
@@ -800,20 +797,22 @@ public class TimeDetails extends AppCompatActivity {
     }
 
     public void populateListSessions() {
-        if (time.equals("ALL")) {
+        if (tl.equals("ALL")) {
             fgboys
-                    .whereGreaterThanOrEqualTo("edate", date1)
-                    .whereLessThanOrEqualTo("edate", date2)
-                    .whereEqualTo("category",spinCategories)
-                    .whereEqualTo("program",spinPrograms)
                     .orderBy("edate")
                     .orderBy("name")
-                    .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+                    .whereEqualTo("fg",fg)
+                    .whereEqualTo("program",spinPrograms)
+                    .whereEqualTo("category",spinCategories)
+                    .whereGreaterThanOrEqualTo("edate", date1)
+                    .whereLessThanOrEqualTo("edate", date2)
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                             if (e != null) {
                                 return;
                             }
+
                             TreeMap<String, Integer> count = new TreeMap<>();
                             ArrayList<Note> details = new ArrayList<>();
 
@@ -835,23 +834,25 @@ public class TimeDetails extends AppCompatActivity {
                                     details.add(note);
                                 }
                             }
+
                             if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
                             }
-
                         }
                     });
         } else {
             fgboys
-                    .whereGreaterThan("edate", epoch1)
-                    .whereLessThanOrEqualTo("edate", epoch2)
-                    .whereEqualTo("category",spinCategories)
-                    .whereEqualTo("program",spinPrograms)
                     .orderBy("edate")
                     .orderBy("name")
-                    .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+                    .whereEqualTo("ztl",tl)
+                    .whereEqualTo("fg",fg)
+                    .whereEqualTo("program",spinPrograms)
+                    .whereEqualTo("category",spinCategories)
+                    .whereGreaterThanOrEqualTo("edate", date1)
+                    .whereLessThanOrEqualTo("edate", date2)
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                             if (e != null) {
@@ -891,21 +892,23 @@ public class TimeDetails extends AppCompatActivity {
     }
 
     public void populateList() {
-        if (time.equals("ALL")) {
+        if (tl.equals("ALL")) {
             fgboys
-                    .whereGreaterThanOrEqualTo("edate", date1)
-                    .whereLessThanOrEqualTo("edate", date2)
-                    .whereEqualTo("category",spinCategories)
-                    .whereEqualTo("session",spinSessions)
-                    .whereEqualTo("program",spinPrograms)
                     .orderBy("edate")
                     .orderBy("name")
-                    .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+                    .whereEqualTo("fg",fg)
+                    .whereEqualTo("session",spinSessions)
+                    .whereEqualTo("program",spinPrograms)
+                    .whereEqualTo("category",spinCategories)
+                    .whereGreaterThanOrEqualTo("edate", date1)
+                    .whereLessThanOrEqualTo("edate", date2)
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                             if (e != null) {
                                 return;
                             }
+
                             TreeMap<String, Integer> count = new TreeMap<>();
                             ArrayList<Note> details = new ArrayList<>();
 
@@ -937,14 +940,16 @@ public class TimeDetails extends AppCompatActivity {
                     });
         } else {
             fgboys
-                    .whereGreaterThan("edate", epoch1)
-                    .whereLessThanOrEqualTo("edate", epoch2)
-                    .whereEqualTo("category",spinCategories)
-                    .whereEqualTo("session",spinSessions)
-                    .whereEqualTo("program",spinPrograms)
                     .orderBy("edate")
                     .orderBy("name")
-                    .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+                    .whereEqualTo("ztl",tl)
+                    .whereEqualTo("fg",fg)
+                    .whereEqualTo("session",spinSessions)
+                    .whereEqualTo("program",spinPrograms)
+                    .whereEqualTo("category",spinCategories)
+                    .whereGreaterThanOrEqualTo("edate", date1)
+                    .whereLessThanOrEqualTo("edate", date2)
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                             if (e != null) {
@@ -972,12 +977,12 @@ public class TimeDetails extends AppCompatActivity {
                                     details.add(note);
                                 }
                             }
+
                             if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
                             }
-
                         }
                     });
         }

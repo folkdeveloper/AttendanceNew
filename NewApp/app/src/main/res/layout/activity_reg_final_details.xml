@@ -355,9 +355,9 @@
 
                     <TextView
                         android:id="@+id/textView29"
-                        android:layout_width="wrap_content"
+                        android:layout_width="85dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
+                        android:layout_weight="0.60"
                         android:gravity="center"
                         android:text="FG Call"
                         android:textSize="17dp"
@@ -367,19 +367,19 @@
                         android:id="@+id/button1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Yes"
+                        android:layout_weight="0.20"
+                        android:background="@drawable/button_shape"
                         android:inputType="textCapWords"
-                        android:background="@drawable/button_shape"/>
+                        android:text="Yes" />
 
                     <Button
                         android:id="@+id/button2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="No"
+                        android:layout_weight="0.20"
+                        android:background="@drawable/button_shape"
                         android:inputType="textCapWords"
-                        android:background="@drawable/button_shape"/>
+                        android:text="No" />
 
                 </LinearLayout>
 
@@ -391,9 +391,9 @@
 
                     <TextView
                         android:id="@+id/textView30"
-                        android:layout_width="wrap_content"
+                        android:layout_width="85dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
+                        android:layout_weight="0.60"
                         android:gravity="center"
                         android:text="Leave Agreed"
                         android:textSize="17dp"
@@ -403,19 +403,19 @@
                         android:id="@+id/button3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Yes"
+                        android:layout_weight="0.20"
+                        android:background="@drawable/button_shape"
                         android:inputType="textCapWords"
-                        android:background="@drawable/button_shape"/>
+                        android:text="Yes" />
 
                     <Button
                         android:id="@+id/button4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="No"
+                        android:layout_weight="0.20"
+                        android:background="@drawable/button_shape"
                         android:inputType="textCapWords"
-                        android:background="@drawable/button_shape"/>
+                        android:text="No" />
 
                 </LinearLayout>
 
@@ -427,9 +427,9 @@
 
                     <TextView
                         android:id="@+id/textView31"
-                        android:layout_width="wrap_content"
+                        android:layout_width="85dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
+                        android:layout_weight="0.60"
                         android:gravity="center"
                         android:text="Message Confirm"
                         android:textSize="17dp"
@@ -439,7 +439,7 @@
                         android:id="@+id/button5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="0.20"
                         android:text="Yes"
                         android:inputType="textCapWords"
                         android:background="@drawable/button_shape"/>
@@ -448,7 +448,7 @@
                         android:id="@+id/button6"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="0.20"
                         android:text="No"
                         android:inputType="textCapWords"
                         android:background="@drawable/button_shape"/>
@@ -463,9 +463,9 @@
 
                     <TextView
                         android:id="@+id/textView32"
-                        android:layout_width="wrap_content"
+                        android:layout_width="85dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
+                        android:layout_weight="0.60"
                         android:gravity="center"
                         android:text="Status"
                         android:textSize="17dp"
@@ -475,19 +475,19 @@
                         android:id="@+id/button7"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Coming"
+                        android:layout_weight="0.20"
+                        android:background="@drawable/button_shape"
                         android:inputType="textCapWords"
-                        android:background="@drawable/button_shape"/>
+                        android:text="Coming" />
 
                     <Button
                         android:id="@+id/button8"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Not Coming"
+                        android:layout_weight="0.20"
+                        android:background="@drawable/button_shape"
                         android:inputType="textCapWords"
-                        android:background="@drawable/button_shape"/>
+                        android:text="Not Coming" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -495,8 +495,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="350dp"
-                android:orientation="vertical"
-                android:background="#FFFFE8">
+                android:background="#FFFFE8"
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -508,7 +508,6 @@
                         android:id="@+id/textView38"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="-12dp"
                         android:layout_weight="1.5"
                         android:gravity="center_vertical"
                         android:text="Comment: "
@@ -580,9 +579,9 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="1"
+                    android:background="@drawable/update_button"
                     android:gravity="center"
-                    android:text="Update"
-                    android:background="@drawable/update_button"/>
+                    android:text="Update" />
             </LinearLayout>
 
         </LinearLayout>

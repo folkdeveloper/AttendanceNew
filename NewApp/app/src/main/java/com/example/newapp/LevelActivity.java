@@ -29,7 +29,6 @@ public class LevelActivity extends AppCompatActivity {
     private String collection = "";
     ListView mListView;
     public static String session = "";
-    public static String tl = "";
     public static String fg = "";
     public static String spinPrograms = "";
     public static String spinCategories = "";
@@ -46,7 +45,6 @@ public class LevelActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         session = extras.getString("Session");
-        tl = extras.getString("TL");
         date1 = getIntent().getLongExtra("Date1",date1);
         date2 = getIntent().getLongExtra("Date2",date2);
         fg = extras.getString("FG");
@@ -74,7 +72,6 @@ public class LevelActivity extends AppCompatActivity {
 //                    .whereEqualTo("zzdate",date)
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
-                    .whereEqualTo("ztl",tl)
                     .whereEqualTo("fg",fg)
                     .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
                         @Override
@@ -109,7 +106,6 @@ public class LevelActivity extends AppCompatActivity {
                                     extras.putString("Session",session);
                                     extras.putLong("Date1",date1);
                                     extras.putLong("Date2",date2);
-                                    extras.putString("TL",tl);
                                     extras.putString("FG",fg);
                                     extras.putString("FL",zfl);
                                     extras.putString("SpinPrograms",spinPrograms);
@@ -127,7 +123,6 @@ public class LevelActivity extends AppCompatActivity {
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
                     .whereEqualTo("session",session)
-                    .whereEqualTo("ztl",tl)
                     .whereEqualTo("fg",fg)
                     .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
                         @Override
@@ -162,7 +157,6 @@ public class LevelActivity extends AppCompatActivity {
                                     extras.putString("Session",session);
                                     extras.putLong("Date1",date1);
                                     extras.putLong("Date2",date2);
-                                    extras.putString("TL",tl);
                                     extras.putString("FG",fg);
                                     extras.putString("FL",zfl);
                                     extras.putString("SpinPrograms",spinPrograms);
@@ -184,7 +178,6 @@ public class LevelActivity extends AppCompatActivity {
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
                     .whereEqualTo("category",spinCategories)
-                    .whereEqualTo("ztl",tl)
                     .whereEqualTo("fg",fg)
                     .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
                         @Override
@@ -219,7 +212,6 @@ public class LevelActivity extends AppCompatActivity {
                                     extras.putString("Session",session);
                                     extras.putLong("Date1",date1);
                                     extras.putLong("Date2",date2);
-                                    extras.putString("TL",tl);
                                     extras.putString("FG",fg);
                                     extras.putString("FL",zfl);
                                     extras.putString("SpinPrograms",spinPrograms);
@@ -238,7 +230,6 @@ public class LevelActivity extends AppCompatActivity {
                     .whereLessThanOrEqualTo("edate", date2)
                     .whereEqualTo("session",session)
                     .whereEqualTo("category",spinCategories)
-                    .whereEqualTo("ztl",tl)
                     .whereEqualTo("fg",fg)
                     .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
                         @Override
@@ -273,7 +264,6 @@ public class LevelActivity extends AppCompatActivity {
                                     extras.putString("Session",session);
                                     extras.putLong("Date1",date1);
                                     extras.putLong("Date2",date2);
-                                    extras.putString("TL",tl);
                                     extras.putString("FG",fg);
                                     extras.putString("FL",zfl);
                                     extras.putString("SpinPrograms",spinPrograms);
@@ -295,7 +285,6 @@ public class LevelActivity extends AppCompatActivity {
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
                     .whereEqualTo("program",spinPrograms)
-                    .whereEqualTo("ztl",tl)
                     .whereEqualTo("fg",fg)
                     .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
                         @Override
@@ -330,7 +319,6 @@ public class LevelActivity extends AppCompatActivity {
                                     extras.putString("Session",session);
                                     extras.putLong("Date1",date1);
                                     extras.putLong("Date2",date2);
-                                    extras.putString("TL",tl);
                                     extras.putString("FG",fg);
                                     extras.putString("FL",zfl);
                                     extras.putString("SpinPrograms",spinPrograms);
@@ -349,7 +337,6 @@ public class LevelActivity extends AppCompatActivity {
                     .whereLessThanOrEqualTo("edate", date2)
                     .whereEqualTo("session",session)
                     .whereEqualTo("program",spinPrograms)
-                    .whereEqualTo("ztl",tl)
                     .whereEqualTo("fg",fg)
                     .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
                         @Override
@@ -384,7 +371,6 @@ public class LevelActivity extends AppCompatActivity {
                                     extras.putString("Session",session);
                                     extras.putLong("Date1",date1);
                                     extras.putLong("Date2",date2);
-                                    extras.putString("TL",tl);
                                     extras.putString("FG",fg);
                                     extras.putString("FL",zfl);
                                     extras.putString("SpinPrograms",spinPrograms);
@@ -407,7 +393,6 @@ public class LevelActivity extends AppCompatActivity {
                     .whereLessThanOrEqualTo("edate", date2)
                     .whereEqualTo("program",spinPrograms)
                     .whereEqualTo("category",spinCategories)
-                    .whereEqualTo("ztl",tl)
                     .whereEqualTo("fg",fg)
                     .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
                         @Override
@@ -442,7 +427,6 @@ public class LevelActivity extends AppCompatActivity {
                                     extras.putString("Session",session);
                                     extras.putLong("Date1",date1);
                                     extras.putLong("Date2",date2);
-                                    extras.putString("TL",tl);
                                     extras.putString("FG",fg);
                                     extras.putString("FL",zfl);
                                     extras.putString("SpinPrograms",spinPrograms);
@@ -462,7 +446,6 @@ public class LevelActivity extends AppCompatActivity {
                     .whereEqualTo("session",session)
                     .whereEqualTo("program",spinPrograms)
                     .whereEqualTo("category",spinCategories)
-                    .whereEqualTo("ztl",tl)
                     .whereEqualTo("fg",fg)
                     .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
                         @Override
@@ -497,7 +480,6 @@ public class LevelActivity extends AppCompatActivity {
                                     extras.putString("Session",session);
                                     extras.putLong("Date1",date1);
                                     extras.putLong("Date2",date2);
-                                    extras.putString("TL",tl);
                                     extras.putString("FG",fg);
                                     extras.putString("FL",zfl);
                                     extras.putString("SpinPrograms",spinPrograms);

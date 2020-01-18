@@ -2,6 +2,7 @@ package com.example.newapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -243,7 +244,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                             @Override
                                             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                                                 String session = adapter.getItem(i).getKey();
-                                                Intent intent = new Intent(MainActivity.this, TLActivity.class);
+                                                Intent intent = new Intent(MainActivity.this, FGActivity.class);
                                                 Bundle bundle = new Bundle();
                                                 bundle.putLong("Date1",date1);
                                                 bundle.putLong("Date2",date2);
@@ -298,7 +299,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                                 //                final String fg_name = mListView.getItemAtPosition(i).toString();
                                                 //                TextView fgName = (TextView) findViewById(R.id.text_view_1);
                                                 String session = adapter.getItem(i).getKey();
-                                                Intent intent = new Intent(MainActivity.this, TLActivity.class);
+                                                Intent intent = new Intent(MainActivity.this, FGActivity.class);
                                                 Bundle bundle = new Bundle();
                                                 bundle.putLong("Date1",date1);
                                                 bundle.putLong("Date2",date2);
@@ -401,7 +402,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                             @Override
                                             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                                                 String session = adapter.getItem(i).getKey();
-                                                Intent intent = new Intent(MainActivity.this, TLActivity.class);
+                                                Intent intent = new Intent(MainActivity.this, FGActivity.class);
                                                 Bundle bundle = new Bundle();
                                                 bundle.putLong("Date1",date1);
                                                 bundle.putLong("Date2",date2);
@@ -453,7 +454,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                             @Override
                                             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                                                 String session = adapter.getItem(i).getKey();
-                                                Intent intent = new Intent(MainActivity.this, TLActivity.class);
+                                                Intent intent = new Intent(MainActivity.this, FGActivity.class);
                                                 Bundle bundle = new Bundle();
                                                 bundle.putLong("Date1",date1);
                                                 bundle.putLong("Date2",date2);

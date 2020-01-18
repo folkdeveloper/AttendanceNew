@@ -29,7 +29,6 @@ public class OccupationDetails extends AppCompatActivity {
     private CollectionReference fgboys;
     private String collection = "";
     ListView mListView;
-    public static String tl = "";
     public static String fg = "";
     private long date1 = 0, date2 = 0;
     private String url = "";
@@ -46,7 +45,6 @@ public class OccupationDetails extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         fgboys = db.collection(collection);
         mListView = findViewById(R.id.list_view);
-        tl = getIntent().getStringExtra("TL");
         fg = getIntent().getStringExtra("FG");
         date1 = getIntent().getLongExtra("Date1",date1);
         date2 = getIntent().getLongExtra("Date2",date2);
@@ -110,7 +108,7 @@ public class OccupationDetails extends AppCompatActivity {
                 bundle.putString("Branch",adapterD.getItem(position).getBranch());
                 bundle.putString("Zone",adapterD.getItem(position).getZzone());
                 bundle.putString("Organisation",adapterD.getItem(position).getOrganization());
-                bundle.putString("TL",adapterD.getItem(position).getZtl());
+                bundle.putString("TL",adapterD.getItem(position).getFg());
                 bundle.putString("Level",adapterD.getItem(position).getZfl());
                 bundle.putString("Category",adapterD.getItem(position).getCategory());
                 if (adapterD.getItem(position).getRes_interest() != null)
@@ -175,7 +173,7 @@ public class OccupationDetails extends AppCompatActivity {
                 bundle.putString("Branch",adapterD.getItem(position).getBranch());
                 bundle.putString("Zone",adapterD.getItem(position).getZzone());
                 bundle.putString("Organisation",adapterD.getItem(position).getOrganization());
-                bundle.putString("TL",adapterD.getItem(position).getZtl());
+                bundle.putString("TL",adapterD.getItem(position).getFg());
                 bundle.putString("Level",adapterD.getItem(position).getZfl());
                 bundle.putString("Category",adapterD.getItem(position).getCategory());
                 bundle.putLong("Edate",adapterD.getItem(position).getEdate());
@@ -238,7 +236,6 @@ public class OccupationDetails extends AppCompatActivity {
 
     public void populateListProgramsAndCategoriesAndSessions() {
         fgboys
-                .whereEqualTo("ztl", tl)
                 .whereEqualTo("fg",fg)
 //                .whereEqualTo("zzdate", date)
                 .whereGreaterThanOrEqualTo("edate", date1)
@@ -272,7 +269,7 @@ public class OccupationDetails extends AppCompatActivity {
                             details.add(note);
                         }
 
-                        if (collection.equals("Attendancedemo")) {
+                        if (collection.equals("AttendanceDemo")) {
                             detailsFinal(details);
                         } else if (collection.equals("RegistrationDemo")){
                             regFinal(details);
@@ -283,7 +280,6 @@ public class OccupationDetails extends AppCompatActivity {
 
     public void populateListProgramsAndCategories() {
         fgboys
-                .whereEqualTo("ztl", tl)
                 .whereEqualTo("fg",fg)
 //                .whereEqualTo("zzdate", date)
                 .whereEqualTo("session",spinSessions)
@@ -318,7 +314,7 @@ public class OccupationDetails extends AppCompatActivity {
                             details.add(note);
                         }
 
-                        if (collection.equals("Attendancedemo")) {
+                        if (collection.equals("AttendanceDemo")) {
                             detailsFinal(details);
                         } else if (collection.equals("RegistrationDemo")){
                             regFinal(details);
@@ -329,7 +325,6 @@ public class OccupationDetails extends AppCompatActivity {
 
     public void populateListProgramsAndSessions() {
         fgboys
-                .whereEqualTo("ztl", tl)
                 .whereEqualTo("fg",fg)
 //                .whereEqualTo("zzdate", date)
                 .whereEqualTo("category",spinCategories)
@@ -364,7 +359,7 @@ public class OccupationDetails extends AppCompatActivity {
                             details.add(note);
                         }
 
-                        if (collection.equals("Attendancedemo")) {
+                        if (collection.equals("AttendanceDemo")) {
                             detailsFinal(details);
                         } else if (collection.equals("RegistrationDemo")){
                             regFinal(details);
@@ -375,7 +370,6 @@ public class OccupationDetails extends AppCompatActivity {
 
     public void populateListCategoriesAndSessions() {
         fgboys
-                .whereEqualTo("ztl", tl)
                 .whereEqualTo("fg",fg)
 //                .whereEqualTo("zzdate", date)
                 .whereEqualTo("program",spinPrograms)
@@ -410,7 +404,7 @@ public class OccupationDetails extends AppCompatActivity {
                             details.add(note);
                         }
 
-                        if (collection.equals("Attendancedemo")) {
+                        if (collection.equals("AttendanceDemo")) {
                             detailsFinal(details);
                         } else if (collection.equals("RegistrationDemo")){
                             regFinal(details);
@@ -421,7 +415,6 @@ public class OccupationDetails extends AppCompatActivity {
 
     public void populateListPrograms() {
         fgboys
-                .whereEqualTo("ztl", tl)
                 .whereEqualTo("fg",fg)
 //                .whereEqualTo("zzdate", date)
                 .whereEqualTo("category",spinCategories)
@@ -457,7 +450,7 @@ public class OccupationDetails extends AppCompatActivity {
                             details.add(note);
                         }
 
-                        if (collection.equals("Attendancedemo")) {
+                        if (collection.equals("AttendanceDemo")) {
                             detailsFinal(details);
                         } else if (collection.equals("RegistrationDemo")){
                             regFinal(details);
@@ -468,7 +461,6 @@ public class OccupationDetails extends AppCompatActivity {
 
     public void populateListCategories() {
         fgboys
-                .whereEqualTo("ztl", tl)
                 .whereEqualTo("fg",fg)
 //                .whereEqualTo("zzdate", date)
                 .whereEqualTo("session",spinSessions)
@@ -504,7 +496,7 @@ public class OccupationDetails extends AppCompatActivity {
                             details.add(note);
                         }
 
-                        if (collection.equals("Attendancedemo")) {
+                        if (collection.equals("AttendanceDemo")) {
                             detailsFinal(details);
                         } else if (collection.equals("RegistrationDemo")){
                             regFinal(details);
@@ -515,7 +507,6 @@ public class OccupationDetails extends AppCompatActivity {
 
     public void populateListSessions() {
         fgboys
-                .whereEqualTo("ztl", tl)
                 .whereEqualTo("fg",fg)
 //                .whereEqualTo("zzdate", date)
                 .whereEqualTo("program",spinPrograms)
@@ -551,7 +542,7 @@ public class OccupationDetails extends AppCompatActivity {
                             details.add(note);
                         }
 
-                        if (collection.equals("Attendancedemo")) {
+                        if (collection.equals("AttendanceDemo")) {
                             detailsFinal(details);
                         } else if (collection.equals("RegistrationDemo")){
                             regFinal(details);
@@ -562,7 +553,6 @@ public class OccupationDetails extends AppCompatActivity {
 
     public void populateList() {
         fgboys
-                .whereEqualTo("ztl", tl)
                 .whereEqualTo("fg",fg)
 //                .whereEqualTo("zzdate", date)
                 .whereEqualTo("program",spinPrograms)
@@ -599,7 +589,7 @@ public class OccupationDetails extends AppCompatActivity {
                             details.add(note);
                         }
 
-                        if (collection.equals("Attendancedemo")) {
+                        if (collection.equals("AttendanceDemo")) {
                             detailsFinal(details);
                         } else if (collection.equals("RegistrationDemo")){
                             regFinal(details);

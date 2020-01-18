@@ -56,7 +56,7 @@
                 android:layout_weight="1.25"
                 android:background="@drawable/header_style"
                 android:gravity="center"
-                android:text="TL"
+                android:text="FG"
                 android:textAlignment="center"
                 android:textSize="20dp"
                 android:textStyle="bold" />
@@ -256,7 +256,7 @@
                 <ListView
                     android:id="@+id/list_item"
                     android:layout_width="match_parent"
-                    android:layout_height="718dp"
+                    android:layout_height="1600dp"
                     android:layout_below="@+id/toolbar"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentLeft="true"

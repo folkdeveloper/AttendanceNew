@@ -1,8 +1,7 @@
 package com.example.newapp;
 
-import android.animation.Animator;
-import android.annotation.SuppressLint;
-import android.app.Dialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -11,10 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
@@ -24,53 +20,69 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.TreeMap;
 
 import javax.annotation.Nullable;
 
-public class PaymentDetails  extends AppCompatActivity {
+public class TurnoutFGDetails extends AppCompatActivity {
+
     private FirebaseFirestore db;
     private CollectionReference fgboys;
     private String collection = "";
-    public static String session = "";
+    ListView mListView;
+    public static String color = "";
+    private long date1 = 0, date2 = 0;
+    private int lower = 0, higher = 0;
     public static String fg = "";
-    public static String zfl = "";
-    private ListView mListView;
-    private String url;
+    private String url = "";
     public static String spinPrograms = "";
     public static String spinCategories = "";
-    private long date1 = 0, date2 = 0;
+    public static String spinSessions = "";
     EditText searchFilter;
 
-    private Dialog MyDialog;
-    private ImageView showImage;
-
-    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_payment_details);
+        setContentView(R.layout.activity_turnout_fgdetails);
         collection = getIntent().getStringExtra("Collection");
         db = FirebaseFirestore.getInstance();
         fgboys = db.collection(collection);
+        fg = getIntent().getStringExtra("FG");
         mListView = findViewById(R.id.list_view);
-        Intent intent = getIntent();
-        Bundle extras = intent.getExtras();
-        session = extras.getString("Session");
         date1 = getIntent().getLongExtra("Date1",date1);
         date2 = getIntent().getLongExtra("Date2",date2);
-        fg = extras.getString("FG");
-        zfl = extras.getString("FL");
-        spinPrograms= getIntent().getStringExtra("SpinPrograms");
-        spinCategories= getIntent().getStringExtra("SpinCategories");
+        spinPrograms = getIntent().getStringExtra("SpinPrograms");
+        spinCategories = getIntent().getStringExtra("SpinCategories");
+        spinSessions = getIntent().getStringExtra("SpinSessions");
+        lower = getIntent().getIntExtra("Lower",lower);
+        higher = getIntent().getIntExtra("Higher",higher);
         searchFilter = findViewById(R.id.searchFilter);
-        url = "";
+    }
 
-        final View thumb1View = findViewById(R.id.img);
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if ((spinPrograms.equals("ALL")) && (spinCategories.equals("ALL")) && (spinSessions.equals("ALL"))) {
+            populateListProgramsAndCategoriesAndSessions();
+        } else if ((spinPrograms.equals("ALL")) && (spinCategories.equals("ALL")) && (!spinSessions.equals("ALL"))) {
+            populateListProgramsAndCategories();
+        } else if ((spinPrograms.equals("ALL")) && (!spinCategories.equals("ALL")) && (spinSessions.equals("ALL"))) {
+            populateListProgramsAndSessions();
+        } else if ((!spinPrograms.equals("ALL")) && (spinCategories.equals("ALL")) && (spinSessions.equals("ALL"))){
+//            populateListCategoriesAndSessions();
+        } else if ((spinPrograms.equals("ALL")) && (!spinCategories.equals("ALL")) && (!spinSessions.equals("ALL"))) {
+            populateListPrograms();
+        } else if ((!spinPrograms.equals("ALL")) && (spinCategories.equals("ALL")) && (!spinSessions.equals("ALL"))) {
+            populateListCategories();
+        } else if ((!spinPrograms.equals("ALL")) && (!spinCategories.equals("ALL")) && (spinSessions.equals("ALL"))) {
+            populateListSessions();
+        } else if ((!spinPrograms.equals("ALL")) && (!spinCategories.equals("ALL")) && (!spinSessions.equals("ALL"))) {
+            populateList();
+        }
     }
 
     public void detailsFinal(ArrayList<Note> details) {
-        final DetailsAdapter adapterD = new DetailsAdapter(PaymentDetails.this, R.layout.details_layout, details);
+        final DetailsAdapter adapterD = new DetailsAdapter(TurnoutFGDetails.this, R.layout.details_layout, details);
         mListView.setAdapter(adapterD);
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -78,7 +90,7 @@ public class PaymentDetails  extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String name = adapterD.getItem(position).getName();
 
-                Intent intent = new Intent(PaymentDetails.this, DetailsFinal.class);
+                Intent intent = new Intent(TurnoutFGDetails.this, DetailsFinal.class);
                 Bundle bundle = new Bundle();
                 bundle.putLong("Date1",date1);
                 bundle.putLong("Date2",date2);
@@ -135,7 +147,7 @@ public class PaymentDetails  extends AppCompatActivity {
     }
 
     public void regFinal(ArrayList<Note> details) {
-        final DetailsAdapter adapterD = new DetailsAdapter(PaymentDetails.this, R.layout.details_layout, details);
+        final DetailsAdapter adapterD = new DetailsAdapter(TurnoutFGDetails.this, R.layout.details_layout, details);
         mListView.setAdapter(adapterD);
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -143,7 +155,7 @@ public class PaymentDetails  extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String name = adapterD.getItem(position).getName();
 
-                Intent intent = new Intent(PaymentDetails.this, RegFinalDetails.class);
+                Intent intent = new Intent(TurnoutFGDetails.this, RegFinalDetails.class);
                 Bundle bundle = new Bundle();
                 bundle.putLong("Date1",date1);
                 bundle.putLong("Date2",date2);
@@ -226,48 +238,205 @@ public class PaymentDetails  extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        if ((spinPrograms.equals("ALL")) && (spinCategories.equals("ALL"))) {
-            populateListProgramsAndCategories();
-        } else if ((spinPrograms.equals("ALL")) && (!spinCategories.equals("ALL"))) {
-            populateListPrograms();
-        } else if ((!spinPrograms.equals("ALL")) && (spinCategories.equals("ALL"))) {
-            populateListCategories();
-        } else {
-            populateList();
-        }
-    }
-
-    public void populateListProgramsAndCategories() {
-        if (session.equals("ALL")) {
+    public void populateListProgramsAndCategoriesAndSessions() {
+        if (fg.equals("ALL")) {
             fgboys
 //                    .whereEqualTo("zzdate",date)
                     .whereGreaterThanOrEqualTo("edate", date1)
-                    .whereLessThanOrEqualTo("edate", date2)
-                    .whereEqualTo("fg",fg)
-                    .whereEqualTo("zfl",zfl)
+                    .whereLessThan("edate", date2)
+                    .orderBy("edate")
                     .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                             if (e != null) {
                                 return;
                             }
-
+                            Log.d("Details", "onEvent: Out");
+                            String data = "";
                             ArrayList<Note> details = new ArrayList<>();
-
-                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                            for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
                                 Note note = documentSnapshot.toObject(Note.class);
-                                Log.d("Details", "onEvent: Event" + note.area + note.fg);
 
                                 if (note.getUrl() == null) {
                                     note.setUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr");
                                     url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
-                                    details.add(note);
                                 } else {
                                     url = note.getUrl();
+                                }
+
+                                Log.d("Color", "onEvent: Event"+note.area + note.fg);
+
+                                if ((note.getProbability() >= lower) && (note.getProbability() <= higher)) {
+                                    details.add(note);
+                                }
+                            }
+
+                            if (collection.equals("AttendanceDemo")) {
+                                detailsFinal(details);
+                            } else if (collection.equals("RegistrationDemo")){
+                                regFinal(details);
+                            }
+                        }
+                    });
+        }else {
+            fgboys
+//                    .whereEqualTo("zzdate",date)
+                    .whereGreaterThanOrEqualTo("edate", date1)
+                    .whereLessThan("edate", date2)
+                    .whereEqualTo("fg", fg)
+                    .orderBy("edate")
+                    .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                            if (e != null) {
+                                return;
+                            }
+                            Log.d("Details", "onEvent: Out");
+                            String data = "";
+                            ArrayList<Note> details = new ArrayList<>();
+                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                Note note = documentSnapshot.toObject(Note.class);
+
+                                if (note.getUrl() == null) {
+                                    note.setUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr");
+                                    url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
+                                } else {
+                                    url = note.getUrl();
+                                }
+
+                                Log.d("Color", "onEvent: Event" + note.area + note.fg);
+
+                                if ((note.getProbability() >= lower) && (note.getProbability() <= higher)) {
+                                    details.add(note);
+                                }
+                            }
+
+                            if (collection.equals("AttendanceDemo")) {
+                                detailsFinal(details);
+                            } else if (collection.equals("RegistrationDemo")) {
+                                regFinal(details);
+                            }
+                        }
+                    });
+        }
+    }
+
+    public void populateListProgramsAndCategories() {
+        if (fg.equals("ALL")) {
+            fgboys
+//                    .whereEqualTo("zzdate",date)
+                    .whereGreaterThanOrEqualTo("edate", date1)
+                    .whereLessThan("edate", date2)
+                    .whereEqualTo("fg",fg)
+                    .whereEqualTo("session",spinSessions)
+                    .orderBy("edate")
+                    .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                            if (e != null) {
+                                return;
+                            }
+                            Log.d("Details", "onEvent: Out");
+                            String data = "";
+                            ArrayList<Note> details = new ArrayList<>();
+                            for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
+                                Note note = documentSnapshot.toObject(Note.class);
+
+                                if (note.getUrl() == null) {
+                                    note.setUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr");
+                                    url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
+                                } else {
+                                    url = note.getUrl();
+                                }
+
+                                Log.d("Color", "onEvent: Event"+note.area + note.fg);
+
+                                if ((note.getProbability() >= lower) && (note.getProbability() <= higher)) {
+                                    details.add(note);
+                                }
+                            }
+
+                            if (collection.equals("AttendanceDemo")) {
+                                detailsFinal(details);
+                            } else if (collection.equals("RegistrationDemo")){
+                                regFinal(details);
+                            }
+                        }
+                    });
+        }else {
+            fgboys
+//                    .whereEqualTo("zzdate",date)
+                    .whereGreaterThanOrEqualTo("edate", date1)
+                    .whereLessThan("edate", date2)
+                    .whereEqualTo("fg", fg)
+                    .whereEqualTo("session", spinSessions)
+                    .orderBy("edate")
+                    .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                            if (e != null) {
+                                return;
+                            }
+                            Log.d("Details", "onEvent: Out");
+                            String data = "";
+                            ArrayList<Note> details = new ArrayList<>();
+                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                Note note = documentSnapshot.toObject(Note.class);
+
+                                if (note.getUrl() == null) {
+                                    note.setUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr");
+                                    url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
+                                } else {
+                                    url = note.getUrl();
+                                }
+
+                                Log.d("Color", "onEvent: Event" + note.area + note.fg);
+
+                                if ((note.getProbability() >= lower) && (note.getProbability() <= higher)) {
+                                    details.add(note);
+                                }
+                            }
+
+                            if (collection.equals("AttendanceDemo")) {
+                                detailsFinal(details);
+                            } else if (collection.equals("RegistrationDemo")) {
+                                regFinal(details);
+                            }
+                        }
+                    });
+        }
+    }
+
+    public void populateListProgramsAndSessions() {
+        if (fg.equals("ALL")) {
+            fgboys
+//                    .whereEqualTo("zzdate",date)
+                    .whereGreaterThanOrEqualTo("edate", date1)
+                    .whereLessThan("edate", date2)
+                    .whereEqualTo("category",spinCategories)
+                    .orderBy("edate")
+                    .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                            if (e != null) {
+                                return;
+                            }
+                            Log.d("Details", "onEvent: Out");
+                            String data = "";
+                            ArrayList<Note> details = new ArrayList<>();
+                            for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
+                                Note note = documentSnapshot.toObject(Note.class);
+
+                                if (note.getUrl() == null) {
+                                    note.setUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr");
+                                    url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
+                                } else {
+                                    url = note.getUrl();
+                                }
+
+                                Log.d("Color", "onEvent: Event"+note.area + note.fg);
+
+                                if ((note.getProbability() >= lower) && (note.getProbability() <= higher)) {
                                     details.add(note);
                                 }
                             }
@@ -283,36 +452,39 @@ public class PaymentDetails  extends AppCompatActivity {
             fgboys
 //                    .whereEqualTo("zzdate",date)
                     .whereGreaterThanOrEqualTo("edate", date1)
-                    .whereLessThanOrEqualTo("edate", date2)
-                    .whereEqualTo("session",session)
-                    .whereEqualTo("fg",fg)
-                    .whereEqualTo("zfl",zfl)
+                    .whereLessThan("edate", date2)
+                    .whereEqualTo("fg", fg)
+                    .whereEqualTo("category", spinCategories)
+                    .orderBy("edate")
                     .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                             if (e != null) {
                                 return;
                             }
-
+                            Log.d("Details", "onEvent: Out");
+                            String data = "";
                             ArrayList<Note> details = new ArrayList<>();
-
                             for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                 Note note = documentSnapshot.toObject(Note.class);
-                                Log.d("Details", "onEvent: Event" + note.area + note.fg);
 
                                 if (note.getUrl() == null) {
                                     note.setUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr");
                                     url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
-                                    details.add(note);
                                 } else {
                                     url = note.getUrl();
+                                }
+
+                                Log.d("Color", "onEvent: Event" + note.area + note.fg);
+
+                                if ((note.getProbability() >= lower) && (note.getProbability() <= higher)) {
                                     details.add(note);
                                 }
                             }
 
                             if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
-                            } else if (collection.equals("RegistrationDemo")){
+                            } else if (collection.equals("RegistrationDemo")) {
                                 regFinal(details);
                             }
                         }
@@ -321,33 +493,36 @@ public class PaymentDetails  extends AppCompatActivity {
     }
 
     public void populateListPrograms() {
-        if (session.equals("ALL")) {
+        if (fg.equals("ALL")) {
             fgboys
 //                    .whereEqualTo("zzdate",date)
                     .whereGreaterThanOrEqualTo("edate", date1)
-                    .whereLessThanOrEqualTo("edate", date2)
+                    .whereLessThan("edate", date2)
                     .whereEqualTo("category",spinCategories)
-                    .whereEqualTo("fg",fg)
-                    .whereEqualTo("zfl",zfl)
+                    .whereEqualTo("session",spinSessions)
+                    .orderBy("edate")
                     .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                             if (e != null) {
                                 return;
                             }
-
+                            Log.d("Details", "onEvent: Out");
+                            String data = "";
                             ArrayList<Note> details = new ArrayList<>();
-
-                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                            for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
                                 Note note = documentSnapshot.toObject(Note.class);
-                                Log.d("Details", "onEvent: Event" + note.area + note.fg);
 
                                 if (note.getUrl() == null) {
                                     note.setUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr");
                                     url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
-                                    details.add(note);
                                 } else {
                                     url = note.getUrl();
+                                }
+
+                                Log.d("Color", "onEvent: Event"+note.area + note.fg);
+
+                                if ((note.getProbability() >= lower) && (note.getProbability() <= higher)) {
                                     details.add(note);
                                 }
                             }
@@ -363,37 +538,40 @@ public class PaymentDetails  extends AppCompatActivity {
             fgboys
 //                    .whereEqualTo("zzdate",date)
                     .whereGreaterThanOrEqualTo("edate", date1)
-                    .whereLessThanOrEqualTo("edate", date2)
-                    .whereEqualTo("session",session)
-                    .whereEqualTo("category",spinCategories)
-                    .whereEqualTo("fg",fg)
-                    .whereEqualTo("zfl",zfl)
+                    .whereLessThan("edate", date2)
+                    .whereEqualTo("fg", fg)
+                    .whereEqualTo("category", spinCategories)
+                    .whereEqualTo("session", spinSessions)
+                    .orderBy("edate")
                     .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                             if (e != null) {
                                 return;
                             }
-
+                            Log.d("Details", "onEvent: Out");
+                            String data = "";
                             ArrayList<Note> details = new ArrayList<>();
-
                             for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                 Note note = documentSnapshot.toObject(Note.class);
-                                Log.d("Details", "onEvent: Event" + note.area + note.fg);
 
                                 if (note.getUrl() == null) {
                                     note.setUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr");
                                     url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
-                                    details.add(note);
                                 } else {
                                     url = note.getUrl();
+                                }
+
+                                Log.d("Color", "onEvent: Event" + note.area + note.fg);
+
+                                if ((note.getProbability() >= lower) && (note.getProbability() <= higher)) {
                                     details.add(note);
                                 }
                             }
 
                             if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
-                            } else if (collection.equals("RegistrationDemo")){
+                            } else if (collection.equals("RegistrationDemo")) {
                                 regFinal(details);
                             }
                         }
@@ -402,33 +580,36 @@ public class PaymentDetails  extends AppCompatActivity {
     }
 
     public void populateListCategories() {
-        if (session.equals("ALL")) {
+        if (fg.equals("ALL")) {
             fgboys
 //                    .whereEqualTo("zzdate",date)
                     .whereGreaterThanOrEqualTo("edate", date1)
-                    .whereLessThanOrEqualTo("edate", date2)
+                    .whereLessThan("edate", date2)
+                    .whereEqualTo("session",spinSessions)
                     .whereEqualTo("program",spinPrograms)
-                    .whereEqualTo("fg",fg)
-                    .whereEqualTo("zfl",zfl)
+                    .orderBy("edate")
                     .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                             if (e != null) {
                                 return;
                             }
-
+                            Log.d("Details", "onEvent: Out");
+                            String data = "";
                             ArrayList<Note> details = new ArrayList<>();
-
-                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                            for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
                                 Note note = documentSnapshot.toObject(Note.class);
-                                Log.d("Details", "onEvent: Event" + note.area + note.fg);
 
                                 if (note.getUrl() == null) {
                                     note.setUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr");
                                     url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
-                                    details.add(note);
                                 } else {
                                     url = note.getUrl();
+                                }
+
+                                Log.d("Color", "onEvent: Event"+note.area + note.fg);
+
+                                if ((note.getProbability() >= lower) && (note.getProbability() <= higher)) {
                                     details.add(note);
                                 }
                             }
@@ -444,30 +625,78 @@ public class PaymentDetails  extends AppCompatActivity {
             fgboys
 //                    .whereEqualTo("zzdate",date)
                     .whereGreaterThanOrEqualTo("edate", date1)
-                    .whereLessThanOrEqualTo("edate", date2)
-                    .whereEqualTo("session",session)
-                    .whereEqualTo("program",spinPrograms)
-                    .whereEqualTo("fg",fg)
-                    .whereEqualTo("zfl",zfl)
+                    .whereLessThan("edate", date2)
+                    .whereEqualTo("fg", fg)
+                    .whereEqualTo("session", spinSessions)
+                    .whereEqualTo("program", spinPrograms)
+                    .orderBy("edate")
                     .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                             if (e != null) {
                                 return;
                             }
-
+                            Log.d("Details", "onEvent: Out");
+                            String data = "";
                             ArrayList<Note> details = new ArrayList<>();
-
                             for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                 Note note = documentSnapshot.toObject(Note.class);
-                                Log.d("Details", "onEvent: Event" + note.area + note.fg);
 
                                 if (note.getUrl() == null) {
                                     note.setUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr");
                                     url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
-                                    details.add(note);
                                 } else {
                                     url = note.getUrl();
+                                }
+
+                                Log.d("Color", "onEvent: Event" + note.area + note.fg);
+
+                                if ((note.getProbability() >= lower) && (note.getProbability() <= higher)) {
+                                    details.add(note);
+                                }
+                            }
+
+                            if (collection.equals("AttendanceDemo")) {
+                                detailsFinal(details);
+                            } else if (collection.equals("RegistrationDemo")) {
+                                regFinal(details);
+                            }
+                        }
+                    });
+        }
+    }
+
+    public void populateListSessions() {
+        if (fg.equals("ALL")) {
+            fgboys
+//                    .whereEqualTo("zzdate",date)
+                    .whereGreaterThanOrEqualTo("edate", date1)
+                    .whereLessThan("edate", date2)
+                    .whereEqualTo("program",spinPrograms)
+                    .whereEqualTo("category",spinCategories)
+                    .orderBy("edate")
+                    .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                            if (e != null) {
+                                return;
+                            }
+                            Log.d("Details", "onEvent: Out");
+                            String data = "";
+                            ArrayList<Note> details = new ArrayList<>();
+                            for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
+                                Note note = documentSnapshot.toObject(Note.class);
+
+                                if (note.getUrl() == null) {
+                                    note.setUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr");
+                                    url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
+                                } else {
+                                    url = note.getUrl();
+                                }
+
+                                Log.d("Color", "onEvent: Event"+note.area + note.fg);
+
+                                if ((note.getProbability() >= lower) && (note.getProbability() <= higher)) {
                                     details.add(note);
                                 }
                             }
@@ -475,6 +704,48 @@ public class PaymentDetails  extends AppCompatActivity {
                             if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
+                                regFinal(details);
+                            }
+                        }
+                    });
+        } else {
+            fgboys
+//                    .whereEqualTo("zzdate",date)
+                    .whereGreaterThanOrEqualTo("edate", date1)
+                    .whereLessThan("edate", date2)
+                    .whereEqualTo("fg", fg)
+                    .whereEqualTo("program", spinPrograms)
+                    .whereEqualTo("category", spinCategories)
+                    .orderBy("edate")
+                    .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                            if (e != null) {
+                                return;
+                            }
+                            Log.d("Details", "onEvent: Out");
+                            String data = "";
+                            ArrayList<Note> details = new ArrayList<>();
+                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                Note note = documentSnapshot.toObject(Note.class);
+
+                                if (note.getUrl() == null) {
+                                    note.setUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr");
+                                    url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
+                                } else {
+                                    url = note.getUrl();
+                                }
+
+                                Log.d("Color", "onEvent: Event" + note.area + note.fg);
+
+                                if ((note.getProbability() >= lower) && (note.getProbability() <= higher)) {
+                                    details.add(note);
+                                }
+                            }
+
+                            if (collection.equals("AttendanceDemo")) {
+                                detailsFinal(details);
+                            } else if (collection.equals("RegistrationDemo")) {
                                 regFinal(details);
                             }
                         }
@@ -483,34 +754,37 @@ public class PaymentDetails  extends AppCompatActivity {
     }
 
     public void populateList() {
-        if (session.equals("ALL")) {
+        if (fg.equals("ALL")) {
             fgboys
-//                    .whereEqualTo("zzdate", date)
+//                    .whereEqualTo("zzdate",date)
                     .whereGreaterThanOrEqualTo("edate", date1)
-                    .whereLessThanOrEqualTo("edate", date2)
-                    .whereEqualTo("program", spinPrograms)
-                    .whereEqualTo("category", spinCategories)
-                    .whereEqualTo("fg", fg)
-                    .whereEqualTo("zfl",zfl)
+                    .whereLessThan("edate", date2)
+                    .whereEqualTo("program",spinPrograms)
+                    .whereEqualTo("session",spinSessions)
+                    .whereEqualTo("category",spinCategories)
+                    .orderBy("edate")
                     .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                             if (e != null) {
                                 return;
                             }
-
+                            Log.d("Details", "onEvent: Out");
+                            String data = "";
                             ArrayList<Note> details = new ArrayList<>();
-
-                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                            for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
                                 Note note = documentSnapshot.toObject(Note.class);
-                                Log.d("Details", "onEvent: Event" + note.area + note.fg);
 
                                 if (note.getUrl() == null) {
                                     note.setUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr");
                                     url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
-                                    details.add(note);
                                 } else {
                                     url = note.getUrl();
+                                }
+
+                                Log.d("Color", "onEvent: Event"+note.area + note.fg);
+
+                                if ((note.getProbability() >= lower) && (note.getProbability() <= higher)) {
                                     details.add(note);
                                 }
                             }
@@ -524,40 +798,43 @@ public class PaymentDetails  extends AppCompatActivity {
                     });
         } else {
             fgboys
-//                    .whereEqualTo("zzdate", date)
+//                    .whereEqualTo("zzdate",date)
                     .whereGreaterThanOrEqualTo("edate", date1)
-                    .whereLessThanOrEqualTo("edate", date2)
-                    .whereEqualTo("session", session)
-                    .whereEqualTo("program", spinPrograms)
-                    .whereEqualTo("category", spinCategories)
+                    .whereLessThan("edate", date2)
                     .whereEqualTo("fg", fg)
-                    .whereEqualTo("zfl",zfl)
+                    .whereEqualTo("program", spinPrograms)
+                    .whereEqualTo("session", spinSessions)
+                    .whereEqualTo("category", spinCategories)
+                    .orderBy("edate")
                     .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                             if (e != null) {
                                 return;
                             }
-
+                            Log.d("Details", "onEvent: Out");
+                            String data = "";
                             ArrayList<Note> details = new ArrayList<>();
-
                             for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                 Note note = documentSnapshot.toObject(Note.class);
-                                Log.d("Details", "onEvent: Event" + note.area + note.fg);
 
                                 if (note.getUrl() == null) {
                                     note.setUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr");
                                     url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
-                                    details.add(note);
                                 } else {
                                     url = note.getUrl();
+                                }
+
+                                Log.d("Color", "onEvent: Event" + note.area + note.fg);
+
+                                if ((note.getProbability() >= lower) && (note.getProbability() <= higher)) {
                                     details.add(note);
                                 }
                             }
 
                             if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
-                            } else if (collection.equals("RegistrationDemo")){
+                            } else if (collection.equals("RegistrationDemo")) {
                                 regFinal(details);
                             }
                         }
@@ -565,9 +842,8 @@ public class PaymentDetails  extends AppCompatActivity {
         }
     }
 
-
     public void select1(View v) {
-        Intent intent = new Intent(PaymentDetails.this, DateSelector.class);
+        Intent intent = new Intent(TurnoutFGDetails.this, DateSelector.class);
         startActivity(intent);
     }
 }

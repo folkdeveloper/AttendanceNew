@@ -23,7 +23,7 @@ import java.util.TreeMap;
 
 import javax.annotation.Nullable;
 
-public class UniqueFG extends AppCompatActivity {
+public class TLViewFG extends AppCompatActivity {
 
     private FirebaseFirestore db;
     private CollectionReference fgboys;
@@ -43,7 +43,7 @@ public class UniqueFG extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_unique_fg);
+        setContentView(R.layout.activity_tlviewfg);
         collection = getIntent().getStringExtra("Collection");
         db = FirebaseFirestore.getInstance();
         fgboys = db.collection(collection);
@@ -133,7 +133,7 @@ public class UniqueFG extends AppCompatActivity {
                                 @Override
                                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                                     String fg = adapter.getItem(i).getKey();
-                                    Intent intent = new Intent(UniqueFG.this,UniqueDetails.class);
+                                    Intent intent = new Intent(TLViewFG.this, TLViewDetails.class);
                                     Bundle bundle = new Bundle();
                                     bundle.putLong("Date1",date1);
                                     bundle.putLong("Date2",date2);
@@ -202,7 +202,7 @@ public class UniqueFG extends AppCompatActivity {
                                 @Override
                                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                                     String fg = adapter.getItem(i).getKey();
-                                    Intent intent = new Intent(UniqueFG.this,UniqueDetails.class);
+                                    Intent intent = new Intent(TLViewFG.this, TLViewDetails.class);
                                     Bundle bundle = new Bundle();
                                     bundle.putLong("Date1",date1);
                                     bundle.putLong("Date2",date2);
@@ -274,7 +274,7 @@ public class UniqueFG extends AppCompatActivity {
                                 @Override
                                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                                     String fg = adapter.getItem(i).getKey();
-                                    Intent intent = new Intent(UniqueFG.this,UniqueDetails.class);
+                                    Intent intent = new Intent(TLViewFG.this, TLViewDetails.class);
                                     Bundle bundle = new Bundle();
                                     bundle.putLong("Date1",date1);
                                     bundle.putLong("Date2",date2);
@@ -344,7 +344,7 @@ public class UniqueFG extends AppCompatActivity {
                                 @Override
                                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                                     String fg = adapter.getItem(i).getKey();
-                                    Intent intent = new Intent(UniqueFG.this,UniqueDetails.class);
+                                    Intent intent = new Intent(TLViewFG.this, TLViewDetails.class);
                                     Bundle bundle = new Bundle();
                                     bundle.putLong("Date1",date1);
                                     bundle.putLong("Date2",date2);
@@ -416,7 +416,7 @@ public class UniqueFG extends AppCompatActivity {
                                 @Override
                                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                                     String fg = adapter.getItem(i).getKey();
-                                    Intent intent = new Intent(UniqueFG.this,UniqueDetails.class);
+                                    Intent intent = new Intent(TLViewFG.this, TLViewDetails.class);
                                     Bundle bundle = new Bundle();
                                     bundle.putLong("Date1",date1);
                                     bundle.putLong("Date2",date2);
@@ -486,7 +486,7 @@ public class UniqueFG extends AppCompatActivity {
                                 @Override
                                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                                     String fg = adapter.getItem(i).getKey();
-                                    Intent intent = new Intent(UniqueFG.this,UniqueDetails.class);
+                                    Intent intent = new Intent(TLViewFG.this, TLViewDetails.class);
                                     Bundle bundle = new Bundle();
                                     bundle.putLong("Date1",date1);
                                     bundle.putLong("Date2",date2);
@@ -558,7 +558,7 @@ public class UniqueFG extends AppCompatActivity {
                                 @Override
                                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                                     String fg = adapter.getItem(i).getKey();
-                                    Intent intent = new Intent(UniqueFG.this,UniqueDetails.class);
+                                    Intent intent = new Intent(TLViewFG.this, TLViewDetails.class);
                                     Bundle bundle = new Bundle();
                                     bundle.putLong("Date1",date1);
                                     bundle.putLong("Date2",date2);
@@ -628,7 +628,7 @@ public class UniqueFG extends AppCompatActivity {
                                 @Override
                                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                                     String fg = adapter.getItem(i).getKey();
-                                    Intent intent = new Intent(UniqueFG.this,UniqueDetails.class);
+                                    Intent intent = new Intent(TLViewFG.this, TLViewDetails.class);
                                     Bundle bundle = new Bundle();
                                     bundle.putLong("Date1",date1);
                                     bundle.putLong("Date2",date2);
@@ -701,7 +701,7 @@ public class UniqueFG extends AppCompatActivity {
                                 @Override
                                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                                     String fg = adapter.getItem(i).getKey();
-                                    Intent intent = new Intent(UniqueFG.this,UniqueDetails.class);
+                                    Intent intent = new Intent(TLViewFG.this, TLViewDetails.class);
                                     Bundle bundle = new Bundle();
                                     bundle.putLong("Date1",date1);
                                     bundle.putLong("Date2",date2);
@@ -772,7 +772,7 @@ public class UniqueFG extends AppCompatActivity {
                                 @Override
                                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                                     String fg = adapter.getItem(i).getKey();
-                                    Intent intent = new Intent(UniqueFG.this,UniqueDetails.class);
+                                    Intent intent = new Intent(TLViewFG.this, TLViewDetails.class);
                                     Bundle bundle = new Bundle();
                                     bundle.putLong("Date1",date1);
                                     bundle.putLong("Date2",date2);
@@ -845,7 +845,7 @@ public class UniqueFG extends AppCompatActivity {
                                 @Override
                                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                                     String fg = adapter.getItem(i).getKey();
-                                    Intent intent = new Intent(UniqueFG.this,UniqueDetails.class);
+                                    Intent intent = new Intent(TLViewFG.this, TLViewDetails.class);
                                     Bundle bundle = new Bundle();
                                     bundle.putLong("Date1",date1);
                                     bundle.putLong("Date2",date2);
@@ -916,7 +916,7 @@ public class UniqueFG extends AppCompatActivity {
                                 @Override
                                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                                     String fg = adapter.getItem(i).getKey();
-                                    Intent intent = new Intent(UniqueFG.this,UniqueDetails.class);
+                                    Intent intent = new Intent(TLViewFG.this, TLViewDetails.class);
                                     Bundle bundle = new Bundle();
                                     bundle.putLong("Date1",date1);
                                     bundle.putLong("Date2",date2);
@@ -989,7 +989,7 @@ public class UniqueFG extends AppCompatActivity {
                                 @Override
                                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                                     String fg = adapter.getItem(i).getKey();
-                                    Intent intent = new Intent(UniqueFG.this,UniqueDetails.class);
+                                    Intent intent = new Intent(TLViewFG.this, TLViewDetails.class);
                                     Bundle bundle = new Bundle();
                                     bundle.putLong("Date1",date1);
                                     bundle.putLong("Date2",date2);
@@ -1060,7 +1060,7 @@ public class UniqueFG extends AppCompatActivity {
                                 @Override
                                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                                     String fg = adapter.getItem(i).getKey();
-                                    Intent intent = new Intent(UniqueFG.this,UniqueDetails.class);
+                                    Intent intent = new Intent(TLViewFG.this, TLViewDetails.class);
                                     Bundle bundle = new Bundle();
                                     bundle.putLong("Date1",date1);
                                     bundle.putLong("Date2",date2);
@@ -1134,7 +1134,7 @@ public class UniqueFG extends AppCompatActivity {
                                 @Override
                                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                                     String fg = adapter.getItem(i).getKey();
-                                    Intent intent = new Intent(UniqueFG.this,UniqueDetails.class);
+                                    Intent intent = new Intent(TLViewFG.this, TLViewDetails.class);
                                     Bundle bundle = new Bundle();
                                     bundle.putLong("Date1",date1);
                                     bundle.putLong("Date2",date2);
@@ -1206,7 +1206,7 @@ public class UniqueFG extends AppCompatActivity {
                                 @Override
                                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                                     String fg = adapter.getItem(i).getKey();
-                                    Intent intent = new Intent(UniqueFG.this,UniqueDetails.class);
+                                    Intent intent = new Intent(TLViewFG.this, TLViewDetails.class);
                                     Bundle bundle = new Bundle();
                                     bundle.putLong("Date1",date1);
                                     bundle.putLong("Date2",date2);

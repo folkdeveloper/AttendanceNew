@@ -256,7 +256,7 @@ public class CollegeDetails extends AppCompatActivity {
                                 Log.d("Details", "onEvent: Event" + note.area + note.fg);
                                 details.add(note);
                             }
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -292,7 +292,7 @@ public class CollegeDetails extends AppCompatActivity {
                                 Log.d("Details", "onEvent: Event" + note.area + note.fg);
                                 details.add(note);
                             }
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -332,7 +332,7 @@ public class CollegeDetails extends AppCompatActivity {
                                 Log.d("Details", "onEvent: Event" + note.area + note.fg);
                                 details.add(note);
                             }
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -370,7 +370,7 @@ public class CollegeDetails extends AppCompatActivity {
                                 details.add(note);
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -411,7 +411,7 @@ public class CollegeDetails extends AppCompatActivity {
                                 details.add(note);
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -449,7 +449,7 @@ public class CollegeDetails extends AppCompatActivity {
                                 details.add(note);
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -491,7 +491,7 @@ public class CollegeDetails extends AppCompatActivity {
                                 details.add(note);
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
@@ -530,7 +530,7 @@ public class CollegeDetails extends AppCompatActivity {
                                 details.add(note);
                             }
 
-                            if (collection.equals("Attendancedemo")) {
+                            if (collection.equals("AttendanceDemo")) {
                                 detailsFinal(details);
                             } else if (collection.equals("RegistrationDemo")){
                                 regFinal(details);
