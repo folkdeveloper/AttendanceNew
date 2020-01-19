@@ -98,7 +98,7 @@ public class TurnoutActivity extends AppCompatActivity {
         }
 
         if (number30 > 0) {
-            count.put("30-40", new JapaClass(number30, per40));
+            count.put("30-40", new JapaClass(number30, per30));
         }
 
         if (number40 > 0) {
@@ -1152,5 +1152,17 @@ public class TurnoutActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    public void select1(View v) {
+        fgboys
+                .whereGreaterThanOrEqualTo("edate",date1)
+                .whereLessThan("edate",date2)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+
+                    }
+                });
     }
 }

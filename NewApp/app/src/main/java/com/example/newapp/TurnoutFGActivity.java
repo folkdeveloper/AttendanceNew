@@ -42,12 +42,7 @@ public class TurnoutFGActivity extends AppCompatActivity {
     private TextView mTextView;
     private long date1 = 0, date2 = 0;
     private int total = 0;
-    private int number0=0, number10=0, number20=0, number30=0, number40=0, number50=0, number60=0, number70=0,
-            number80=0, number90=0;
-    private double total0=0.0, total10=0.0, total20=0.0, total30=0.0, total40=0.0, total50=0.0, total60=0.0,
-            total70=0.0, total80=0.0, total90=0.0;
-    private double per0=0.0, per10=0.0, per20=0.0, per30=0.0, per40=0.0, per50=0.0, per60=0.0, per70=0.0,
-            per80=0.0, per90=0.0;
+    private double totalProbability = 0.0;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     private String spinnerPrograms = "";
     private String spinnerCategories = "";
@@ -352,6 +347,7 @@ public class TurnoutFGActivity extends AppCompatActivity {
 
                     if (spinnerSessions.equals("ALL")) {
                         total=0;
+                        totalProbability=0.0;
 
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate",date1)
@@ -374,17 +370,7 @@ public class TurnoutFGActivity extends AppCompatActivity {
 
                                             double turnout = note.getProbability();
                                             total++;
-
-                                            if (count.containsKey("ALL")) {
-                                                int studentsAll = count.get("ALL").getStudents();
-                                                int totalAll = (int) (studentsAll * count.get("ALL").getPercentage());
-                                                studentsAll++;
-                                                totalAll += turnout;
-                                                count.put("ALL", new JapaClass(studentsAll,
-                                                        Double.parseDouble(df.format(totalAll / studentsAll))));
-                                            } else {
-                                                count.put("ALL",new JapaClass(1,turnout));
-                                            }
+                                            totalProbability += turnout;
 
                                             if (count.containsKey(note.getFg())) {
                                                 JapaClass number = count.get(note.getFg());
@@ -398,11 +384,14 @@ public class TurnoutFGActivity extends AppCompatActivity {
                                                 count.put(note.getFg(), new JapaClass(1, turnout));
                                             }
                                         }
+
+                                        count.put("ALL",new JapaClass(total,Double.parseDouble(df.format(totalProbability / total))));
                                         populateTurnoutsAdapter(count);
                                     }
                                 });
                     } else {
                         total=0;
+                        totalProbability=0.0;
 
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate",date1)
@@ -426,17 +415,7 @@ public class TurnoutFGActivity extends AppCompatActivity {
 
                                             double turnout = note.getProbability();
                                             total++;
-
-                                            if (count.containsKey("ALL")) {
-                                                int studentsAll = count.get("ALL").getStudents();
-                                                int totalAll = (int) (studentsAll * count.get("ALL").getPercentage());
-                                                studentsAll++;
-                                                totalAll += turnout;
-                                                count.put("ALL", new JapaClass(studentsAll,
-                                                        Double.parseDouble(df.format(totalAll / studentsAll))));
-                                            } else {
-                                                count.put("ALL",new JapaClass(1,turnout));
-                                            }
+                                            totalProbability += turnout;
 
                                             if (count.containsKey(note.getFg())) {
                                                 JapaClass number = count.get(note.getFg());
@@ -450,6 +429,8 @@ public class TurnoutFGActivity extends AppCompatActivity {
                                                 count.put(note.getFg(), new JapaClass(1, turnout));
                                             }
                                         }
+
+                                        count.put("ALL",new JapaClass(total,Double.parseDouble(df.format(totalProbability / total))));
                                         populateTurnoutsAdapter(count);
                                     }
                                 });
@@ -508,7 +489,7 @@ public class TurnoutFGActivity extends AppCompatActivity {
 
                     if (spinnerSessions.equals("ALL")) {
                         total=0;
-
+                        totalProbability=0.0;
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate",date1)
                                 .whereLessThan("edate",date2)
@@ -531,17 +512,7 @@ public class TurnoutFGActivity extends AppCompatActivity {
 
                                             double turnout = note.getProbability();
                                             total++;
-
-                                            if (count.containsKey("ALL")) {
-                                                int studentsAll = count.get("ALL").getStudents();
-                                                int totalAll = (int) (studentsAll * count.get("ALL").getPercentage());
-                                                studentsAll++;
-                                                totalAll += turnout;
-                                                count.put("ALL", new JapaClass(studentsAll,
-                                                        Double.parseDouble(df.format(totalAll / studentsAll))));
-                                            } else {
-                                                count.put("ALL",new JapaClass(1,turnout));
-                                            }
+                                            totalProbability += turnout;
 
                                             if (count.containsKey(note.getFg())) {
                                                 JapaClass number = count.get(note.getFg());
@@ -555,11 +526,14 @@ public class TurnoutFGActivity extends AppCompatActivity {
                                                 count.put(note.getFg(), new JapaClass(1, turnout));
                                             }
                                         }
+
+                                        count.put("ALL",new JapaClass(total,Double.parseDouble(df.format(totalProbability / total))));
                                         populateTurnoutsAdapter(count);
                                     }
                                 });
                     } else {
                         total=0;
+                        totalProbability=0.0;
 
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate",date1)
@@ -584,17 +558,7 @@ public class TurnoutFGActivity extends AppCompatActivity {
 
                                             double turnout = note.getProbability();
                                             total++;
-
-                                            if (count.containsKey("ALL")) {
-                                                int studentsAll = count.get("ALL").getStudents();
-                                                int totalAll = (int) (studentsAll * count.get("ALL").getPercentage());
-                                                studentsAll++;
-                                                totalAll += turnout;
-                                                count.put("ALL", new JapaClass(studentsAll,
-                                                        Double.parseDouble(df.format(totalAll / studentsAll))));
-                                            } else {
-                                                count.put("ALL",new JapaClass(1,turnout));
-                                            }
+                                            totalProbability += turnout;
 
                                             if (count.containsKey(note.getFg())) {
                                                 JapaClass number = count.get(note.getFg());
@@ -608,6 +572,8 @@ public class TurnoutFGActivity extends AppCompatActivity {
                                                 count.put(note.getFg(), new JapaClass(1, turnout));
                                             }
                                         }
+
+                                        count.put("ALL",new JapaClass(total,Double.parseDouble(df.format(totalProbability / total))));
                                         populateTurnoutsAdapter(count);
                                     }
                                 });
@@ -673,6 +639,7 @@ public class TurnoutFGActivity extends AppCompatActivity {
 
                     if (spinnerSessions.equals("ALL")) {
                         total=0;
+                        totalProbability=0.0;
 
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate",date1)
@@ -696,17 +663,7 @@ public class TurnoutFGActivity extends AppCompatActivity {
 
                                             double turnout = note.getProbability();
                                             total++;
-
-                                            if (count.containsKey("ALL")) {
-                                                int studentsAll = count.get("ALL").getStudents();
-                                                int totalAll = (int) (studentsAll * count.get("ALL").getPercentage());
-                                                studentsAll++;
-                                                totalAll += turnout;
-                                                count.put("ALL", new JapaClass(studentsAll,
-                                                        Double.parseDouble(df.format(totalAll / studentsAll))));
-                                            } else {
-                                                count.put("ALL",new JapaClass(1,turnout));
-                                            }
+                                            totalProbability += turnout;
 
                                             if (count.containsKey(note.getFg())) {
                                                 JapaClass number = count.get(note.getFg());
@@ -720,11 +677,14 @@ public class TurnoutFGActivity extends AppCompatActivity {
                                                 count.put(note.getFg(), new JapaClass(1, turnout));
                                             }
                                         }
+
+                                        count.put("ALL",new JapaClass(total,Double.parseDouble(df.format(totalProbability / total))));
                                         populateTurnoutsAdapter(count);
                                     }
                                 });
                     } else {
                         total=0;
+                        totalProbability=0.0;
 
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate",date1)
@@ -749,17 +709,7 @@ public class TurnoutFGActivity extends AppCompatActivity {
 
                                             double turnout = note.getProbability();
                                             total++;
-
-                                            if (count.containsKey("ALL")) {
-                                                int studentsAll = count.get("ALL").getStudents();
-                                                int totalAll = (int) (studentsAll * count.get("ALL").getPercentage());
-                                                studentsAll++;
-                                                totalAll += turnout;
-                                                count.put("ALL", new JapaClass(studentsAll,
-                                                        Double.parseDouble(df.format(totalAll / studentsAll))));
-                                            } else {
-                                                count.put("ALL",new JapaClass(1,turnout));
-                                            }
+                                            totalProbability += turnout;
 
                                             if (count.containsKey(note.getFg())) {
                                                 JapaClass number = count.get(note.getFg());
@@ -773,6 +723,8 @@ public class TurnoutFGActivity extends AppCompatActivity {
                                                 count.put(note.getFg(), new JapaClass(1, turnout));
                                             }
                                         }
+
+                                        count.put("ALL",new JapaClass(total,Double.parseDouble(df.format(totalProbability / total))));
                                         populateTurnoutsAdapter(count);
                                     }
                                 });
@@ -832,6 +784,7 @@ public class TurnoutFGActivity extends AppCompatActivity {
 
                     if (spinnerSessions.equals("ALL")) {
                         total=0;
+                        totalProbability=0.0;
 
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate",date1)
@@ -856,17 +809,7 @@ public class TurnoutFGActivity extends AppCompatActivity {
 
                                             double turnout = note.getProbability();
                                             total++;
-
-                                            if (count.containsKey("ALL")) {
-                                                int studentsAll = count.get("ALL").getStudents();
-                                                int totalAll = (int) (studentsAll * count.get("ALL").getPercentage());
-                                                studentsAll++;
-                                                totalAll += turnout;
-                                                count.put("ALL", new JapaClass(studentsAll,
-                                                        Double.parseDouble(df.format(totalAll / studentsAll))));
-                                            } else {
-                                                count.put("ALL",new JapaClass(1,turnout));
-                                            }
+                                            totalProbability += turnout;
 
                                             if (count.containsKey(note.getFg())) {
                                                 JapaClass number = count.get(note.getFg());
@@ -880,11 +823,14 @@ public class TurnoutFGActivity extends AppCompatActivity {
                                                 count.put(note.getFg(), new JapaClass(1, turnout));
                                             }
                                         }
+
+                                        count.put("ALL",new JapaClass(total,Double.parseDouble(df.format(totalProbability / total))));
                                         populateTurnoutsAdapter(count);
                                     }
                                 });
                     } else {
                         total=0;
+                        totalProbability=0.0;
 
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate",date1)
@@ -910,6 +856,7 @@ public class TurnoutFGActivity extends AppCompatActivity {
 
                                             double turnout = note.getProbability();
                                             total++;
+                                            totalProbability += turnout;
 
                                             if (count.containsKey(note.getFg())) {
                                                 JapaClass number = count.get(note.getFg());
@@ -923,6 +870,8 @@ public class TurnoutFGActivity extends AppCompatActivity {
                                                 count.put(note.getFg(), new JapaClass(1, turnout));
                                             }
                                         }
+
+                                        count.put("ALL",new JapaClass(total,Double.parseDouble(df.format(totalProbability / total))));
                                         populateTurnoutsAdapter(count);
                                     }
                                 });

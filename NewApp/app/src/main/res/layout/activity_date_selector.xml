@@ -107,15 +107,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="select1"
-                android:text="View by program"
+                android:text="Program"
                 android:textSize="20dp" />
 
             <Button
-                android:id="@+id/button1"
+                android:id="@+id/button2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="select2"
-                android:text="View by area"
+                android:text="Area"
                 android:textSize="20dp" />
 
             <Button
@@ -123,7 +123,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="select3"
-                android:text="View by FOLK Level"
+                android:text="FOLK Level"
                 android:textSize="20dp" />
 
             <Button
@@ -131,7 +131,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="select4"
-                android:text="View by Color"
+                android:text="Color"
                 android:textSize="20dp" />
 
             <Button
@@ -139,7 +139,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="select5"
-                android:text="View by Occupation"
+                android:text="Occupation"
                 android:textSize="20dp" />
 
             <Button
@@ -147,7 +147,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="select6"
-                android:text="View by Japa"
+                android:text="Japa"
                 android:textSize="20dp" />
 
             <Button
@@ -155,7 +155,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="select7"
-                android:text="View by Branch"
+                android:text="Branch"
                 android:textSize="20dp" />
 
             <Button
@@ -163,7 +163,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="select8"
-                android:text="View by Organization"
+                android:text="Organization"
                 android:textSize="20dp" />
 
             <Button
@@ -171,7 +171,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="select9"
-                android:text="View by College"
+                android:text="College"
                 android:textSize="20dp" />
 
             <Button
@@ -179,7 +179,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="select10"
-                android:text="View by Source"
+                android:text="Source"
                 android:textSize="20dp" />
 
             <Button
@@ -187,7 +187,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="select11"
-                android:text="View by TL"
+                android:text="TL"
                 android:textSize="20dp" />
 
             <Button
@@ -195,7 +195,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="select14"
-                android:text="View by Unique Attendees"
+                android:text="Unique Attendees"
                 android:textSize="20dp" />
 
             <Button
@@ -203,7 +203,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="select12"
-                android:text="View by time"
+                android:text="Time"
                 android:textSize="20dp" />
 
             <Button
@@ -211,7 +211,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="select13"
-                android:text="View by Res Interest"
+                android:text="Res Interest"
                 android:textSize="20dp" />
         </LinearLayout>
         </androidx.core.widget.NestedScrollView>

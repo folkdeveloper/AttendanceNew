@@ -1021,4 +1021,76 @@ public class UniqueActivity extends AppCompatActivity {
             });
         }
     }
+
+    public void select1(View v) {
+        fgboys
+                .whereGreaterThanOrEqualTo("edate",date1)
+                .whereLessThan("edate",date2)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            return;
+                        }
+
+                        TreeMap<String, Integer> countName = new TreeMap<>();
+                        TreeMap<String, Integer> count = new TreeMap<>();
+
+                        for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
+                            Note note = documentSnapshot.toObject(Note.class);
+
+                            if (note.getName() == null) {
+                                continue;
+                            }
+
+                            if (note.getUrl() == null) {
+                                note.setUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr");
+                                url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
+                            }
+
+                            if (countName.containsKey(note.getName())) {
+                                continue;
+                            } else if (note.getCategory().equals("FOLK Intro")) {
+                                continue;
+                            }
+                            else {
+                                countName.put(note.getName(), 1);
+                                total++;
+                                count.put("ALL",total);
+                            }
+
+                            if (count.containsKey(note.getFg())) {
+                                int number = count.get(note.getFg());
+                                number++;
+                                count.put(note.getFg(),number);
+                            } else if (note.getCategory().equals("FOLK Intro")) {
+                                continue;
+                            } else {
+                                count.put(note.getFg(),1);
+                            }
+
+                            final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
+                            mListView.setAdapter((ListAdapter) adapter);
+
+                            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                    String fg = adapter.getItem(i).getKey();
+                                    Intent intent = new Intent(UniqueActivity.this, UniqueDetails.class);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putLong("Date1",date1);
+                                    bundle.putLong("Date2",date2);
+                                    bundle.putString("FG", fg);
+                                    bundle.putString("SpinPrograms", spinnerPrograms);
+                                    bundle.putString("SpinCategories", spinnerCategories);
+                                    bundle.putString("SpinSessions", spinnerSessions);
+                                    bundle.putString("Collection",collection);
+                                    intent.putExtras(bundle);
+                                    startActivity(intent);
+                                }
+                            });
+                        }
+                    }
+                });
+    }
 }
