@@ -103,6 +103,22 @@
             android:orientation="vertical">
 
             <Button
+                android:id="@+id/button14"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="select14"
+                android:text="Unique Attendees"
+                android:textSize="20dp" />
+
+            <Button
+                android:id="@+id/button11"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="select11"
+                android:text="TL"
+                android:textSize="20dp" />
+
+            <Button
                 android:id="@+id/button1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -180,22 +196,6 @@
                 android:layout_height="wrap_content"
                 android:onClick="select10"
                 android:text="Source"
-                android:textSize="20dp" />
-
-            <Button
-                android:id="@+id/button11"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="select11"
-                android:text="TL"
-                android:textSize="20dp" />
-
-            <Button
-                android:id="@+id/button14"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="select14"
-                android:text="Unique Attendees"
                 android:textSize="20dp" />
 
             <Button

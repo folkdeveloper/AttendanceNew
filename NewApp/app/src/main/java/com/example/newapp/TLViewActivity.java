@@ -61,6 +61,7 @@ public class TLViewActivity extends AppCompatActivity {
     String[] programs = new String[]{"ALL"};
     Spinner program, category, session;
     int posProgram, posCategory, posSession;
+    Button include, notInclude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +78,9 @@ public class TLViewActivity extends AppCompatActivity {
 
         programsList = Arrays.asList(programs);
         finalPrograms.addAll(programsList);
+
+        include = findViewById(R.id.button2);
+        notInclude = findViewById(R.id.button1);
 
         program = findViewById(R.id.program);
         category = findViewById(R.id.category);
@@ -136,6 +140,157 @@ public class TLViewActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void select1(View v) {
+        total=0;
+        notInclude.setBackgroundResource(R.drawable.button_selected);
+        include.setBackgroundResource(R.drawable.button_notselected);
+
+        fgboys
+                .whereGreaterThanOrEqualTo("edate",date1)
+                .whereLessThan("edate",date2)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            return;
+                        }
+
+                        TreeMap<String, Integer> countName = new TreeMap<>();
+                        TreeMap<String, Integer> count = new TreeMap<>();
+
+                        for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
+                            Note note = documentSnapshot.toObject(Note.class);
+
+                            if (note.getName() == null) {
+                                continue;
+                            }
+
+                            if (note.getUrl() == null) {
+                                note.setUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr");
+                                url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
+                            }
+
+                            if (countName.containsKey(note.getName())) {
+                                continue;
+                            } else if ((note.getCategory().equals("FOLK Intro"))
+                                    || (note.getCategory().equals("FOLK Plus"))) {
+                                continue;
+                            }
+
+                            else {
+                                countName.put(note.getName(), 1);
+                                total++;
+                                count.put("ALL",total);
+                            }
+
+                            if (count.containsKey(note.getZtl())) {
+                                int number = count.get(note.getZtl());
+                                number++;
+                                count.put(note.getZtl(),number);
+                            } else if ((note.getCategory().equals("FOLK Intro"))
+                                    || (note.getCategory().equals("FOLK Plus"))){
+                                continue;
+                            } else {
+                                count.put(note.getZtl(),1);
+                            }
+
+                            final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
+                            mListView.setAdapter((ListAdapter) adapter);
+
+                            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                    String tl = adapter.getItem(i).getKey();
+                                    Intent intent = new Intent(TLViewActivity.this, TLViewFG.class);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putLong("Date1",date1);
+                                    bundle.putLong("Date2",date2);
+                                    bundle.putString("TL",tl);
+                                    bundle.putString("SpinPrograms", spinnerPrograms);
+                                    bundle.putString("SpinCategories", spinnerCategories);
+                                    bundle.putString("SpinSessions", spinnerSessions);
+                                    bundle.putString("Collection",collection);
+                                    intent.putExtras(bundle);
+                                    startActivity(intent);
+                                }
+                            });
+                        }
+                    }
+                });
+    }
+
+    public void select2(View v) {
+        total=0;
+        include.setBackgroundResource(R.drawable.button_selected);
+        notInclude.setBackgroundResource(R.drawable.button_notselected);
+
+        fgboys
+                .whereGreaterThanOrEqualTo("edate",date1)
+                .whereLessThan("edate",date2)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            return;
+                        }
+
+                        TreeMap<String, Integer> countName = new TreeMap<>();
+                        TreeMap<String, Integer> count = new TreeMap<>();
+
+                        for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
+                            Note note = documentSnapshot.toObject(Note.class);
+
+                            if (note.getName() == null) {
+                                continue;
+                            }
+
+                            if (note.getUrl() == null) {
+                                note.setUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr");
+                                url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
+                            }
+
+                            if (countName.containsKey(note.getName())) {
+                                continue;
+                            }
+                            else {
+                                countName.put(note.getName(), 1);
+                                total++;
+                                count.put("ALL",total);
+                            }
+
+                            if (count.containsKey(note.getZtl())) {
+                                int number = count.get(note.getZtl());
+                                number++;
+                                count.put(note.getZtl(),number);
+                            } else {
+                                count.put(note.getZtl(),1);
+                            }
+
+                            final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
+                            mListView.setAdapter((ListAdapter) adapter);
+
+                            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                    String tl = adapter.getItem(i).getKey();
+                                    Intent intent = new Intent(TLViewActivity.this, TLViewFG.class);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putLong("Date1",date1);
+                                    bundle.putLong("Date2",date2);
+                                    bundle.putString("TL",tl);
+                                    bundle.putString("SpinPrograms", spinnerPrograms);
+                                    bundle.putString("SpinCategories", spinnerCategories);
+                                    bundle.putString("SpinSessions", spinnerSessions);
+                                    bundle.putString("Collection",collection);
+                                    intent.putExtras(bundle);
+                                    startActivity(intent);
+                                }
+                            });
+                        }
+                    }
+                });
     }
 
     public void populateCategories(String spinProgram) {

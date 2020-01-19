@@ -10,10 +10,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
@@ -61,7 +63,7 @@ public class UniqueActivity extends AppCompatActivity {
     String[] programs = new String[]{"ALL"};
     Spinner program, category, session;
     int posProgram, posCategory, posSession;
-
+    Button include, notInclude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +75,11 @@ public class UniqueActivity extends AppCompatActivity {
         mTextView = findViewById(R.id.textView2);
         mTextView.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
         mListView = findViewById(R.id.list_item);
-        date1 = getIntent().getLongExtra("Date1",date1);
-        date2 = getIntent().getLongExtra("Date2",date2);
+        date1 = getIntent().getLongExtra("Date1", date1);
+        date2 = getIntent().getLongExtra("Date2", date2);
+
+        include = findViewById(R.id.button2);
+        notInclude = findViewById(R.id.button1);
 
         programsList = Arrays.asList(programs);
         finalPrograms.addAll(programsList);
@@ -84,12 +89,11 @@ public class UniqueActivity extends AppCompatActivity {
         session = findViewById(R.id.session);
 
         adapterPrograms = new ArrayAdapter<String>(
-                this,R.layout.spinner_item,finalPrograms);
+                this, R.layout.spinner_item, finalPrograms);
         adapterPrograms.setDropDownViewResource(R.layout.spinner_item);
         program.setAdapter(adapterPrograms);
 
         fgboys
-//                .whereEqualTo("zzdate", date)
                 .whereGreaterThanOrEqualTo("edate", date1)
                 .whereLessThanOrEqualTo("edate", date2)
                 .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
@@ -123,20 +127,290 @@ public class UniqueActivity extends AppCompatActivity {
                 spinnerPrograms = parent.getItemAtPosition(position).toString();
                 posProgram = position;
 
-                if (spinnerPrograms.equals("ALL")) {
-                    spinProgram = "1";
-                    populateCategories(spinProgram);
-                } else {
-                    spinProgram = "2";
-                    populateCategories(spinProgram);
+                    if (spinnerPrograms.equals("ALL")) {
+                        spinProgram = "1";
+                        populateCategoriesWoIntro(spinProgram);
+                    } else {
+                        spinProgram = "2";
+                        populateCategoriesWoIntro(spinProgram);
+                    }
                 }
-            }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });
+    }
+
+    public void select1(View v) {
+        total=0;
+        notInclude.setBackgroundResource(R.drawable.button_selected);
+        include.setBackgroundResource(R.drawable.button_notselected);
+
+        fgboys
+                .whereGreaterThanOrEqualTo("edate",date1)
+                .whereLessThan("edate",date2)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            return;
+                        }
+
+                        TreeMap<String, Integer> countName = new TreeMap<>();
+                        TreeMap<String, Integer> count = new TreeMap<>();
+
+                        for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
+                            Note note = documentSnapshot.toObject(Note.class);
+
+                            if (note.getName() == null) {
+                                continue;
+                            }
+
+                            if (note.getUrl() == null) {
+                                note.setUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr");
+                                url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
+                            }
+
+                            if (countName.containsKey(note.getName())) {
+                                continue;
+                            } else if ((note.getCategory().equals("FOLK Intro"))
+                                    || (note.getCategory().equals("FOLK Plus"))) {
+                                continue;
+                            }
+
+                            else {
+                                countName.put(note.getName(), 1);
+                                total++;
+                                count.put("ALL",total);
+                            }
+
+                            if (count.containsKey(note.getFg())) {
+                                int number = count.get(note.getFg());
+                                number++;
+                                count.put(note.getFg(),number);
+                            } else if ((note.getCategory().equals("FOLK Intro"))
+                                    || (note.getCategory().equals("FOLK Plus"))){
+                                continue;
+                            } else {
+                                count.put(note.getFg(),1);
+                            }
+
+                            final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
+                            mListView.setAdapter((ListAdapter) adapter);
+
+                            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                    String fg = adapter.getItem(i).getKey();
+                                    Intent intent = new Intent(UniqueActivity.this, UniqueDetails.class);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putLong("Date1",date1);
+                                    bundle.putLong("Date2",date2);
+                                    bundle.putString("FG", fg);
+                                    bundle.putString("SpinPrograms", spinnerPrograms);
+                                    bundle.putString("SpinCategories", spinnerCategories);
+                                    bundle.putString("SpinSessions", spinnerSessions);
+                                    bundle.putString("Collection",collection);
+                                    intent.putExtras(bundle);
+                                    startActivity(intent);
+                                }
+                            });
+                        }
+                    }
+                });
+    }
+
+    public void select2(View v) {
+        total=0;
+        include.setBackgroundResource(R.drawable.button_selected);
+        notInclude.setBackgroundResource(R.drawable.button_notselected);
+
+        fgboys
+                .whereGreaterThanOrEqualTo("edate",date1)
+                .whereLessThan("edate",date2)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            return;
+                        }
+
+                        TreeMap<String, Integer> countName = new TreeMap<>();
+                        TreeMap<String, Integer> count = new TreeMap<>();
+
+                        for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
+                            Note note = documentSnapshot.toObject(Note.class);
+
+                            if (note.getName() == null) {
+                                continue;
+                            }
+
+                            if (note.getUrl() == null) {
+                                note.setUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr");
+                                url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
+                            }
+
+                            if (countName.containsKey(note.getName())) {
+                                continue;
+                            }
+                            else {
+                                countName.put(note.getName(), 1);
+                                total++;
+                                count.put("ALL",total);
+                            }
+
+                            if (count.containsKey(note.getFg())) {
+                                int number = count.get(note.getFg());
+                                number++;
+                                count.put(note.getFg(),number);
+                            } else {
+                                count.put(note.getFg(),1);
+                            }
+
+                            final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
+                            mListView.setAdapter((ListAdapter) adapter);
+
+                            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                    String fg = adapter.getItem(i).getKey();
+                                    Intent intent = new Intent(UniqueActivity.this, UniqueDetails.class);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putLong("Date1",date1);
+                                    bundle.putLong("Date2",date2);
+                                    bundle.putString("FG", fg);
+                                    bundle.putString("SpinPrograms", spinnerPrograms);
+                                    bundle.putString("SpinCategories", spinnerCategories);
+                                    bundle.putString("SpinSessions", spinnerSessions);
+                                    bundle.putString("Collection",collection);
+                                    intent.putExtras(bundle);
+                                    startActivity(intent);
+                                }
+                            });
+                        }
+                    }
+                });
+    }
+
+    public void populateCategoriesWoIntro(String spinProgram) {
+        final String spinPrograms = spinnerPrograms;
+
+        if (spinProgram.equals("1")) {
+            finalCategories = new ArrayList<String>();
+            categoriesList = Arrays.asList(categories);
+            finalCategories.addAll(categoriesList);
+
+            adapterCategories = new ArrayAdapter<String>
+                    (this,R.layout.spinner_item,finalCategories);
+
+            fgboys
+                    .whereGreaterThanOrEqualTo("edate", date1)
+                    .whereLessThanOrEqualTo("edate", date2)
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                            if (e != null) {
+                                return;
+                            }
+
+                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                Note note = documentSnapshot.toObject(Note.class);
+
+                                if ((finalCategories.contains(note.getCategory())) || (note.getCategory() == null)) {
+                                    continue;
+                                } else {
+                                    finalCategories.add(note.getCategory());
+                                    adapterCategories.notifyDataSetChanged();
+                                }
+
+                            }
+                        }
+                    });
+            adapterCategories.setDropDownViewResource(R.layout.spinner_item);
+            category.setAdapter(adapterCategories);
+
+            category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    spinnerCategories = parent.getItemAtPosition(position).toString();
+                    posCategory = position;
+
+                    if (spinnerCategories.equals("ALL")) {
+                        spinCategory = "1";
+                        populateSessionsPrograms(spinCategory,spinPrograms);
+                    } else {
+                        spinCategory = "2";
+                        populateSessionsPrograms(spinCategory,spinPrograms);
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+        }
+        else {
+            finalCategories = new ArrayList<String>();
+            categoriesList = Arrays.asList(categories);
+            finalCategories.addAll(categoriesList);
+
+            adapterCategories = new ArrayAdapter<String>
+                    (this,R.layout.spinner_item,finalCategories);
+
+            fgboys
+                    .whereGreaterThanOrEqualTo("edate", date1)
+                    .whereLessThanOrEqualTo("edate", date2)
+                    .whereEqualTo("program",spinPrograms)
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                            if (e != null) {
+                                return;
+                            }
+
+                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                Note note = documentSnapshot.toObject(Note.class);
+
+                                if ((finalCategories.contains(note.getCategory())) || (note.getCategory() == null)) {
+                                    continue;
+                                } else if (note.getCategory().equals("FOLK Intro")) {
+                                    continue;
+                                }
+                                else {
+                                    finalCategories.add(note.getCategory());
+                                    adapterCategories.notifyDataSetChanged();
+                                }
+                            }
+                        }
+                    });
+            adapterCategories.setDropDownViewResource(R.layout.spinner_item);
+            category.setAdapter(adapterCategories);
+
+            category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    spinnerCategories = parent.getItemAtPosition(position).toString();
+                    posCategory = position;
+
+                    if (spinnerCategories.equals("ALL")) {
+                        spinCategory = "1";
+                        populateSessions(spinCategory,spinPrograms);
+                    } else {
+                        spinCategory = "2";
+                        populateSessions(spinCategory,spinPrograms);
+                    }
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+        }
     }
 
     public void populateCategories(String spinProgram) {
@@ -1020,77 +1294,5 @@ public class UniqueActivity extends AppCompatActivity {
                 }
             });
         }
-    }
-
-    public void select1(View v) {
-        fgboys
-                .whereGreaterThanOrEqualTo("edate",date1)
-                .whereLessThan("edate",date2)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            return;
-                        }
-
-                        TreeMap<String, Integer> countName = new TreeMap<>();
-                        TreeMap<String, Integer> count = new TreeMap<>();
-
-                        for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
-                            Note note = documentSnapshot.toObject(Note.class);
-
-                            if (note.getName() == null) {
-                                continue;
-                            }
-
-                            if (note.getUrl() == null) {
-                                note.setUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr");
-                                url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
-                            }
-
-                            if (countName.containsKey(note.getName())) {
-                                continue;
-                            } else if (note.getCategory().equals("FOLK Intro")) {
-                                continue;
-                            }
-                            else {
-                                countName.put(note.getName(), 1);
-                                total++;
-                                count.put("ALL",total);
-                            }
-
-                            if (count.containsKey(note.getFg())) {
-                                int number = count.get(note.getFg());
-                                number++;
-                                count.put(note.getFg(),number);
-                            } else if (note.getCategory().equals("FOLK Intro")) {
-                                continue;
-                            } else {
-                                count.put(note.getFg(),1);
-                            }
-
-                            final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
-                            mListView.setAdapter((ListAdapter) adapter);
-
-                            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                    String fg = adapter.getItem(i).getKey();
-                                    Intent intent = new Intent(UniqueActivity.this, UniqueDetails.class);
-                                    Bundle bundle = new Bundle();
-                                    bundle.putLong("Date1",date1);
-                                    bundle.putLong("Date2",date2);
-                                    bundle.putString("FG", fg);
-                                    bundle.putString("SpinPrograms", spinnerPrograms);
-                                    bundle.putString("SpinCategories", spinnerCategories);
-                                    bundle.putString("SpinSessions", spinnerSessions);
-                                    bundle.putString("Collection",collection);
-                                    intent.putExtras(bundle);
-                                    startActivity(intent);
-                                }
-                            });
-                        }
-                    }
-                });
     }
 }

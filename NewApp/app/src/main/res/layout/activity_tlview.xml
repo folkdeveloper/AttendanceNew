@@ -43,17 +43,53 @@
 
     </LinearLayout>
 
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent">-->
-<!--        <androidx.core.widget.NestedScrollView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent">-->
+    <!--    <LinearLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent">-->
+    <!--        <androidx.core.widget.NestedScrollView-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="match_parent">-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="120dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="select2"
+            android:text="Include Non-FOLK"
+            android:background="@drawable/button_shape"/>
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="select1"
+            android:text="Only FOLK"
+            android:background="@drawable/button_shape"/>
+
+    </LinearLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="180dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
             <ListView
                 android:id="@+id/list_item"
                 android:layout_width="match_parent"
-                android:layout_height="718dp"
+                android:layout_height="1500dp"
                 android:layout_below="@+id/toolbar"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentLeft="true"
@@ -61,11 +97,11 @@
                 android:layout_alignParentBottom="true"
                 android:layout_marginStart="-1dp"
                 android:layout_marginLeft="-1dp"
-                android:layout_marginTop="86dp"
                 android:layout_marginEnd="2dp"
                 android:layout_marginBottom="-89dp"></ListView>
-<!--        </androidx.core.widget.NestedScrollView>-->
-<!--    </LinearLayout>-->
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"

@@ -16,7 +16,7 @@
     <ListView
         android:id="@+id/list_item"
         android:layout_width="match_parent"
-        android:layout_height="718dp"
+        android:layout_height="1500dp"
         android:layout_below="@+id/toolbar"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
