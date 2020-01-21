@@ -8,10 +8,10 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 import javax.annotation.Nullable;
 
-public class JapaTLDetails extends AppCompatActivity {
+public class RegToAttendDetails extends AppCompatActivity {
 
     private FirebaseFirestore db;
     private CollectionReference fgboys;
@@ -32,17 +32,19 @@ public class JapaTLDetails extends AppCompatActivity {
     ListView mListView;
     public static String fg = "";
     private long date1 = 0, date2 = 0;
-    public static String japa = "";
     private String url = "";
     public static String spinPrograms = "";
     public static String spinCategories = "";
     public static String spinSessions = "";
+    public static String clickedFirst = "";
+    public static String clicked = "";
     EditText searchFilter;
+    private TextView mTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_japa_tldetails);
+        setContentView(R.layout.activity_reg_to_attend_details);
         collection = getIntent().getStringExtra("Collection");
         db = FirebaseFirestore.getInstance();
         fgboys = db.collection(collection);
@@ -50,11 +52,15 @@ public class JapaTLDetails extends AppCompatActivity {
         fg = getIntent().getStringExtra("FG");
         date1 = getIntent().getLongExtra("Date1",date1);
         date2 = getIntent().getLongExtra("Date2",date2);
-        japa = getIntent().getStringExtra("Japa");
         spinPrograms= getIntent().getStringExtra("SpinPrograms");
         spinCategories= getIntent().getStringExtra("SpinCategories");
         spinSessions= getIntent().getStringExtra("SpinSessions");
+        clickedFirst = getIntent().getStringExtra("ClickedFirst");
+        clicked = getIntent().getStringExtra("Clicked");
         searchFilter = findViewById(R.id.searchFilter);
+        mTextView = findViewById(R.id.textView2);
+
+        mTextView.setText(spinSessions);
     }
 
     @Override
@@ -81,7 +87,7 @@ public class JapaTLDetails extends AppCompatActivity {
     }
 
     public void detailsFinal(ArrayList<Note> details) {
-        final DetailsAdapter adapterD = new DetailsAdapter(JapaTLDetails.this, R.layout.details_layout, details);
+        final DetailsAdapter adapterD = new DetailsAdapter(RegToAttendDetails.this, R.layout.details_layout, details);
         mListView.setAdapter(adapterD);
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -89,7 +95,7 @@ public class JapaTLDetails extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String name = adapterD.getItem(position).getName();
 
-                Intent intent = new Intent(JapaTLDetails.this, DetailsFinal.class);
+                Intent intent = new Intent(RegToAttendDetails.this, DetailsFinal.class);
                 Bundle bundle = new Bundle();
                 bundle.putLong("Date1",date1);
                 bundle.putLong("Date2",date2);
@@ -111,7 +117,7 @@ public class JapaTLDetails extends AppCompatActivity {
                 bundle.putString("Branch",adapterD.getItem(position).getBranch());
                 bundle.putString("Zone",adapterD.getItem(position).getZzone());
                 bundle.putString("Organisation",adapterD.getItem(position).getOrganization());
-                bundle.putString("TL",adapterD.getItem(position).getZtl());
+                bundle.putString("TL",adapterD.getItem(position).getFg());
                 bundle.putString("Level",adapterD.getItem(position).getZfl());
                 bundle.putString("Category",adapterD.getItem(position).getCategory());
                 bundle.putString("FID",adapterD.getItem(position).getFid());
@@ -148,7 +154,7 @@ public class JapaTLDetails extends AppCompatActivity {
     }
 
     public void regFinal(ArrayList<Note> details) {
-        final DetailsAdapter adapterD = new DetailsAdapter(JapaTLDetails.this, R.layout.details_layout, details);
+        final DetailsAdapter adapterD = new DetailsAdapter(RegToAttendDetails.this, R.layout.details_layout, details);
         mListView.setAdapter(adapterD);
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -156,7 +162,7 @@ public class JapaTLDetails extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String name = adapterD.getItem(position).getName();
 
-                Intent intent = new Intent(JapaTLDetails.this, RegFinalDetails.class);
+                Intent intent = new Intent(RegToAttendDetails.this, RegFinalDetails.class);
                 Bundle bundle = new Bundle();
                 bundle.putLong("Date1",date1);
                 bundle.putLong("Date2",date2);
@@ -178,7 +184,7 @@ public class JapaTLDetails extends AppCompatActivity {
                 bundle.putString("Branch",adapterD.getItem(position).getBranch());
                 bundle.putString("Zone",adapterD.getItem(position).getZzone());
                 bundle.putString("Organisation",adapterD.getItem(position).getOrganization());
-                bundle.putString("TL",adapterD.getItem(position).getZtl());
+                bundle.putString("TL",adapterD.getItem(position).getFg());
                 bundle.putString("Level",adapterD.getItem(position).getZfl());
                 bundle.putString("Category",adapterD.getItem(position).getCategory());
                 bundle.putLong("Edate",adapterD.getItem(position).getEdate());
@@ -243,7 +249,7 @@ public class JapaTLDetails extends AppCompatActivity {
     }
 
     public void populateListProgramsAndCategoriesAndSessions() {
-        if (japa.equals("5")) {
+        if (clickedFirst.equals("ALL")) {
             fgboys
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
@@ -258,7 +264,7 @@ public class JapaTLDetails extends AppCompatActivity {
                             Log.d("Details", "onEvent: Out");
                             String data = "";
                             ArrayList<Note> details = new ArrayList<>();
-                            for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
+                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                 Note note = documentSnapshot.toObject(Note.class);
 
                                 if (note.getUrl() == null) {
@@ -268,7 +274,34 @@ public class JapaTLDetails extends AppCompatActivity {
                                     url = note.getUrl();
                                 }
 
-                                details.add(note);
+                                if (note.getStatus() == null) {
+                                    note.setStatus("Not updated");
+                                }
+
+                                if (note.getAttended() == null) {
+                                    note.setStatus("No");
+                                }
+
+                                if (clicked.equals("Registered")) {
+                                    details.add(note);
+                                }
+
+                                if (clicked.equals("Coming")) {
+                                    if (note.getStatus().equals("Coming"))
+                                        details.add(note);
+                                }
+
+                                if (clicked.equals("Not Coming")) {
+                                    if (note.getStatus().equals("Not Coming"))
+                                        details.add(note);
+                                }
+
+                                Log.d("Details", "onEvent: "+clicked);
+
+                                if (clicked.equals("Attended")) {
+                                    if (note.getAttended().equals("Yes"))
+                                        details.add(note);
+                                }
                             }
 
                             if (collection.equals("AttendanceDemo")) {
@@ -280,6 +313,8 @@ public class JapaTLDetails extends AppCompatActivity {
                     });
         } else {
             fgboys
+                    .whereEqualTo("fg",fg)
+//                .whereEqualTo("zzdate", date)
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
                     .orderBy("edate")
@@ -293,7 +328,7 @@ public class JapaTLDetails extends AppCompatActivity {
                             Log.d("Details", "onEvent: Out");
                             String data = "";
                             ArrayList<Note> details = new ArrayList<>();
-                            for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
+                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                 Note note = documentSnapshot.toObject(Note.class);
 
                                 if (note.getUrl() == null) {
@@ -303,164 +338,33 @@ public class JapaTLDetails extends AppCompatActivity {
                                     url = note.getUrl();
                                 }
 
-                                switch (japa) {
-                                    case "0" :
-                                        if ((note.getJapa().equals("0"))) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                    case "1" :
-                                        if ((note.getJapa().equals("1")) || (note.getJapa().equals("2"))) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                    case "2" :
-                                        if ((note.getJapa().equals("3")) || (note.getJapa().equals("4"))) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                    case "3" :
-                                        if ((note.getJapa().equals("5")) || (note.getJapa().equals("6"))
-                                                || (note.getJapa().equals("7")) || (note.getJapa().equals("8"))) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                    case "4" :
-                                        if ((note.getJapa().equals("9")) || (note.getJapa().equals("10")) ||
-                                                (note.getJapa().equals("11")) || (note.getJapa().equals("12")) ||
-                                                (note.getJapa().equals("13")) || (note.getJapa().equals("14")) ||
-                                                (note.getJapa().equals("15"))) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                    case "6" :
-                                        if (note.getJapa().equals("16")) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                }
-                            }
-
-                            if (collection.equals("AttendanceDemo")) {
-                                detailsFinal(details);
-                            } else if (collection.equals("RegistrationDemo")){
-                                regFinal(details);
-                            }
-                        }
-                    });
-        }
-    }
-
-    public void populateListProgramsAndSessions() {
-        if (japa.equals("5")) {
-            fgboys
-                    .whereEqualTo("category",spinCategories)
-                    .whereGreaterThanOrEqualTo("edate", date1)
-                    .whereLessThanOrEqualTo("edate", date2)
-                    .orderBy("edate")
-                    .orderBy("name")
-                    .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
-                        @Override
-                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                            if (e != null) {
-                                return;
-                            }
-                            Log.d("Details", "onEvent: Out");
-                            String data = "";
-                            ArrayList<Note> details = new ArrayList<>();
-                            for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
-                                Note note = documentSnapshot.toObject(Note.class);
-
-                                if (note.getUrl() == null) {
-                                    note.setUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr");
-                                    url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
-                                } else {
-                                    url = note.getUrl();
+                                if (note.getStatus() == null) {
+                                    note.setStatus("Not updated");
                                 }
 
-                                details.add(note);
-                            }
-
-                            if (collection.equals("AttendanceDemo")) {
-                                detailsFinal(details);
-                            } else if (collection.equals("RegistrationDemo")){
-                                regFinal(details);
-                            }
-                        }
-                    });
-        } else {
-            fgboys
-                    .whereEqualTo("category",spinCategories)
-                    .whereGreaterThanOrEqualTo("edate", date1)
-                    .whereLessThanOrEqualTo("edate", date2)
-                    .orderBy("edate")
-                    .orderBy("name")
-                    .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
-                        @Override
-                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                            if (e != null) {
-                                return;
-                            }
-                            Log.d("Details", "onEvent: Out");
-                            String data = "";
-                            ArrayList<Note> details = new ArrayList<>();
-                            for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
-                                Note note = documentSnapshot.toObject(Note.class);
-
-                                if (note.getUrl() == null) {
-                                    note.setUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr");
-                                    url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
-                                } else {
-                                    url = note.getUrl();
+                                if (note.getAttended() == null) {
+                                    note.setStatus("No");
                                 }
 
-                                switch (japa) {
-                                    case "0" :
-                                        if ((note.getJapa().equals("0"))) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                    case "1" :
-                                        if ((note.getJapa().equals("1")) || (note.getJapa().equals("2"))) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                    case "2" :
-                                        if ((note.getJapa().equals("3")) || (note.getJapa().equals("4"))) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                    case "3" :
-                                        if ((note.getJapa().equals("5")) || (note.getJapa().equals("6"))
-                                                || (note.getJapa().equals("7")) || (note.getJapa().equals("8"))) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                    case "4" :
-                                        if ((note.getJapa().equals("9")) || (note.getJapa().equals("10")) ||
-                                                (note.getJapa().equals("11")) || (note.getJapa().equals("12")) ||
-                                                (note.getJapa().equals("13")) || (note.getJapa().equals("14")) ||
-                                                (note.getJapa().equals("15"))) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                    case "6" :
-                                        if (note.getJapa().equals("16")) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
+                                if (clicked.equals("Registered")) {
+                                    details.add(note);
+                                }
+
+                                if (clicked.equals("Coming")) {
+                                    if (note.getStatus().equals("Coming"))
+                                        details.add(note);
+                                }
+
+                                if (clicked.equals("Not Coming")) {
+                                    if (note.getStatus().equals("Not Coming"))
+                                        details.add(note);
+                                }
+
+                                Log.d("Details", "onEvent: "+clicked);
+
+                                if (clicked.equals("Attended")) {
+                                    if (note.getAttended().equals("Yes"))
+                                        details.add(note);
                                 }
                             }
 
@@ -475,8 +379,9 @@ public class JapaTLDetails extends AppCompatActivity {
     }
 
     public void populateListProgramsAndCategories() {
-        if (japa.equals("5")) {
+        if (clickedFirst.equals("ALL")) {
             fgboys
+//                .whereEqualTo("zzdate", date)
                     .whereEqualTo("session",spinSessions)
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
@@ -491,7 +396,7 @@ public class JapaTLDetails extends AppCompatActivity {
                             Log.d("Details", "onEvent: Out");
                             String data = "";
                             ArrayList<Note> details = new ArrayList<>();
-                            for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
+                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                 Note note = documentSnapshot.toObject(Note.class);
 
                                 if (note.getUrl() == null) {
@@ -501,7 +406,26 @@ public class JapaTLDetails extends AppCompatActivity {
                                     url = note.getUrl();
                                 }
 
-                                details.add(note);
+                                if (note.getStatus() == null) {
+                                    note.setStatus("Not updated");
+                                }
+
+                                if (note.getAttended() == null) {
+                                    note.setStatus("No");
+                                }
+
+                                if (clicked.equals("Registered")) {
+                                    details.add(note);
+                                } else if (clicked.equals("Coming")) {
+                                    if (note.getStatus().equals("Coming"))
+                                        details.add(note);
+                                } else if (clicked.equals("Not Coming")) {
+                                    if (note.getStatus().equals("Not Coming"))
+                                        details.add(note);
+                                } else if (clicked.equals("Attended")) {
+                                    if (note.getAttended().equals("Yes"))
+                                        details.add(note);
+                                }
                             }
 
                             if (collection.equals("AttendanceDemo")) {
@@ -513,6 +437,8 @@ public class JapaTLDetails extends AppCompatActivity {
                     });
         } else {
             fgboys
+                    .whereEqualTo("fg",fg)
+//                .whereEqualTo("zzdate", date)
                     .whereEqualTo("session",spinSessions)
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
@@ -527,7 +453,7 @@ public class JapaTLDetails extends AppCompatActivity {
                             Log.d("Details", "onEvent: Out");
                             String data = "";
                             ArrayList<Note> details = new ArrayList<>();
-                            for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
+                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                 Note note = documentSnapshot.toObject(Note.class);
 
                                 if (note.getUrl() == null) {
@@ -537,47 +463,142 @@ public class JapaTLDetails extends AppCompatActivity {
                                     url = note.getUrl();
                                 }
 
-                                switch (japa) {
-                                    case "0" :
-                                        if ((note.getJapa().equals("0"))) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                    case "1" :
-                                        if ((note.getJapa().equals("1")) || (note.getJapa().equals("2"))) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                    case "2" :
-                                        if ((note.getJapa().equals("3")) || (note.getJapa().equals("4"))) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                    case "3" :
-                                        if ((note.getJapa().equals("5")) || (note.getJapa().equals("6"))
-                                                || (note.getJapa().equals("7")) || (note.getJapa().equals("8"))) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                    case "4" :
-                                        if ((note.getJapa().equals("9")) || (note.getJapa().equals("10")) ||
-                                                (note.getJapa().equals("11")) || (note.getJapa().equals("12")) ||
-                                                (note.getJapa().equals("13")) || (note.getJapa().equals("14")) ||
-                                                (note.getJapa().equals("15"))) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                    case "6" :
-                                        if (note.getJapa().equals("16")) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
+                                if (note.getStatus() == null) {
+                                    note.setStatus("Not updated");
+                                }
+
+                                if (note.getAttended() == null) {
+                                    note.setStatus("No");
+                                }
+
+                                if (clicked.equals("Registered")) {
+                                    details.add(note);
+                                } else if (clicked.equals("Coming")) {
+                                    if (note.getStatus().equals("Coming"))
+                                        details.add(note);
+                                } else if (clicked.equals("Not Coming")) {
+                                    if (note.getStatus().equals("Not Coming"))
+                                        details.add(note);
+                                } else if (clicked.equals("Attended")) {
+                                    if (note.getAttended().equals("Yes"))
+                                        details.add(note);
+                                }
+                            }
+
+                            if (collection.equals("AttendanceDemo")) {
+                                detailsFinal(details);
+                            } else if (collection.equals("RegistrationDemo")){
+                                regFinal(details);
+                            }
+                        }
+                    });
+        }
+    }
+
+    public void populateListProgramsAndSessions() {
+        if (clickedFirst.equals("ALL")) {
+            fgboys
+//                .whereEqualTo("zzdate", date)
+                    .whereEqualTo("category",spinCategories)
+                    .whereGreaterThanOrEqualTo("edate", date1)
+                    .whereLessThanOrEqualTo("edate", date2)
+                    .orderBy("edate")
+                    .orderBy("name")
+                    .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                            if (e != null) {
+                                return;
+                            }
+                            Log.d("Details", "onEvent: Out");
+                            String data = "";
+                            ArrayList<Note> details = new ArrayList<>();
+                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                Note note = documentSnapshot.toObject(Note.class);
+
+                                if (note.getUrl() == null) {
+                                    note.setUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr");
+                                    url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
+                                } else {
+                                    url = note.getUrl();
+                                }
+
+                                if (note.getStatus() == null) {
+                                    note.setStatus("Not updated");
+                                }
+
+                                if (note.getAttended() == null) {
+                                    note.setStatus("No");
+                                }
+
+                                if (clicked.equals("Registered")) {
+                                    details.add(note);
+                                } else if (clicked.equals("Coming")) {
+                                    if (note.getStatus().equals("Coming"))
+                                        details.add(note);
+                                } else if (clicked.equals("Not Coming")) {
+                                    if (note.getStatus().equals("Not Coming"))
+                                        details.add(note);
+                                } else if (clicked.equals("Attended")) {
+                                    if (note.getAttended().equals("Yes"))
+                                        details.add(note);
+                                }
+                            }
+
+                            if (collection.equals("AttendanceDemo")) {
+                                detailsFinal(details);
+                            } else if (collection.equals("RegistrationDemo")){
+                                regFinal(details);
+                            }
+                        }
+                    });
+        } else {
+            fgboys
+                    .whereEqualTo("fg",fg)
+//                .whereEqualTo("zzdate", date)
+                    .whereEqualTo("category",spinCategories)
+                    .whereGreaterThanOrEqualTo("edate", date1)
+                    .whereLessThanOrEqualTo("edate", date2)
+                    .orderBy("edate")
+                    .orderBy("name")
+                    .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                            if (e != null) {
+                                return;
+                            }
+                            Log.d("Details", "onEvent: Out");
+                            String data = "";
+                            ArrayList<Note> details = new ArrayList<>();
+                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                Note note = documentSnapshot.toObject(Note.class);
+
+                                if (note.getUrl() == null) {
+                                    note.setUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr");
+                                    url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
+                                } else {
+                                    url = note.getUrl();
+                                }
+
+                                if (note.getStatus() == null) {
+                                    note.setStatus("Not updated");
+                                }
+
+                                if (note.getAttended() == null) {
+                                    note.setStatus("No");
+                                }
+
+                                if (clicked.equals("Registered")) {
+                                    details.add(note);
+                                } else if (clicked.equals("Coming")) {
+                                    if (note.getStatus().equals("Coming"))
+                                        details.add(note);
+                                } else if (clicked.equals("Not Coming")) {
+                                    if (note.getStatus().equals("Not Coming"))
+                                        details.add(note);
+                                } else if (clicked.equals("Attended")) {
+                                    if (note.getAttended().equals("Yes"))
+                                        details.add(note);
                                 }
                             }
 
@@ -592,7 +613,7 @@ public class JapaTLDetails extends AppCompatActivity {
     }
 
     public void populateListCategoriesAndSessions() {
-        if (japa.equals("5")) {
+        if (clickedFirst.equals("ALL")) {
             fgboys
                     .whereEqualTo("program",spinPrograms)
                     .whereGreaterThanOrEqualTo("edate", date1)
@@ -608,7 +629,7 @@ public class JapaTLDetails extends AppCompatActivity {
                             Log.d("Details", "onEvent: Out");
                             String data = "";
                             ArrayList<Note> details = new ArrayList<>();
-                            for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
+                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                 Note note = documentSnapshot.toObject(Note.class);
 
                                 if (note.getUrl() == null) {
@@ -618,124 +639,26 @@ public class JapaTLDetails extends AppCompatActivity {
                                     url = note.getUrl();
                                 }
 
-                                details.add(note);
-                            }
-                            if (collection.equals("AttendanceDemo")) {
-                                detailsFinal(details);
-                            } else if (collection.equals("RegistrationDemo")){
-                                regFinal(details);
-                            }
-                        }
-                    });
-        } else {
-            fgboys
-                    .whereEqualTo("program",spinPrograms)
-                    .whereGreaterThanOrEqualTo("edate", date1)
-                    .whereLessThanOrEqualTo("edate", date2)
-                    .orderBy("edate")
-                    .orderBy("name")
-                    .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
-                        @Override
-                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                            if (e != null) {
-                                return;
-                            }
-                            Log.d("Details", "onEvent: Out");
-                            String data = "";
-                            ArrayList<Note> details = new ArrayList<>();
-                            for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
-                                Note note = documentSnapshot.toObject(Note.class);
-
-                                if (note.getUrl() == null) {
-                                    note.setUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr");
-                                    url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
-                                } else {
-                                    url = note.getUrl();
+                                if (note.getStatus() == null) {
+                                    note.setStatus("Not updated");
                                 }
 
-                                switch (japa) {
-                                    case "0" :
-                                        if ((note.getJapa().equals("0"))) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                    case "1" :
-                                        if ((note.getJapa().equals("1")) || (note.getJapa().equals("2"))) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                    case "2" :
-                                        if ((note.getJapa().equals("3")) || (note.getJapa().equals("4"))) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                    case "3" :
-                                        if ((note.getJapa().equals("5")) || (note.getJapa().equals("6"))
-                                                || (note.getJapa().equals("7")) || (note.getJapa().equals("8"))) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                    case "4" :
-                                        if ((note.getJapa().equals("9")) || (note.getJapa().equals("10")) ||
-                                                (note.getJapa().equals("11")) || (note.getJapa().equals("12")) ||
-                                                (note.getJapa().equals("13")) || (note.getJapa().equals("14")) ||
-                                                (note.getJapa().equals("15"))) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                    case "6" :
-                                        if (note.getJapa().equals("16")) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                }
-                            }
-
-                            if (collection.equals("AttendanceDemo")) {
-                                detailsFinal(details);
-                            } else if (collection.equals("RegistrationDemo")){
-                                regFinal(details);
-                            }
-                        }
-                    });
-        }
-    }
-
-    public void populateListCategories() {
-        if (japa.equals("5")) {
-            fgboys
-                    .whereEqualTo("program",spinPrograms)
-                    .whereEqualTo("session",spinSessions)
-                    .whereGreaterThanOrEqualTo("edate", date1)
-                    .whereLessThanOrEqualTo("edate", date2)
-                    .orderBy("edate")
-                    .orderBy("name")
-                    .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
-                        @Override
-                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                            if (e != null) {
-                                return;
-                            }
-                            Log.d("Details", "onEvent: Out");
-                            String data = "";
-                            ArrayList<Note> details = new ArrayList<>();
-                            for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
-                                Note note = documentSnapshot.toObject(Note.class);
-
-                                if (note.getUrl() == null) {
-                                    note.setUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr");
-                                    url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
-                                } else {
-                                    url = note.getUrl();
+                                if (note.getAttended() == null) {
+                                    note.setStatus("No");
                                 }
 
-                                details.add(note);
+                                if (clicked.equals("Registered")) {
+                                    details.add(note);
+                                } else if (clicked.equals("Coming")) {
+                                    if (note.getStatus().equals("Coming"))
+                                        details.add(note);
+                                } else if (clicked.equals("Not Coming")) {
+                                    if (note.getStatus().equals("Not Coming"))
+                                        details.add(note);
+                                } else if (clicked.equals("Attended")) {
+                                    if (note.getAttended().equals("Yes"))
+                                        details.add(note);
+                                }
                             }
 
                             if (collection.equals("AttendanceDemo")) {
@@ -747,8 +670,8 @@ public class JapaTLDetails extends AppCompatActivity {
                     });
         } else {
             fgboys
+                    .whereEqualTo("fg",fg)
                     .whereEqualTo("program",spinPrograms)
-                    .whereEqualTo("session",spinSessions)
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
                     .orderBy("edate")
@@ -762,7 +685,7 @@ public class JapaTLDetails extends AppCompatActivity {
                             Log.d("Details", "onEvent: Out");
                             String data = "";
                             ArrayList<Note> details = new ArrayList<>();
-                            for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
+                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                 Note note = documentSnapshot.toObject(Note.class);
 
                                 if (note.getUrl() == null) {
@@ -772,47 +695,25 @@ public class JapaTLDetails extends AppCompatActivity {
                                     url = note.getUrl();
                                 }
 
-                                switch (japa) {
-                                    case "0" :
-                                        if ((note.getJapa().equals("0"))) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                    case "1" :
-                                        if ((note.getJapa().equals("1")) || (note.getJapa().equals("2"))) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                    case "2" :
-                                        if ((note.getJapa().equals("3")) || (note.getJapa().equals("4"))) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                    case "3" :
-                                        if ((note.getJapa().equals("5")) || (note.getJapa().equals("6"))
-                                                || (note.getJapa().equals("7")) || (note.getJapa().equals("8"))) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                    case "4" :
-                                        if ((note.getJapa().equals("9")) || (note.getJapa().equals("10")) ||
-                                                (note.getJapa().equals("11")) || (note.getJapa().equals("12")) ||
-                                                (note.getJapa().equals("13")) || (note.getJapa().equals("14")) ||
-                                                (note.getJapa().equals("15"))) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                    case "6" :
-                                        if (note.getJapa().equals("16")) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
+                                if (note.getStatus() == null) {
+                                    note.setStatus("Not updated");
+                                }
+
+                                if (note.getAttended() == null) {
+                                    note.setStatus("No");
+                                }
+
+                                if (clicked.equals("Registered")) {
+                                    details.add(note);
+                                } else if (clicked.equals("Coming")) {
+                                    if (note.getStatus().equals("Coming"))
+                                        details.add(note);
+                                } else if (clicked.equals("Not Coming")) {
+                                    if (note.getStatus().equals("Not Coming"))
+                                        details.add(note);
+                                } else if (clicked.equals("Attended")) {
+                                    if (note.getAttended().equals("Yes"))
+                                        details.add(note);
                                 }
                             }
 
@@ -827,8 +728,9 @@ public class JapaTLDetails extends AppCompatActivity {
     }
 
     public void populateListPrograms() {
-        if (japa.equals("5")) {
+        if (clickedFirst.equals("ALL")) {
             fgboys
+//                .whereEqualTo("zzdate", date)
                     .whereEqualTo("category",spinCategories)
                     .whereEqualTo("session",spinSessions)
                     .whereGreaterThanOrEqualTo("edate", date1)
@@ -844,7 +746,7 @@ public class JapaTLDetails extends AppCompatActivity {
                             Log.d("Details", "onEvent: Out");
                             String data = "";
                             ArrayList<Note> details = new ArrayList<>();
-                            for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
+                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                 Note note = documentSnapshot.toObject(Note.class);
 
                                 if (note.getUrl() == null) {
@@ -854,7 +756,26 @@ public class JapaTLDetails extends AppCompatActivity {
                                     url = note.getUrl();
                                 }
 
-                                details.add(note);
+                                if (note.getStatus() == null) {
+                                    note.setStatus("Not updated");
+                                }
+
+                                if (note.getAttended() == null) {
+                                    note.setStatus("No");
+                                }
+
+                                if (clicked.equals("Registered")) {
+                                    details.add(note);
+                                } else if (clicked.equals("Coming")) {
+                                    if (note.getStatus().equals("Coming"))
+                                        details.add(note);
+                                } else if (clicked.equals("Not Coming")) {
+                                    if (note.getStatus().equals("Not Coming"))
+                                        details.add(note);
+                                } else if (clicked.equals("Attended")) {
+                                    if (note.getAttended().equals("Yes"))
+                                        details.add(note);
+                                }
                             }
 
                             if (collection.equals("AttendanceDemo")) {
@@ -866,6 +787,8 @@ public class JapaTLDetails extends AppCompatActivity {
                     });
         } else {
             fgboys
+                    .whereEqualTo("fg",fg)
+//                .whereEqualTo("zzdate", date)
                     .whereEqualTo("category",spinCategories)
                     .whereEqualTo("session",spinSessions)
                     .whereGreaterThanOrEqualTo("edate", date1)
@@ -881,7 +804,7 @@ public class JapaTLDetails extends AppCompatActivity {
                             Log.d("Details", "onEvent: Out");
                             String data = "";
                             ArrayList<Note> details = new ArrayList<>();
-                            for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
+                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                 Note note = documentSnapshot.toObject(Note.class);
 
                                 if (note.getUrl() == null) {
@@ -891,47 +814,144 @@ public class JapaTLDetails extends AppCompatActivity {
                                     url = note.getUrl();
                                 }
 
-                                switch (japa) {
-                                    case "0" :
-                                        if ((note.getJapa().equals("0"))) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                    case "1" :
-                                        if ((note.getJapa().equals("1")) || (note.getJapa().equals("2"))) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                    case "2" :
-                                        if ((note.getJapa().equals("3")) || (note.getJapa().equals("4"))) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                    case "3" :
-                                        if ((note.getJapa().equals("5")) || (note.getJapa().equals("6"))
-                                                || (note.getJapa().equals("7")) || (note.getJapa().equals("8"))) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                    case "4" :
-                                        if ((note.getJapa().equals("9")) || (note.getJapa().equals("10")) ||
-                                                (note.getJapa().equals("11")) || (note.getJapa().equals("12")) ||
-                                                (note.getJapa().equals("13")) || (note.getJapa().equals("14")) ||
-                                                (note.getJapa().equals("15"))) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                    case "6" :
-                                        if (note.getJapa().equals("16")) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
+                                if (note.getStatus() == null) {
+                                    note.setStatus("Not updated");
+                                }
+
+                                if (note.getAttended() == null) {
+                                    note.setStatus("No");
+                                }
+
+                                if (clicked.equals("Registered")) {
+                                    details.add(note);
+                                } else if (clicked.equals("Coming")) {
+                                    if (note.getStatus().equals("Coming"))
+                                        details.add(note);
+                                } else if (clicked.equals("Not Coming")) {
+                                    if (note.getStatus().equals("Not Coming"))
+                                        details.add(note);
+                                } else if (clicked.equals("Attended")) {
+                                    if (note.getAttended().equals("Yes"))
+                                        details.add(note);
+                                }
+                            }
+
+                            if (collection.equals("AttendanceDemo")) {
+                                detailsFinal(details);
+                            } else if (collection.equals("RegistrationDemo")){
+                                regFinal(details);
+                            }
+                        }
+                    });
+        }
+    }
+
+    public void populateListCategories() {
+        if (clickedFirst.equals("ALL")) {
+            fgboys
+//                .whereEqualTo("zzdate", date)
+                    .whereEqualTo("session",spinSessions)
+                    .whereEqualTo("program",spinPrograms)
+                    .whereGreaterThanOrEqualTo("edate", date1)
+                    .whereLessThanOrEqualTo("edate", date2)
+                    .orderBy("edate")
+                    .orderBy("name")
+                    .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                            if (e != null) {
+                                return;
+                            }
+                            Log.d("Details", "onEvent: Out");
+                            String data = "";
+                            ArrayList<Note> details = new ArrayList<>();
+                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                Note note = documentSnapshot.toObject(Note.class);
+
+                                if (note.getUrl() == null) {
+                                    note.setUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr");
+                                    url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
+                                } else {
+                                    url = note.getUrl();
+                                }
+
+                                if (note.getStatus() == null) {
+                                    note.setStatus("Not updated");
+                                }
+
+                                if (note.getAttended() == null) {
+                                    note.setStatus("No");
+                                }
+
+                                if (clicked.equals("Registered")) {
+                                    details.add(note);
+                                } else if (clicked.equals("Coming")) {
+                                    if (note.getStatus().equals("Coming"))
+                                        details.add(note);
+                                } else if (clicked.equals("Not Coming")) {
+                                    if (note.getStatus().equals("Not Coming"))
+                                        details.add(note);
+                                } else if (clicked.equals("Attended")) {
+                                    if (note.getAttended().equals("Yes"))
+                                        details.add(note);
+                                }
+                            }
+
+                            if (collection.equals("AttendanceDemo")) {
+                                detailsFinal(details);
+                            } else if (collection.equals("RegistrationDemo")){
+                                regFinal(details);
+                            }
+                        }
+                    });
+        } else {
+            fgboys
+                    .whereEqualTo("fg",fg)
+//                .whereEqualTo("zzdate", date)
+                    .whereEqualTo("session",spinSessions)
+                    .whereEqualTo("program",spinPrograms)
+                    .whereGreaterThanOrEqualTo("edate", date1)
+                    .whereLessThanOrEqualTo("edate", date2)
+                    .orderBy("edate")
+                    .orderBy("name")
+                    .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                            if (e != null) {
+                                return;
+                            }
+                            Log.d("Details", "onEvent: Out");
+                            String data = "";
+                            ArrayList<Note> details = new ArrayList<>();
+                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                Note note = documentSnapshot.toObject(Note.class);
+
+                                if (note.getUrl() == null) {
+                                    note.setUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr");
+                                    url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
+                                } else {
+                                    url = note.getUrl();
+                                }
+
+                                if (note.getStatus() == null) {
+                                    note.setStatus("Not updated");
+                                }
+
+                                if (note.getAttended() == null) {
+                                    note.setStatus("No");
+                                }
+
+                                if (clicked.equals("Registered")) {
+                                    details.add(note);
+                                } else if (clicked.equals("Coming")) {
+                                    if (note.getStatus().equals("Coming"))
+                                        details.add(note);
+                                } else if (clicked.equals("Not Coming")) {
+                                    if (note.getStatus().equals("Not Coming"))
+                                        details.add(note);
+                                } else if (clicked.equals("Attended")) {
+                                    if (note.getAttended().equals("Yes"))
+                                        details.add(note);
                                 }
                             }
 
@@ -946,10 +966,11 @@ public class JapaTLDetails extends AppCompatActivity {
     }
 
     public void populateListSessions() {
-        if (japa.equals("5")) {
+        if (clickedFirst.equals("ALL")) {
             fgboys
-                    .whereEqualTo("category",spinCategories)
+//                .whereEqualTo("zzdate", date)
                     .whereEqualTo("program",spinPrograms)
+                    .whereEqualTo("category",spinCategories)
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
                     .orderBy("edate")
@@ -963,7 +984,7 @@ public class JapaTLDetails extends AppCompatActivity {
                             Log.d("Details", "onEvent: Out");
                             String data = "";
                             ArrayList<Note> details = new ArrayList<>();
-                            for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
+                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                 Note note = documentSnapshot.toObject(Note.class);
 
                                 if (note.getUrl() == null) {
@@ -973,6 +994,15 @@ public class JapaTLDetails extends AppCompatActivity {
                                     url = note.getUrl();
                                 }
 
+                                if (note.getStatus() == null) {
+                                    note.setStatus("Not updated");
+                                }
+
+                                if (note.getAttended() == null) {
+                                    note.setStatus("No");
+                                }
+
+                                Log.d("Details", "onEvent: Event" + note.occupation + note.fg);
                                 details.add(note);
                             }
 
@@ -985,8 +1015,10 @@ public class JapaTLDetails extends AppCompatActivity {
                     });
         } else {
             fgboys
-                    .whereEqualTo("category",spinCategories)
+                    .whereEqualTo("fg",fg)
+//                .whereEqualTo("zzdate", date)
                     .whereEqualTo("program",spinPrograms)
+                    .whereEqualTo("category",spinCategories)
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
                     .orderBy("edate")
@@ -1000,7 +1032,7 @@ public class JapaTLDetails extends AppCompatActivity {
                             Log.d("Details", "onEvent: Out");
                             String data = "";
                             ArrayList<Note> details = new ArrayList<>();
-                            for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
+                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                 Note note = documentSnapshot.toObject(Note.class);
 
                                 if (note.getUrl() == null) {
@@ -1010,48 +1042,16 @@ public class JapaTLDetails extends AppCompatActivity {
                                     url = note.getUrl();
                                 }
 
-                                switch (japa) {
-                                    case "0" :
-                                        if ((note.getJapa().equals("0"))) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                    case "1" :
-                                        if ((note.getJapa().equals("1")) || (note.getJapa().equals("2"))) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                    case "2" :
-                                        if ((note.getJapa().equals("3")) || (note.getJapa().equals("4"))) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                    case "3" :
-                                        if ((note.getJapa().equals("5")) || (note.getJapa().equals("6"))
-                                                || (note.getJapa().equals("7")) || (note.getJapa().equals("8"))) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                    case "4" :
-                                        if ((note.getJapa().equals("9")) || (note.getJapa().equals("10")) ||
-                                                (note.getJapa().equals("11")) || (note.getJapa().equals("12")) ||
-                                                (note.getJapa().equals("13")) || (note.getJapa().equals("14")) ||
-                                                (note.getJapa().equals("15"))) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                    case "6" :
-                                        if (note.getJapa().equals("16")) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
+                                if (note.getStatus() == null) {
+                                    note.setStatus("Not updated");
                                 }
+
+                                if (note.getAttended() == null) {
+                                    note.setStatus("No");
+                                }
+
+                                Log.d("Details", "onEvent: Event" + note.occupation + note.fg);
+                                details.add(note);
                             }
 
                             if (collection.equals("AttendanceDemo")) {
@@ -1065,10 +1065,11 @@ public class JapaTLDetails extends AppCompatActivity {
     }
 
     public void populateList() {
-        if (japa.equals("5")) {
+        if (clickedFirst.equals("ALL")) {
             fgboys
-                    .whereEqualTo("category",spinCategories)
+//                .whereEqualTo("zzdate", date)
                     .whereEqualTo("program",spinPrograms)
+                    .whereEqualTo("category",spinCategories)
                     .whereEqualTo("session",spinSessions)
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
@@ -1083,7 +1084,7 @@ public class JapaTLDetails extends AppCompatActivity {
                             Log.d("Details", "onEvent: Out");
                             String data = "";
                             ArrayList<Note> details = new ArrayList<>();
-                            for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
+                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                 Note note = documentSnapshot.toObject(Note.class);
 
                                 if (note.getUrl() == null) {
@@ -1093,7 +1094,26 @@ public class JapaTLDetails extends AppCompatActivity {
                                     url = note.getUrl();
                                 }
 
-                                details.add(note);
+                                if (note.getStatus() == null) {
+                                    note.setStatus("Not updated");
+                                }
+
+                                if (note.getAttended() == null) {
+                                    note.setStatus("No");
+                                }
+
+                                if (clicked.equals("Registered")) {
+                                    details.add(note);
+                                } else if (clicked.equals("Coming")) {
+                                    if (note.getStatus().equals("Coming"))
+                                        details.add(note);
+                                } else if (clicked.equals("Not Coming")) {
+                                    if (note.getStatus().equals("Not Coming"))
+                                        details.add(note);
+                                } else if (clicked.equals("Attended")) {
+                                    if (note.getAttended().equals("Yes"))
+                                        details.add(note);
+                                }
                             }
 
                             if (collection.equals("AttendanceDemo")) {
@@ -1105,8 +1125,10 @@ public class JapaTLDetails extends AppCompatActivity {
                     });
         } else {
             fgboys
-                    .whereEqualTo("category",spinCategories)
+                    .whereEqualTo("fg",fg)
+//                .whereEqualTo("zzdate", date)
                     .whereEqualTo("program",spinPrograms)
+                    .whereEqualTo("category",spinCategories)
                     .whereEqualTo("session",spinSessions)
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
@@ -1121,7 +1143,7 @@ public class JapaTLDetails extends AppCompatActivity {
                             Log.d("Details", "onEvent: Out");
                             String data = "";
                             ArrayList<Note> details = new ArrayList<>();
-                            for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
+                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                 Note note = documentSnapshot.toObject(Note.class);
 
                                 if (note.getUrl() == null) {
@@ -1131,47 +1153,25 @@ public class JapaTLDetails extends AppCompatActivity {
                                     url = note.getUrl();
                                 }
 
-                                switch (japa) {
-                                    case "0" :
-                                        if ((note.getJapa().equals("0"))) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                    case "1" :
-                                        if ((note.getJapa().equals("1")) || (note.getJapa().equals("2"))) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                    case "2" :
-                                        if ((note.getJapa().equals("3")) || (note.getJapa().equals("4"))) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                    case "3" :
-                                        if ((note.getJapa().equals("5")) || (note.getJapa().equals("6"))
-                                                || (note.getJapa().equals("7")) || (note.getJapa().equals("8"))) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                    case "4" :
-                                        if ((note.getJapa().equals("9")) || (note.getJapa().equals("10")) ||
-                                                (note.getJapa().equals("11")) || (note.getJapa().equals("12")) ||
-                                                (note.getJapa().equals("13")) || (note.getJapa().equals("14")) ||
-                                                (note.getJapa().equals("15"))) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
-                                    case "6" :
-                                        if (note.getJapa().equals("16")) {
-                                            Log.d("Details", "onEvent: Event"+note.japa + note.fg);
-                                            details.add(note);
-                                        }
-                                        break;
+                                if (note.getStatus() == null) {
+                                    note.setStatus("Not updated");
+                                }
+
+                                if (note.getAttended() == null) {
+                                    note.setStatus("No");
+                                }
+
+                                if (clicked.equals("Registered")) {
+                                    details.add(note);
+                                } else if (clicked.equals("Coming")) {
+                                    if (note.getStatus().equals("Coming"))
+                                        details.add(note);
+                                } else if (clicked.equals("Not Coming")) {
+                                    if (note.getStatus().equals("Not Coming"))
+                                        details.add(note);
+                                } else if (clicked.equals("Attended")) {
+                                    if (note.getAttended().equals("Yes"))
+                                        details.add(note);
                                 }
                             }
 
@@ -1186,7 +1186,7 @@ public class JapaTLDetails extends AppCompatActivity {
     }
 
     public void select1(View v) {
-        Intent intent = new Intent(JapaTLDetails.this, DateSelector.class);
+        Intent intent = new Intent(RegToAttendDetails.this, DateSelector.class);
         startActivity(intent);
     }
 }

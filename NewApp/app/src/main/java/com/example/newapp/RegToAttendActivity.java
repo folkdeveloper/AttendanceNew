@@ -2,6 +2,7 @@ package com.example.newapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -32,7 +34,7 @@ import java.util.TreeMap;
 
 import javax.annotation.Nullable;
 
-public class OccupationActivity extends AppCompatActivity {
+public class RegToAttendActivity extends AppCompatActivity {
 
     private FirebaseFirestore db;
     private CollectionReference fgboys;
@@ -43,8 +45,9 @@ public class OccupationActivity extends AppCompatActivity {
     private long date1 = 0, date2 = 0;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     public int totalReg, totalCom, totalNotCom, totalAtt, total;
+    public int totalNextReg, totalNextCom, totalNextNotCom, totalNextAtt;
     public double p1, p2, p3 ,p4;
-    TreeMap<String,Occupation> count = null;
+    TreeMap<String,RegToAttend> count = null;
     View headerView = null;
     TextView mTextView6, mTextView7, mTextView8 , mTextView9, mTextView10, mTextView12, mTextView13,
             mTextView14, mTextView15;
@@ -70,11 +73,12 @@ public class OccupationActivity extends AppCompatActivity {
     final String[] sessions = new String[]{"ALL"};
     Spinner program, category, session;
     int posProgram, posCategory, posSession;
+    Button totalButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_occupation);
+        setContentView(R.layout.activity_reg_to_attend);
         collection = getIntent().getStringExtra("Collection");
         db = FirebaseFirestore.getInstance();
         fgboys = db.collection(collection);
@@ -89,6 +93,7 @@ public class OccupationActivity extends AppCompatActivity {
         totalAtt = 0;
         total = 0;
         p1 = 0.0; p2 = 0.0; p3 = 0.0; p4 = 0.0;
+        totalButton = findViewById(R.id.button18);
         mTextView6 = (TextView) findViewById(R.id.text6);
         mTextView7 = (TextView) findViewById(R.id.text7);
         mTextView8 = (TextView) findViewById(R.id.text8);
@@ -105,11 +110,6 @@ public class OccupationActivity extends AppCompatActivity {
         count = new TreeMap<>();
         count.clear();
         mListView.setAdapter(null);
-        total = 0;
-        totalReg = 0;
-        totalCom = 0;
-        totalNotCom = 0;
-        totalAtt = 0;
 
         programsList = Arrays.asList(programs);
         finalPrograms.addAll(programsList);
@@ -297,10 +297,745 @@ public class OccupationActivity extends AppCompatActivity {
 
                     if (spinnerCategories.equals("ALL")) {
                         spinCategory = "1";
-                        populateSessions(spinCategory,spinPrograms);
+//                        populateSessions(spinCategory,spinPrograms);
                     } else {
                         spinCategory = "2";
-                        populateSessions(spinCategory,spinPrograms);
+//                        populateSessions(spinCategory,spinPrograms);
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+        }
+    }
+
+    public void populateSessions(String spinCategory, final String spinProgram) {
+        final String spinCategories = spinCategory;
+        final String spinPrograms = spinProgram;
+
+        if (spinCategory.equals("1")) {
+            finalSessions = new ArrayList<String>();
+            sessionsList = Arrays.asList(sessions);
+            finalSessions.addAll(sessionsList);
+
+            adapterSessions = new ArrayAdapter<String>
+                    (this, R.layout.spinner_item, finalSessions);
+            total = 0;
+            totalAtt = 0;
+            totalNotCom = 0;
+            totalReg = 0;
+            totalCom = 0;
+
+            fgboys
+//                    .whereEqualTo("zzdate", date)
+                    .whereGreaterThanOrEqualTo("edate", date1)
+                    .whereLessThanOrEqualTo("edate", date2)
+                    .whereEqualTo("program",spinnerPrograms)
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                            if (e != null) {
+                                return;
+                            }
+
+                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                Note note = documentSnapshot.toObject(Note.class);
+
+                                if (note.getSession() == null)
+                                    continue;
+                                ;
+
+                                if (finalSessions.contains(note.getSession())) {
+                                    continue;
+                                } else {
+                                    finalSessions.add(note.getSession());
+                                    adapterSessions.notifyDataSetChanged();
+                                }
+
+                            }
+                        }
+                    });
+            adapterSessions.setDropDownViewResource(R.layout.spinner_item);
+            session.setAdapter(adapterSessions);
+
+            session.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
+                    spinnerSessions = parent.getItemAtPosition(position).toString();
+                    posSession = position;
+                    totalNotCom = 0;
+                    totalReg = 0;
+                    totalCom = 0;
+                    totalAtt = 0;
+
+                    if (spinnerSessions.equals("ALL")) {
+                        total = 0;
+                        totalAtt = 0;
+                        totalNotCom = 0;
+                        totalReg = 0;
+                        totalCom = 0;
+                        fgboys
+//                                .whereEqualTo("zzdate", date)
+                                .whereGreaterThanOrEqualTo("edate", date1)
+                                .whereLessThanOrEqualTo("edate", date2)
+                                .whereEqualTo("program",spinnerPrograms)
+                                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                                        if (e != null) {
+                                            return;
+                                        }
+
+                                        String data = "";
+//                                        Log.d(TAG, "onEvent: Out");
+
+                                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                            Note note = documentSnapshot.toObject(Note.class);
+                                            total++;
+//                                            Log.d(TAG, "onEvent: Occupation"
+//                                                    + note.getOccupation() + " " + note.getZtl());
+
+                                            if (note.getOccupation() == null) {
+                                                note.setOccupation("Not updated");
+                                            }
+
+                                            if (count.containsKey(note.getFg())) {
+                                                RegToAttend regToAttend = count.get(note.getFg());
+                                                int reg = regToAttend.getReg();
+                                                int com = regToAttend.getCom();
+                                                int notcom = regToAttend.getNotcom();
+                                                int att = regToAttend.getAtt();
+
+                                                reg++;
+                                                totalReg++;
+                                                count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+
+                                                if (note.getStatus().equals("Coming")) {
+                                                    com++;
+                                                    totalCom++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+                                                } else if (note.getStatus().equals("Not Coming")) {
+                                                    notcom++;
+                                                    totalNotCom++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+                                                } else if (note.getAttended().equals("Yes")){
+                                                    att++;
+                                                    totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+                                                }
+                                            } else {
+                                                int reg = 1;
+
+                                                if (note.getStatus().equals("Coming")) {
+                                                    totalCom++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 1, 0, 0));
+                                                } else if (note.getStatus().equals("Not Coming")) {
+                                                    totalNotCom++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 1, 0));
+                                                } else if (note.getAttended().equals("Yes")){
+                                                    totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 0, 1));
+                                                } else {
+                                                    count.put(note.getFg(), new RegToAttend(reg,0,0,0));
+                                                }
+                                            }
+                                        }
+
+                                        final RegToAttendAdapter adapter = new RegToAttendAdapter(count);
+                                        mListView.setAdapter((ListAdapter) adapter);
+                                        DecimalFormat df = new DecimalFormat("##.#");
+                                        df.setRoundingMode(RoundingMode.DOWN);
+
+                                        Double p1 = ((double) totalReg / total) * 100;
+                                        Double p2 = ((double) totalCom / total) * 100;
+                                        Double p3 = ((double) totalNotCom / total) * 100;
+                                        Double p4 = ((double) totalAtt / total) * 100;
+                                        Double p5 = Double.parseDouble(df.format(p1));
+                                        Double p6 = Double.parseDouble(df.format(p2));
+                                        Double p7 = Double.parseDouble(df.format(p3));
+                                        Double p8 = Double.parseDouble(df.format(p4));
+
+                                        mTextView7.setText(String.valueOf(total));
+                                        mTextView8.setText(String.valueOf(totalCom));
+                                        mTextView9.setText(String.valueOf(totalNotCom));
+                                        mTextView10.setText(String.valueOf(totalAtt));
+                                        mTextView12.setText("100");
+                                        mTextView13.setText(p6.toString());
+                                        mTextView14.setText(p7.toString());
+                                        mTextView15.setText(p8.toString());
+
+                                        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                            @Override
+                                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                                String fg = adapter.getItem(i).getKey();
+                                                Intent intent = new Intent(RegToAttendActivity.this, RegToAttendSecond.class);
+                                                Bundle bundle = new Bundle();
+                                                bundle.putLong("Date1", date1);
+                                                bundle.putLong("Date2", date2);
+                                                bundle.putString("FG", fg);
+                                                bundle.putInt("REG",adapter.getItem(position).getValue().getReg());
+                                                bundle.putInt("COM",adapter.getItem(position).getValue().getCom());
+                                                bundle.putInt("NOTCOM",adapter.getItem(position).getValue().getNotcom());
+                                                bundle.putInt("ATT",adapter.getItem(position).getValue().getAtt());
+                                                Log.d("OccupationActivity", "onItemClick: Main: " + spinnerCategories);
+                                                bundle.putString("SpinPrograms", spinnerPrograms);
+                                                bundle.putString("SpinCategories", spinnerCategories);
+                                                bundle.putString("SpinSessions", spinnerSessions);
+                                                bundle.putString("Collection", collection);
+                                                intent.putExtras(bundle);
+                                                startActivity(intent);
+                                            }
+                                        });
+
+                                        totalNextReg = total;
+                                        totalNextCom = totalCom;
+                                        totalNextNotCom = totalNotCom;
+                                        totalNextAtt = totalAtt;
+
+                                        totalButton.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                Intent intent = new Intent(RegToAttendActivity.this, RegToAttendSecond.class);
+                                                Bundle bundle = new Bundle();
+                                                bundle.putLong("Date1", date1);
+                                                bundle.putLong("Date2", date2);
+                                                bundle.putInt("REG",totalNextReg);
+                                                bundle.putInt("COM",totalNextCom);
+                                                bundle.putInt("NOTCOM",totalNextNotCom);
+                                                bundle.putInt("ATT",totalNextAtt);
+                                                Log.d("OccupationActivity", "onItemClick: Main: " + spinnerCategories);
+                                                bundle.putString("SpinPrograms", spinnerPrograms);
+                                                bundle.putString("SpinCategories", spinnerCategories);
+                                                bundle.putString("SpinSessions", spinnerSessions);
+                                                bundle.putString("Collection", collection);
+                                                bundle.putString("ClickedFirst","ALL");
+                                                intent.putExtras(bundle);
+                                                startActivity(intent);
+                                            }
+                                        });
+
+                                        count.clear();
+                                    }
+                                });
+                    } else {
+                        total = 0;
+                        totalAtt = 0;
+                        totalNotCom = 0;
+                        totalReg = 0;
+                        totalCom = 0;
+                        fgboys
+//                                .whereEqualTo("zzdate", date)
+                                .whereGreaterThanOrEqualTo("edate", date1)
+                                .whereLessThanOrEqualTo("edate", date2)
+                                .whereEqualTo("program",spinnerPrograms)
+                                .whereEqualTo("session", spinnerSessions)
+                                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                                        if (e != null) {
+                                            return;
+                                        }
+
+                                        String data = "";
+
+                                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                            Note note = documentSnapshot.toObject(Note.class);
+                                            total++;
+//                                            Log.d(TAG, "onEvent: Occupation"
+//                                                    + note.getOccupation() + " " + note.getZtl());
+
+                                            if (note.getOccupation() == null) {
+                                                note.setOccupation("Not updated");
+                                            }
+
+                                            if (count.containsKey(note.getFg())) {
+                                                RegToAttend regToAttend = count.get(note.getFg());
+                                                int reg = regToAttend.getReg();
+                                                int com = regToAttend.getCom();
+                                                int notcom = regToAttend.getNotcom();
+                                                int att = regToAttend.getAtt();
+
+                                                reg++;
+                                                totalReg++;
+                                                count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+
+                                                if (note.getStatus().equals("Coming")) {
+                                                    com++;
+                                                    totalCom++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+                                                } else if (note.getStatus().equals("Not Coming")) {
+                                                    notcom++;
+                                                    totalNotCom++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+                                                } else if (note.getAttended().equals("Yes")){
+                                                    att++;
+                                                    totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+                                                }
+                                            } else {
+                                                int reg = 1;
+
+                                                if (note.getStatus().equals("Coming")) {
+                                                    totalCom++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 1, 0, 0));
+                                                } else if (note.getStatus().equals("Not Coming")) {
+                                                    totalNotCom++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 1, 0));
+                                                } else if (note.getAttended().equals("Yes")){
+                                                    totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 0, 1));
+                                                } else {
+                                                    count.put(note.getFg(), new RegToAttend(reg,0,0,0));
+                                                }
+
+                                            }
+                                        }
+
+                                        final RegToAttendAdapter adapter = new RegToAttendAdapter(count);
+                                        mListView.setAdapter((ListAdapter) adapter);
+                                        DecimalFormat df = new DecimalFormat("##.#");
+                                        df.setRoundingMode(RoundingMode.DOWN);
+
+                                        Double p1 = ((double) totalReg / total) * 100;
+                                        Double p2 = ((double) totalCom / total) * 100;
+                                        Double p3 = ((double) totalNotCom / total) * 100;
+                                        Double p4 = ((double) totalAtt / total) * 100;
+                                        Double p5 = Double.parseDouble(df.format(p1));
+                                        Double p6 = Double.parseDouble(df.format(p2));
+                                        Double p7 = Double.parseDouble(df.format(p3));
+                                        Double p8 = Double.parseDouble(df.format(p4));
+
+                                        mTextView7.setText(String.valueOf(total));
+                                        mTextView8.setText(String.valueOf(totalCom));
+                                        mTextView9.setText(String.valueOf(totalNotCom));
+                                        mTextView10.setText(String.valueOf(totalAtt));
+                                        mTextView12.setText("100");
+                                        mTextView13.setText(p6.toString());
+                                        mTextView14.setText(p7.toString());
+                                        mTextView15.setText(p8.toString());
+
+                                        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                            @Override
+                                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                                String fg = adapter.getItem(i).getKey();
+                                                Intent intent = new Intent(RegToAttendActivity.this, RegToAttendSecond.class);
+                                                Bundle bundle = new Bundle();
+                                                bundle.putLong("Date1", date1);
+                                                bundle.putLong("Date2", date2);
+                                                bundle.putString("FG", fg);
+                                                bundle.putInt("REG",adapter.getItem(position).getValue().getReg());
+                                                bundle.putInt("COM",adapter.getItem(position).getValue().getCom());
+                                                bundle.putInt("NOTCOM",adapter.getItem(position).getValue().getNotcom());
+                                                bundle.putInt("ATT",adapter.getItem(position).getValue().getAtt());
+                                                Log.d("OccupationActivity", "onItemClick: Main: " + spinnerCategories);
+                                                bundle.putString("SpinPrograms", spinnerPrograms);
+                                                bundle.putString("SpinCategories", spinnerCategories);
+                                                bundle.putString("SpinSessions", spinnerSessions);
+                                                bundle.putString("Collection", collection);
+                                                intent.putExtras(bundle);
+                                                startActivity(intent);
+                                            }
+                                        });
+
+                                        totalNextReg = total;
+                                        totalNextCom = totalCom;
+                                        totalNextNotCom = totalNotCom;
+                                        totalNextAtt = totalAtt;
+
+                                        totalButton.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                Intent intent = new Intent(RegToAttendActivity.this, RegToAttendSecond.class);
+                                                Bundle bundle = new Bundle();
+                                                bundle.putLong("Date1", date1);
+                                                bundle.putLong("Date2", date2);
+                                                bundle.putInt("REG",totalNextReg);
+                                                bundle.putInt("COM",totalNextCom);
+                                                bundle.putInt("NOTCOM",totalNextNotCom);
+                                                bundle.putInt("ATT",totalNextAtt);
+                                                Log.d("OccupationActivity", "onItemClick: Main: " + spinnerCategories);
+                                                bundle.putString("SpinPrograms", spinnerPrograms);
+                                                bundle.putString("SpinCategories", spinnerCategories);
+                                                bundle.putString("SpinSessions", spinnerSessions);
+                                                bundle.putString("Collection", collection);
+                                                bundle.putString("ClickedFirst","ALL");
+                                                intent.putExtras(bundle);
+                                                startActivity(intent);
+                                            }
+                                        });
+
+                                        count.clear();
+//                        mListView.setAdapter(null);
+                                    }
+                                });
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+        } else {
+            finalSessions = new ArrayList<String>();
+            sessionsList = Arrays.asList(sessions);
+            finalSessions.addAll(sessionsList);
+
+            adapterSessions = new ArrayAdapter<String>
+                    (this, R.layout.spinner_item, finalSessions);
+            total = 0;
+            totalAtt = 0;
+            totalNotCom = 0;
+            totalReg = 0;
+            totalCom = 0;
+
+            fgboys
+//                    .whereEqualTo("zzdate", date)
+                    .whereGreaterThanOrEqualTo("edate", date1)
+                    .whereLessThanOrEqualTo("edate", date2)
+                    .whereEqualTo("program",spinnerPrograms)
+                    .whereEqualTo("category",spinnerCategories)
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                            if (e != null) {
+                                return;
+                            }
+
+                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                Note note = documentSnapshot.toObject(Note.class);
+
+                                if (note.getSession() == null)
+                                    continue;
+                                ;
+
+                                if (finalSessions.contains(note.getSession())) {
+                                    continue;
+                                } else {
+                                    finalSessions.add(note.getSession());
+                                    adapterSessions.notifyDataSetChanged();
+                                }
+
+                            }
+                        }
+                    });
+            adapterSessions.setDropDownViewResource(R.layout.spinner_item);
+            session.setAdapter(adapterSessions);
+
+            session.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    spinnerSessions = parent.getItemAtPosition(position).toString();
+                    posSession = position;
+                    totalNotCom = 0;
+                    totalReg = 0;
+                    totalCom = 0;
+                    totalAtt = 0;
+
+                    if (spinnerSessions.equals("ALL")) {
+                        total = 0;
+                        totalAtt = 0;
+                        totalNotCom = 0;
+                        totalReg = 0;
+                        totalCom = 0;
+                        fgboys
+//                                .whereEqualTo("zzdate", date)
+                                .whereGreaterThanOrEqualTo("edate", date1)
+                                .whereLessThanOrEqualTo("edate", date2)
+                                .whereEqualTo("program",spinnerPrograms)
+                                .whereEqualTo("category",spinnerCategories)
+                                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                                        if (e != null) {
+                                            return;
+                                        }
+
+                                        String data = "";
+//                                        Log.d(TAG, "onEvent: Out");
+
+                                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                            Note note = documentSnapshot.toObject(Note.class);
+                                            total++;
+//                                            Log.d(TAG, "onEvent: Occupation"
+//                                                    + note.getOccupation() + " " + note.getZtl());
+
+                                            if (note.getOccupation() == null) {
+                                                note.setOccupation("Not updated");
+                                            }
+
+                                            if (count.containsKey(note.getFg())) {
+                                                RegToAttend regToAttend = count.get(note.getFg());
+                                                int reg = regToAttend.getReg();
+                                                int com = regToAttend.getCom();
+                                                int notcom = regToAttend.getNotcom();
+                                                int att = regToAttend.getAtt();
+
+                                                reg++;
+                                                totalReg++;
+                                                count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+
+                                                if (note.getStatus().equals("Coming")) {
+                                                    com++;
+                                                    totalCom++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+                                                } else if (note.getStatus().equals("Not Coming")) {
+                                                    notcom++;
+                                                    totalNotCom++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+                                                } else if (note.getAttended().equals("Yes")){
+                                                    att++;
+                                                    totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+                                                }
+                                            } else {
+                                                int reg = 1;
+
+                                                if (note.getStatus().equals("Coming")) {
+                                                    totalCom++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 1, 0, 0));
+                                                } else if (note.getStatus().equals("Not Coming")) {
+                                                    totalNotCom++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 1, 0));
+                                                } else if (note.getAttended().equals("Yes")){
+                                                    totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 0, 1));
+                                                } else {
+                                                    count.put(note.getFg(), new RegToAttend(reg,0,0,0));
+                                                }
+                                            }
+                                        }
+
+                                        final RegToAttendAdapter adapter = new RegToAttendAdapter(count);
+                                        mListView.setAdapter((ListAdapter) adapter);
+                                        DecimalFormat df = new DecimalFormat("##.#");
+                                        df.setRoundingMode(RoundingMode.DOWN);
+
+                                        Double p1 = ((double) totalReg / total) * 100;
+                                        Double p2 = ((double) totalCom / total) * 100;
+                                        Double p3 = ((double) totalNotCom / total) * 100;
+                                        Double p4 = ((double) totalAtt / total) * 100;
+                                        Double p5 = Double.parseDouble(df.format(p1));
+                                        Double p6 = Double.parseDouble(df.format(p2));
+                                        Double p7 = Double.parseDouble(df.format(p3));
+                                        Double p8 = Double.parseDouble(df.format(p4));
+
+                                        mTextView7.setText(String.valueOf(total));
+                                        mTextView8.setText(String.valueOf(totalCom));
+                                        mTextView9.setText(String.valueOf(totalNotCom));
+                                        mTextView10.setText(String.valueOf(totalAtt));
+                                        mTextView12.setText("100");
+                                        mTextView13.setText(p6.toString());
+                                        mTextView14.setText(p7.toString());
+                                        mTextView15.setText(p8.toString());
+
+                                        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                            @Override
+                                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                                String fg = adapter.getItem(i).getKey();
+                                                Intent intent = new Intent(RegToAttendActivity.this, RegToAttendSecond.class);
+                                                Bundle bundle = new Bundle();
+                                                bundle.putLong("Date1", date1);
+                                                bundle.putLong("Date2", date2);
+                                                bundle.putString("FG", fg);
+                                                bundle.putInt("REG",adapter.getItem(i).getValue().getReg());
+                                                bundle.putInt("COM",adapter.getItem(i).getValue().getCom());
+                                                bundle.putInt("NOTCOM",adapter.getItem(i).getValue().getNotcom());
+                                                bundle.putInt("ATT",adapter.getItem(i).getValue().getAtt());
+                                                Log.d("OccupationActivity", "onItemClick: Main: " + spinnerCategories);
+                                                bundle.putString("SpinPrograms", spinnerPrograms);
+                                                bundle.putString("SpinCategories", spinnerCategories);
+                                                bundle.putString("SpinSessions", spinnerSessions);
+                                                bundle.putString("Collection", collection);
+                                                intent.putExtras(bundle);
+                                                startActivity(intent);
+                                            }
+                                        });
+
+                                        totalNextReg = total;
+                                        totalNextCom = totalCom;
+                                        totalNextNotCom = totalNotCom;
+                                        totalNextAtt = totalAtt;
+
+                                        totalButton.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                Intent intent = new Intent(RegToAttendActivity.this, RegToAttendSecond.class);
+                                                Bundle bundle = new Bundle();
+                                                bundle.putLong("Date1", date1);
+                                                bundle.putLong("Date2", date2);
+                                                bundle.putInt("REG",totalNextReg);
+                                                bundle.putInt("COM",totalNextCom);
+                                                bundle.putInt("NOTCOM",totalNextNotCom);
+                                                bundle.putInt("ATT",totalNextAtt);
+                                                Log.d("OccupationActivity", "onItemClick: Main: " + spinnerCategories);
+                                                bundle.putString("SpinPrograms", spinnerPrograms);
+                                                bundle.putString("SpinCategories", spinnerCategories);
+                                                bundle.putString("SpinSessions", spinnerSessions);
+                                                bundle.putString("Collection", collection);
+                                                bundle.putString("ClickedFirst","ALL");
+                                                intent.putExtras(bundle);
+                                                startActivity(intent);
+                                            }
+                                        });
+
+                                        count.clear();
+                                    }
+                                });
+                    } else {
+                        total = 0;
+                        totalAtt = 0;
+                        totalNotCom = 0;
+                        totalReg = 0;
+                        totalCom = 0;
+                        fgboys
+//                                .whereEqualTo("zzdate", date)
+                                .whereGreaterThanOrEqualTo("edate", date1)
+                                .whereLessThanOrEqualTo("edate", date2)
+                                .whereEqualTo("program",spinnerPrograms)
+                                .whereEqualTo("category",spinnerCategories)
+                                .whereEqualTo("session", spinnerSessions)
+                                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                                        if (e != null) {
+                                            return;
+                                        }
+
+                                        String data = "";
+
+                                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                            Note note = documentSnapshot.toObject(Note.class);
+                                            total++;
+//                                            Log.d(TAG, "onEvent: Occupation"
+//                                                    + note.getOccupation() + " " + note.getZtl());
+
+                                            if (note.getOccupation() == null) {
+                                                note.setOccupation("Not updated");
+                                            }
+
+                                            if (count.containsKey(note.getFg())) {
+                                                RegToAttend regToAttend = count.get(note.getFg());
+                                                int reg = regToAttend.getReg();
+                                                int com = regToAttend.getCom();
+                                                int notcom = regToAttend.getNotcom();
+                                                int att = regToAttend.getAtt();
+
+                                                reg++;
+                                                totalReg++;
+                                                count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+
+                                                if (note.getStatus().equals("Coming")) {
+                                                    com++;
+                                                    totalCom++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+                                                } else if (note.getStatus().equals("Not Coming")) {
+                                                    notcom++;
+                                                    totalNotCom++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+                                                } else if (note.getAttended().equals("Yes")){
+                                                    att++;
+                                                    totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+                                                }
+                                            } else {
+                                                int reg = 1;
+
+                                                if (note.getStatus().equals("Coming")) {
+                                                    totalCom++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 1, 0, 0));
+                                                } else if (note.getStatus().equals("Not Coming")) {
+                                                    totalNotCom++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 1, 0));
+                                                } else if (note.getAttended().equals("Yes")){
+                                                    totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 0, 1));
+                                                } else {
+                                                    count.put(note.getFg(), new RegToAttend(reg,0,0,0));
+                                                }
+                                            }
+                                        }
+
+                                        final RegToAttendAdapter adapter = new RegToAttendAdapter(count);
+                                        mListView.setAdapter((ListAdapter) adapter);
+                                        DecimalFormat df = new DecimalFormat("##.#");
+                                        df.setRoundingMode(RoundingMode.DOWN);
+
+                                        Double p1 = ((double) totalReg / total) * 100;
+                                        Double p2 = ((double) totalCom / total) * 100;
+                                        Double p3 = ((double) totalNotCom / total) * 100;
+                                        Double p4 = ((double) totalAtt / total) * 100;
+                                        Double p5 = Double.parseDouble(df.format(p1));
+                                        Double p6 = Double.parseDouble(df.format(p2));
+                                        Double p7 = Double.parseDouble(df.format(p3));
+                                        Double p8 = Double.parseDouble(df.format(p4));
+
+                                        mTextView7.setText(String.valueOf(total));
+                                        mTextView8.setText(String.valueOf(totalCom));
+                                        mTextView9.setText(String.valueOf(totalNotCom));
+                                        mTextView10.setText(String.valueOf(totalAtt));
+                                        mTextView12.setText("100");
+                                        mTextView13.setText(p6.toString());
+                                        mTextView14.setText(p7.toString());
+                                        mTextView15.setText(p8.toString());
+
+                                        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                            @Override
+                                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                                String fg = adapter.getItem(i).getKey();
+                                                Intent intent = new Intent(RegToAttendActivity.this, RegToAttendSecond.class);
+                                                Bundle bundle = new Bundle();
+                                                bundle.putLong("Date1", date1);
+                                                bundle.putLong("Date2", date2);
+                                                bundle.putString("FG", fg);
+                                                bundle.putInt("REG",adapter.getItem(i).getValue().getReg());
+                                                bundle.putInt("COM",adapter.getItem(i).getValue().getCom());
+                                                bundle.putInt("NOTCOM",adapter.getItem(i).getValue().getNotcom());
+                                                bundle.putInt("ATT",adapter.getItem(i).getValue().getAtt());
+                                                Log.d("OccupationActivity", "onItemClick: Main: " + spinnerCategories);
+                                                bundle.putString("SpinPrograms", spinnerPrograms);
+                                                bundle.putString("SpinCategories", spinnerCategories);
+                                                bundle.putString("SpinSessions", spinnerSessions);
+                                                bundle.putString("Collection", collection);
+                                                intent.putExtras(bundle);
+                                                startActivity(intent);
+                                            }
+                                        });
+
+                                        totalNextReg = total;
+                                        totalNextCom = totalCom;
+                                        totalNextNotCom = totalNotCom;
+                                        totalNextAtt = totalAtt;
+
+                                        totalButton.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                Intent intent = new Intent(RegToAttendActivity.this, RegToAttendSecond.class);
+                                                Bundle bundle = new Bundle();
+                                                bundle.putLong("Date1", date1);
+                                                bundle.putLong("Date2", date2);
+                                                bundle.putInt("REG",totalNextReg);
+                                                bundle.putInt("COM",totalNextCom);
+                                                bundle.putInt("NOTCOM",totalNextNotCom);
+                                                bundle.putInt("ATT",totalNextAtt);
+                                                Log.d("OccupationActivity", "onItemClick: Main: " + spinnerCategories);
+                                                bundle.putString("SpinPrograms", spinnerPrograms);
+                                                bundle.putString("SpinCategories", spinnerCategories);
+                                                bundle.putString("SpinSessions", spinnerSessions);
+                                                bundle.putString("Collection", collection);
+                                                bundle.putString("ClickedFirst","ALL");
+                                                intent.putExtras(bundle);
+                                                startActivity(intent);
+                                            }
+                                        });
+
+                                        count.clear();
+//                        mListView.setAdapter(null);
+                                    }
+                                });
                     }
                 }
 
@@ -323,13 +1058,17 @@ public class OccupationActivity extends AppCompatActivity {
 
             adapterSessions = new ArrayAdapter<String>
                     (this, R.layout.spinner_item, finalSessions);
-            total=0;totalAtt=0;
-            totalNotCom=0; totalReg=0; totalCom=0;
+            total = 0;
+            totalAtt = 0;
+            totalNotCom = 0;
+            totalReg = 0;
+            totalCom = 0;
 
             fgboys
 //                    .whereEqualTo("zzdate", date)
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
+
                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -341,7 +1080,8 @@ public class OccupationActivity extends AppCompatActivity {
                                 Note note = documentSnapshot.toObject(Note.class);
 
                                 if (note.getSession() == null)
-                                    continue;;
+                                    continue;
+                                ;
 
                                 if (finalSessions.contains(note.getSession())) {
                                     continue;
@@ -358,14 +1098,20 @@ public class OccupationActivity extends AppCompatActivity {
 
             session.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
                     spinnerSessions = parent.getItemAtPosition(position).toString();
                     posSession = position;
-                    totalNotCom=0;totalReg=0;totalCom=0;totalAtt=0;
+                    totalNotCom = 0;
+                    totalReg = 0;
+                    totalCom = 0;
+                    totalAtt = 0;
 
                     if (spinnerSessions.equals("ALL")) {
-                        total=0;totalAtt=0;
-                        totalNotCom=0; totalReg=0; totalCom=0;
+                        total = 0;
+                        totalAtt = 0;
+                        totalNotCom = 0;
+                        totalReg = 0;
+                        totalCom = 0;
                         fgboys
 //                                .whereEqualTo("zzdate", date)
                                 .whereGreaterThanOrEqualTo("edate", date1)
@@ -391,47 +1137,48 @@ public class OccupationActivity extends AppCompatActivity {
                                             }
 
                                             if (count.containsKey(note.getFg())) {
-                                                Occupation occupation = count.get(note.getFg());
-                                                int students = occupation.getStudents();
-                                                int working = occupation.getWorking();
-                                                int self = occupation.getSelf();
-                                                int others = occupation.getOthers();
+                                                RegToAttend regToAttend = count.get(note.getFg());
+                                                int reg = regToAttend.getReg();
+                                                int com = regToAttend.getCom();
+                                                int notcom = regToAttend.getNotcom();
+                                                int att = regToAttend.getAtt();
 
-                                                if (note.getOccupation().equals("Student")) {
-                                                    students++;
-                                                    totalReg++;
-                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
-                                                } else if (note.getOccupation().equals("Working")) {
-                                                    working++;
+                                                reg++;
+                                                totalReg++;
+                                                count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+
+                                                if (note.getStatus().equals("Coming")) {
+                                                    com++;
                                                     totalCom++;
-                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
-                                                } else if (note.getOccupation().equals("Business/Self Employed")) {
-                                                    self++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+                                                } else if (note.getStatus().equals("Not Coming")) {
+                                                    notcom++;
                                                     totalNotCom++;
-                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
-                                                } else {
-                                                    others++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+                                                } else if (note.getAttended().equals("Yes")){
+                                                    att++;
                                                     totalAtt++;
-                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
                                                 }
                                             } else {
-                                                if (note.getOccupation().equals("Student")) {
-                                                    totalReg++;
-                                                    count.put(note.getFg(), new Occupation(1, 0, 0, 0));
-                                                } else if (note.getOccupation().equals("Working")) {
+                                                int reg = 1;
+
+                                                if (note.getStatus().equals("Coming")) {
                                                     totalCom++;
-                                                    count.put(note.getFg(), new Occupation(0, 1, 0, 0));
-                                                } else if (note.getOccupation().equals("Business/Self Employed")) {
+                                                    count.put(note.getFg(), new RegToAttend(reg, 1, 0, 0));
+                                                } else if (note.getStatus().equals("Not Coming")) {
                                                     totalNotCom++;
-                                                    count.put(note.getFg(), new Occupation(0, 0, 1, 0));
-                                                } else {
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 1, 0));
+                                                } else if (note.getAttended().equals("Yes")){
                                                     totalAtt++;
-                                                    count.put(note.getFg(), new Occupation(0, 0, 0, 1));
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 0, 1));
+                                                } else {
+                                                    count.put(note.getFg(), new RegToAttend(reg,0,0,0));
                                                 }
                                             }
                                         }
 
-                                        final OccupationAdapter adapter = new OccupationAdapter(count);
+                                        final RegToAttendAdapter adapter = new RegToAttendAdapter(count);
                                         mListView.setAdapter((ListAdapter) adapter);
                                         DecimalFormat df = new DecimalFormat("##.#");
                                         df.setRoundingMode(RoundingMode.DOWN);
@@ -445,12 +1192,11 @@ public class OccupationActivity extends AppCompatActivity {
                                         Double p7 = Double.parseDouble(df.format(p3));
                                         Double p8 = Double.parseDouble(df.format(p4));
 
-                                        mTextView6.setText(String.valueOf(total));
-                                        mTextView7.setText(String.valueOf(totalReg));
+                                        mTextView7.setText(String.valueOf(total));
                                         mTextView8.setText(String.valueOf(totalCom));
                                         mTextView9.setText(String.valueOf(totalNotCom));
                                         mTextView10.setText(String.valueOf(totalAtt));
-                                        mTextView12.setText(p5.toString());
+                                        mTextView12.setText("100");
                                         mTextView13.setText(p6.toString());
                                         mTextView14.setText(p7.toString());
                                         mTextView15.setText(p8.toString());
@@ -459,16 +1205,47 @@ public class OccupationActivity extends AppCompatActivity {
                                             @Override
                                             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                                                 String fg = adapter.getItem(i).getKey();
-                                                Intent intent = new Intent(OccupationActivity.this, OccupationDetails.class);
+                                                Intent intent = new Intent(RegToAttendActivity.this, RegToAttendSecond.class);
                                                 Bundle bundle = new Bundle();
-                                                bundle.putLong("Date1",date1);
-                                                bundle.putLong("Date2",date2);
+                                                bundle.putLong("Date1", date1);
+                                                bundle.putLong("Date2", date2);
                                                 bundle.putString("FG", fg);
+                                                bundle.putInt("REG",adapter.getItem(i).getValue().getReg());
+                                                bundle.putInt("COM",adapter.getItem(i).getValue().getCom());
+                                                bundle.putInt("NOTCOM",adapter.getItem(i).getValue().getNotcom());
+                                                bundle.putInt("ATT",adapter.getItem(i).getValue().getAtt());
                                                 Log.d("OccupationActivity", "onItemClick: Main: " + spinnerCategories);
                                                 bundle.putString("SpinPrograms", spinnerPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);
-                                                bundle.putString("Collection",collection);
+                                                bundle.putString("Collection", collection);
+                                                intent.putExtras(bundle);
+                                                startActivity(intent);
+                                            }
+                                        });
+
+                                        totalNextReg = total;
+                                        totalNextCom = totalCom;
+                                        totalNextNotCom = totalNotCom;
+                                        totalNextAtt = totalAtt;
+
+                                        totalButton.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                Intent intent = new Intent(RegToAttendActivity.this, RegToAttendSecond.class);
+                                                Bundle bundle = new Bundle();
+                                                bundle.putLong("Date1", date1);
+                                                bundle.putLong("Date2", date2);
+                                                bundle.putInt("REG",totalNextReg);
+                                                bundle.putInt("COM",totalNextCom);
+                                                bundle.putInt("NOTCOM",totalNextNotCom);
+                                                bundle.putInt("ATT",totalNextAtt);
+                                                Log.d("OccupationActivity", "onItemClick: Main: " + spinnerCategories);
+                                                bundle.putString("SpinPrograms", spinnerPrograms);
+                                                bundle.putString("SpinCategories", spinnerCategories);
+                                                bundle.putString("SpinSessions", spinnerSessions);
+                                                bundle.putString("Collection", collection);
+                                                bundle.putString("ClickedFirst","ALL");
                                                 intent.putExtras(bundle);
                                                 startActivity(intent);
                                             }
@@ -478,13 +1255,16 @@ public class OccupationActivity extends AppCompatActivity {
                                     }
                                 });
                     } else {
-                        total=0;totalAtt=0;
-                        totalNotCom=0; totalReg=0; totalCom=0;
+                        total = 0;
+                        totalAtt = 0;
+                        totalNotCom = 0;
+                        totalReg = 0;
+                        totalCom = 0;
                         fgboys
 //                                .whereEqualTo("zzdate", date)
                                 .whereGreaterThanOrEqualTo("edate", date1)
                                 .whereLessThanOrEqualTo("edate", date2)
-                                .whereEqualTo("session",spinnerSessions)
+                                .whereEqualTo("session", spinnerSessions)
                                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                     @Override
                                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -497,53 +1277,56 @@ public class OccupationActivity extends AppCompatActivity {
                                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                             Note note = documentSnapshot.toObject(Note.class);
                                             total++;
+//                                            Log.d(TAG, "onEvent: Occupation"
+//                                                    + note.getOccupation() + " " + note.getZtl());
 
                                             if (note.getOccupation() == null) {
                                                 note.setOccupation("Not updated");
                                             }
 
                                             if (count.containsKey(note.getFg())) {
-                                                Occupation occupation = count.get(note.getFg());
-                                                int students = occupation.getStudents();
-                                                int working = occupation.getWorking();
-                                                int self = occupation.getSelf();
-                                                int others = occupation.getOthers();
+                                                RegToAttend regToAttend = count.get(note.getFg());
+                                                int reg = regToAttend.getReg();
+                                                int com = regToAttend.getCom();
+                                                int notcom = regToAttend.getNotcom();
+                                                int att = regToAttend.getAtt();
 
-                                                if (note.getOccupation().equals("Student")) {
-                                                    students++;
-                                                    totalReg++;
-                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
-                                                } else if (note.getOccupation().equals("Working")) {
-                                                    working++;
+                                                reg++;
+                                                totalReg++;
+                                                count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+
+                                                if (note.getStatus().equals("Coming")) {
+                                                    com++;
                                                     totalCom++;
-                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
-                                                } else if (note.getOccupation().equals("Business/Self Employed")) {
-                                                    self++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+                                                } else if (note.getStatus().equals("Not Coming")) {
+                                                    notcom++;
                                                     totalNotCom++;
-                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
-                                                } else {
-                                                    others++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+                                                } else if (note.getAttended().equals("Yes")){
+                                                    att++;
                                                     totalAtt++;
-                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
                                                 }
                                             } else {
-                                                if (note.getOccupation().equals("Student")) {
-                                                    totalReg++;
-                                                    count.put(note.getFg(), new Occupation(1, 0, 0, 0));
-                                                } else if (note.getOccupation().equals("Working")) {
+                                                int reg = 1;
+
+                                                if (note.getStatus().equals("Coming")) {
                                                     totalCom++;
-                                                    count.put(note.getFg(), new Occupation(0, 1, 0, 0));
-                                                } else if (note.getOccupation().equals("Business/Self Employed")) {
+                                                    count.put(note.getFg(), new RegToAttend(reg, 1, 0, 0));
+                                                } else if (note.getStatus().equals("Not Coming")) {
                                                     totalNotCom++;
-                                                    count.put(note.getFg(), new Occupation(0, 0, 1, 0));
-                                                } else {
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 1, 0));
+                                                } else if (note.getAttended().equals("Yes")){
                                                     totalAtt++;
-                                                    count.put(note.getFg(), new Occupation(0, 0, 0, 1));
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 0, 1));
+                                                } else {
+                                                    count.put(note.getFg(), new RegToAttend(reg,0,0,0));
                                                 }
                                             }
                                         }
 
-                                        final OccupationAdapter adapter = new OccupationAdapter(count);
+                                        final RegToAttendAdapter adapter = new RegToAttendAdapter(count);
                                         mListView.setAdapter((ListAdapter) adapter);
                                         DecimalFormat df = new DecimalFormat("##.#");
                                         df.setRoundingMode(RoundingMode.DOWN);
@@ -557,38 +1340,65 @@ public class OccupationActivity extends AppCompatActivity {
                                         Double p7 = Double.parseDouble(df.format(p3));
                                         Double p8 = Double.parseDouble(df.format(p4));
 
-                                        mTextView6.setText(String.valueOf(total));
-                                        mTextView7.setText(String.valueOf(totalReg));
+                                        mTextView7.setText(String.valueOf(total));
                                         mTextView8.setText(String.valueOf(totalCom));
                                         mTextView9.setText(String.valueOf(totalNotCom));
                                         mTextView10.setText(String.valueOf(totalAtt));
-                                        mTextView12.setText(p5.toString());
+                                        mTextView12.setText("100");
                                         mTextView13.setText(p6.toString());
                                         mTextView14.setText(p7.toString());
                                         mTextView15.setText(p8.toString());
-
-//                        headerView = getLayoutInflater().inflate(R.layout.details_header,null);
-//                        mListView.addHeaderView(headerView);
-
 
                                         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                             @Override
                                             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                                                 String fg = adapter.getItem(i).getKey();
-                                                Intent intent = new Intent(OccupationActivity.this, OccupationDetails.class);
+                                                Intent intent = new Intent(RegToAttendActivity.this, RegToAttendSecond.class);
                                                 Bundle bundle = new Bundle();
-                                                bundle.putLong("Date1",date1);
-                                                bundle.putLong("Date2",date2);
+                                                bundle.putLong("Date1", date1);
+                                                bundle.putLong("Date2", date2);
                                                 bundle.putString("FG", fg);
-                                                Log.d("OccupationActivity", "onItemClick: Main: " + spinPrograms);
+                                                bundle.putInt("REG",adapter.getItem(i).getValue().getReg());
+                                                bundle.putInt("COM",adapter.getItem(i).getValue().getCom());
+                                                bundle.putInt("NOTCOM",adapter.getItem(i).getValue().getNotcom());
+                                                bundle.putInt("ATT",adapter.getItem(i).getValue().getAtt());
+                                                Log.d("OccupationActivity", "onItemClick: Main: " + spinnerCategories);
                                                 bundle.putString("SpinPrograms", spinnerPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);
-                                                bundle.putString("Collection",collection);
+                                                bundle.putString("Collection", collection);
                                                 intent.putExtras(bundle);
                                                 startActivity(intent);
                                             }
                                         });
+
+                                        totalNextReg = total;
+                                        totalNextCom = totalCom;
+                                        totalNextNotCom = totalNotCom;
+                                        totalNextAtt = totalAtt;
+
+                                        totalButton.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                Intent intent = new Intent(RegToAttendActivity.this, RegToAttendSecond.class);
+                                                Bundle bundle = new Bundle();
+                                                bundle.putLong("Date1", date1);
+                                                bundle.putLong("Date2", date2);
+                                                bundle.putInt("REG",totalNextReg);
+                                                bundle.putInt("COM",totalNextCom);
+                                                bundle.putInt("NOTCOM",totalNextNotCom);
+                                                bundle.putInt("ATT",totalNextAtt);
+                                                Log.d("OccupationActivity", "onItemClick: Main: " + spinnerCategories);
+                                                bundle.putString("SpinPrograms", spinnerPrograms);
+                                                bundle.putString("SpinCategories", spinnerCategories);
+                                                bundle.putString("SpinSessions", spinnerSessions);
+                                                bundle.putString("Collection", collection);
+                                                bundle.putString("ClickedFirst","ALL");
+                                                intent.putExtras(bundle);
+                                                startActivity(intent);
+                                            }
+                                        });
+
                                         count.clear();
 //                        mListView.setAdapter(null);
                                     }
@@ -608,8 +1418,11 @@ public class OccupationActivity extends AppCompatActivity {
 
             adapterSessions = new ArrayAdapter<String>
                     (this, R.layout.spinner_item, finalSessions);
-            total=0;totalAtt=0;
-            totalNotCom=0; totalReg=0; totalCom=0;
+            total = 0;
+            totalAtt = 0;
+            totalNotCom = 0;
+            totalReg = 0;
+            totalCom = 0;
 
             fgboys
 //                    .whereEqualTo("zzdate", date)
@@ -627,7 +1440,8 @@ public class OccupationActivity extends AppCompatActivity {
                                 Note note = documentSnapshot.toObject(Note.class);
 
                                 if (note.getSession() == null)
-                                    continue;;
+                                    continue;
+                                ;
 
                                 if (finalSessions.contains(note.getSession())) {
                                     continue;
@@ -647,11 +1461,17 @@ public class OccupationActivity extends AppCompatActivity {
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     spinnerSessions = parent.getItemAtPosition(position).toString();
                     posSession = position;
-                    total = 0;
+                    totalNotCom = 0;
+                    totalReg = 0;
+                    totalCom = 0;
+                    totalAtt = 0;
 
                     if (spinnerSessions.equals("ALL")) {
-                        total=0;totalAtt=0;
-                        totalNotCom=0; totalReg=0; totalCom=0;
+                        total = 0;
+                        totalAtt = 0;
+                        totalNotCom = 0;
+                        totalReg = 0;
+                        totalCom = 0;
                         fgboys
 //                                .whereEqualTo("zzdate", date)
                                 .whereGreaterThanOrEqualTo("edate", date1)
@@ -678,47 +1498,48 @@ public class OccupationActivity extends AppCompatActivity {
                                             }
 
                                             if (count.containsKey(note.getFg())) {
-                                                Occupation occupation = count.get(note.getFg());
-                                                int students = occupation.getStudents();
-                                                int working = occupation.getWorking();
-                                                int self = occupation.getSelf();
-                                                int others = occupation.getOthers();
+                                                RegToAttend regToAttend = count.get(note.getFg());
+                                                int reg = regToAttend.getReg();
+                                                int com = regToAttend.getCom();
+                                                int notcom = regToAttend.getNotcom();
+                                                int att = regToAttend.getAtt();
 
-                                                if (note.getOccupation().equals("Student")) {
-                                                    students++;
-                                                    totalReg++;
-                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
-                                                } else if (note.getOccupation().equals("Working")) {
-                                                    working++;
+                                                reg++;
+                                                totalReg++;
+                                                count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+
+                                                if (note.getStatus().equals("Coming")) {
+                                                    com++;
                                                     totalCom++;
-                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
-                                                } else if (note.getOccupation().equals("Business/Self Employed")) {
-                                                    self++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+                                                } else if (note.getStatus().equals("Not Coming")) {
+                                                    notcom++;
                                                     totalNotCom++;
-                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
-                                                } else {
-                                                    others++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+                                                } else if (note.getAttended().equals("Yes")){
+                                                    att++;
                                                     totalAtt++;
-                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
                                                 }
                                             } else {
-                                                if (note.getOccupation().equals("Student")) {
-                                                    totalReg++;
-                                                    count.put(note.getFg(), new Occupation(1, 0, 0, 0));
-                                                } else if (note.getOccupation().equals("Working")) {
+                                                int reg = 1;
+
+                                                if (note.getStatus().equals("Coming")) {
                                                     totalCom++;
-                                                    count.put(note.getFg(), new Occupation(0, 1, 0, 0));
-                                                } else if (note.getOccupation().equals("Business/Self Employed")) {
+                                                    count.put(note.getFg(), new RegToAttend(reg, 1, 0, 0));
+                                                } else if (note.getStatus().equals("Not Coming")) {
                                                     totalNotCom++;
-                                                    count.put(note.getFg(), new Occupation(0, 0, 1, 0));
-                                                } else {
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 1, 0));
+                                                } else if (note.getAttended().equals("Yes")){
                                                     totalAtt++;
-                                                    count.put(note.getFg(), new Occupation(0, 0, 0, 1));
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 0, 1));
+                                                } else {
+                                                    count.put(note.getFg(), new RegToAttend(reg,0,0,0));
                                                 }
                                             }
                                         }
 
-                                        final OccupationAdapter adapter = new OccupationAdapter(count);
+                                        final RegToAttendAdapter adapter = new RegToAttendAdapter(count);
                                         mListView.setAdapter((ListAdapter) adapter);
                                         DecimalFormat df = new DecimalFormat("##.#");
                                         df.setRoundingMode(RoundingMode.DOWN);
@@ -732,51 +1553,80 @@ public class OccupationActivity extends AppCompatActivity {
                                         Double p7 = Double.parseDouble(df.format(p3));
                                         Double p8 = Double.parseDouble(df.format(p4));
 
-                                        mTextView6.setText(String.valueOf(total));
-                                        mTextView7.setText(String.valueOf(totalReg));
+                                        mTextView7.setText(String.valueOf(total));
                                         mTextView8.setText(String.valueOf(totalCom));
                                         mTextView9.setText(String.valueOf(totalNotCom));
                                         mTextView10.setText(String.valueOf(totalAtt));
-                                        mTextView12.setText(p5.toString());
+                                        mTextView12.setText("100");
                                         mTextView13.setText(p6.toString());
                                         mTextView14.setText(p7.toString());
                                         mTextView15.setText(p8.toString());
-
-//                        headerView = getLayoutInflater().inflate(R.layout.details_header,null);
-//                        mListView.addHeaderView(headerView);
-
 
                                         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                             @Override
                                             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                                                 String fg = adapter.getItem(i).getKey();
-                                                Intent intent = new Intent(OccupationActivity.this, OccupationDetails.class);
+                                                Intent intent = new Intent(RegToAttendActivity.this, RegToAttendSecond.class);
                                                 Bundle bundle = new Bundle();
-                                                bundle.putLong("Date1",date1);
-                                                bundle.putLong("Date2",date2);
+                                                bundle.putLong("Date1", date1);
+                                                bundle.putLong("Date2", date2);
                                                 bundle.putString("FG", fg);
-                                                Log.d("OccupationActivity", "onItemClick: Main: " + spinPrograms);
+                                                bundle.putInt("REG",adapter.getItem(i).getValue().getReg());
+                                                bundle.putInt("COM",adapter.getItem(i).getValue().getCom());
+                                                bundle.putInt("NOTCOM",adapter.getItem(i).getValue().getNotcom());
+                                                bundle.putInt("ATT",adapter.getItem(i).getValue().getAtt());
+                                                Log.d("OccupationActivity", "onItemClick: Main: " + spinnerCategories);
                                                 bundle.putString("SpinPrograms", spinnerPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);
-                                                bundle.putString("Collection",collection);
+                                                bundle.putString("Collection", collection);
                                                 intent.putExtras(bundle);
                                                 startActivity(intent);
                                             }
                                         });
+
+                                        totalNextReg = total;
+                                        totalNextCom = totalCom;
+                                        totalNextNotCom = totalNotCom;
+                                        totalNextAtt = totalAtt;
+
+                                        totalButton.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                Intent intent = new Intent(RegToAttendActivity.this, RegToAttendSecond.class);
+                                                Bundle bundle = new Bundle();
+                                                bundle.putLong("Date1", date1);
+                                                bundle.putLong("Date2", date2);
+                                                bundle.putInt("REG",totalNextReg);
+                                                bundle.putInt("COM",totalNextCom);
+                                                bundle.putInt("NOTCOM",totalNextNotCom);
+                                                bundle.putInt("ATT",totalNextAtt);
+                                                Log.d("OccupationActivity", "onItemClick: Main: " + spinnerCategories);
+                                                bundle.putString("SpinPrograms", spinnerPrograms);
+                                                bundle.putString("SpinCategories", spinnerCategories);
+                                                bundle.putString("SpinSessions", spinnerSessions);
+                                                bundle.putString("Collection", collection);
+                                                bundle.putString("ClickedFirst","ALL");
+                                                intent.putExtras(bundle);
+                                                startActivity(intent);
+                                            }
+                                        });
+
                                         count.clear();
-//                        mListView.setAdapter(null);
                                     }
                                 });
                     } else {
-                        total=0;totalAtt=0;
-                        totalNotCom=0; totalReg=0; totalCom=0;
+                        total = 0;
+                        totalAtt = 0;
+                        totalNotCom = 0;
+                        totalReg = 0;
+                        totalCom = 0;
                         fgboys
 //                                .whereEqualTo("zzdate", date)
                                 .whereGreaterThanOrEqualTo("edate", date1)
                                 .whereLessThanOrEqualTo("edate", date2)
-                                .whereEqualTo("session",spinnerSessions)
                                 .whereEqualTo("category",spinnerCategories)
+                                .whereEqualTo("session", spinnerSessions)
                                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                     @Override
                                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -785,7 +1635,6 @@ public class OccupationActivity extends AppCompatActivity {
                                         }
 
                                         String data = "";
-//                                        Log.d(TAG, "onEvent: Out");
 
                                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                             Note note = documentSnapshot.toObject(Note.class);
@@ -798,47 +1647,48 @@ public class OccupationActivity extends AppCompatActivity {
                                             }
 
                                             if (count.containsKey(note.getFg())) {
-                                                Occupation occupation = count.get(note.getFg());
-                                                int students = occupation.getStudents();
-                                                int working = occupation.getWorking();
-                                                int self = occupation.getSelf();
-                                                int others = occupation.getOthers();
+                                                RegToAttend regToAttend = count.get(note.getFg());
+                                                int reg = regToAttend.getReg();
+                                                int com = regToAttend.getCom();
+                                                int notcom = regToAttend.getNotcom();
+                                                int att = regToAttend.getAtt();
 
-                                                if (note.getOccupation().equals("Student")) {
-                                                    students++;
-                                                    totalReg++;
-                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
-                                                } else if (note.getOccupation().equals("Working")) {
-                                                    working++;
+                                                reg++;
+                                                totalReg++;
+                                                count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+
+                                                if (note.getStatus().equals("Coming")) {
+                                                    com++;
                                                     totalCom++;
-                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
-                                                } else if (note.getOccupation().equals("Business/Self Employed")) {
-                                                    self++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+                                                } else if (note.getStatus().equals("Not Coming")) {
+                                                    notcom++;
                                                     totalNotCom++;
-                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
-                                                } else {
-                                                    others++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+                                                } else if (note.getAttended().equals("Yes")){
+                                                    att++;
                                                     totalAtt++;
-                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
                                                 }
                                             } else {
-                                                if (note.getOccupation().equals("Student")) {
-                                                    totalReg++;
-                                                    count.put(note.getFg(), new Occupation(1, 0, 0, 0));
-                                                } else if (note.getOccupation().equals("Working")) {
+                                                int reg = 1;
+
+                                                if (note.getStatus().equals("Coming")) {
                                                     totalCom++;
-                                                    count.put(note.getFg(), new Occupation(0, 1, 0, 0));
-                                                } else if (note.getOccupation().equals("Business/Self Employed")) {
+                                                    count.put(note.getFg(), new RegToAttend(reg, 1, 0, 0));
+                                                } else if (note.getStatus().equals("Not Coming")) {
                                                     totalNotCom++;
-                                                    count.put(note.getFg(), new Occupation(0, 0, 1, 0));
-                                                } else {
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 1, 0));
+                                                } else if (note.getAttended().equals("Yes")){
                                                     totalAtt++;
-                                                    count.put(note.getFg(), new Occupation(0, 0, 0, 1));
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 0, 1));
+                                                } else {
+                                                    count.put(note.getFg(), new RegToAttend(reg,0,0,0));
                                                 }
                                             }
                                         }
 
-                                        final OccupationAdapter adapter = new OccupationAdapter(count);
+                                        final RegToAttendAdapter adapter = new RegToAttendAdapter(count);
                                         mListView.setAdapter((ListAdapter) adapter);
                                         DecimalFormat df = new DecimalFormat("##.#");
                                         df.setRoundingMode(RoundingMode.DOWN);
@@ -852,38 +1702,65 @@ public class OccupationActivity extends AppCompatActivity {
                                         Double p7 = Double.parseDouble(df.format(p3));
                                         Double p8 = Double.parseDouble(df.format(p4));
 
-                                        mTextView6.setText(String.valueOf(total));
-                                        mTextView7.setText(String.valueOf(totalReg));
+                                        mTextView7.setText(String.valueOf(total));
                                         mTextView8.setText(String.valueOf(totalCom));
                                         mTextView9.setText(String.valueOf(totalNotCom));
                                         mTextView10.setText(String.valueOf(totalAtt));
-                                        mTextView12.setText(p5.toString());
+                                        mTextView12.setText("100");
                                         mTextView13.setText(p6.toString());
                                         mTextView14.setText(p7.toString());
                                         mTextView15.setText(p8.toString());
-
-//                        headerView = getLayoutInflater().inflate(R.layout.details_header,null);
-//                        mListView.addHeaderView(headerView);
-
 
                                         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                             @Override
                                             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                                                 String fg = adapter.getItem(i).getKey();
-                                                Intent intent = new Intent(OccupationActivity.this, OccupationDetails.class);
+                                                Intent intent = new Intent(RegToAttendActivity.this, RegToAttendSecond.class);
                                                 Bundle bundle = new Bundle();
-                                                bundle.putLong("Date1",date1);
-                                                bundle.putLong("Date2",date2);
+                                                bundle.putLong("Date1", date1);
+                                                bundle.putLong("Date2", date2);
                                                 bundle.putString("FG", fg);
-                                                Log.d("OccupationActivity", "onItemClick: Main: " + spinPrograms);
+                                                bundle.putInt("REG",adapter.getItem(i).getValue().getReg());
+                                                bundle.putInt("COM",adapter.getItem(i).getValue().getCom());
+                                                bundle.putInt("NOTCOM",adapter.getItem(i).getValue().getNotcom());
+                                                bundle.putInt("ATT",adapter.getItem(i).getValue().getAtt());
+                                                Log.d("OccupationActivity", "onItemClick: Main: " + spinnerCategories);
                                                 bundle.putString("SpinPrograms", spinnerPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);
-                                                bundle.putString("Collection",collection);
+                                                bundle.putString("Collection", collection);
                                                 intent.putExtras(bundle);
                                                 startActivity(intent);
                                             }
                                         });
+
+                                        totalNextReg = total;
+                                        totalNextCom = totalCom;
+                                        totalNextNotCom = totalNotCom;
+                                        totalNextAtt = totalAtt;
+
+                                        totalButton.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                Intent intent = new Intent(RegToAttendActivity.this, RegToAttendSecond.class);
+                                                Bundle bundle = new Bundle();
+                                                bundle.putLong("Date1", date1);
+                                                bundle.putLong("Date2", date2);
+                                                bundle.putInt("REG",totalNextReg);
+                                                bundle.putInt("COM",totalNextCom);
+                                                bundle.putInt("NOTCOM",totalNextNotCom);
+                                                bundle.putInt("ATT",totalNextAtt);
+                                                Log.d("OccupationActivity", "onItemClick: Main: " + spinnerCategories);
+                                                bundle.putString("SpinPrograms", spinnerPrograms);
+                                                bundle.putString("SpinCategories", spinnerCategories);
+                                                bundle.putString("SpinSessions", spinnerSessions);
+                                                bundle.putString("Collection", collection);
+                                                bundle.putString("ClickedFirst","ALL");
+                                                intent.putExtras(bundle);
+                                                startActivity(intent);
+                                            }
+                                        });
+
                                         count.clear();
 //                        mListView.setAdapter(null);
                                     }
@@ -897,604 +1774,5 @@ public class OccupationActivity extends AppCompatActivity {
                 }
             });
         }
-    }
-
-    public void populateSessions(String spinCategory, String spinProgram) {
-        final String spinCategories = spinCategory;
-        final String spinPrograms = spinProgram;
-
-        if (spinCategory.equals("1")) {
-            finalSessions = new ArrayList<String>();
-            sessionsList = Arrays.asList(sessions);
-            finalSessions.addAll(sessionsList);
-
-            adapterSessions = new ArrayAdapter<String>
-                    (this, R.layout.spinner_item, finalSessions);
-            total=0;totalAtt=0;
-            totalNotCom=0; totalReg=0; totalCom=0;
-
-            fgboys
-//                    .whereEqualTo("zzdate", date)
-                    .whereGreaterThanOrEqualTo("edate", date1)
-                    .whereLessThanOrEqualTo("edate", date2)
-                    .whereEqualTo("program",spinnerPrograms)
-                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                        @Override
-                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                            if (e != null) {
-                                return;
-                            }
-
-                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                                Note note = documentSnapshot.toObject(Note.class);
-
-                                if (finalSessions.contains(note.getSession())) {
-                                    continue;
-                                } else {
-                                    finalSessions.add(note.getSession());
-                                    adapterSessions.notifyDataSetChanged();
-                                }
-
-                            }
-                        }
-                    });
-            adapterSessions.setDropDownViewResource(R.layout.spinner_item);
-            session.setAdapter(adapterSessions);
-
-            session.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    spinnerSessions = parent.getItemAtPosition(position).toString();
-                    posSession = position;
-                    total2 = 0;
-
-                    if (spinnerSessions.equals("ALL")) {
-                        total=0;totalAtt=0;
-                        totalNotCom=0; totalReg=0; totalCom=0;
-                        fgboys
-//                                .whereEqualTo("zzdate", date)
-                                .whereGreaterThanOrEqualTo("edate", date1)
-                                .whereLessThanOrEqualTo("edate", date2)
-                                .whereEqualTo("program",spinnerPrograms)
-                                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                                        if (e != null) {
-                                            return;
-                                        }
-
-                                        String data = "";
-//                                        Log.d(TAG, "onEvent: Out");
-
-                                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                                            Note note = documentSnapshot.toObject(Note.class);
-                                            total++;
-//                                            Log.d(TAG, "onEvent: Occupation"
-//                                                    + note.getOccupation() + " " + note.getZtl());
-
-                                            if (note.getOccupation() == null) {
-                                                note.setOccupation("Not updated");
-                                            }
-
-                                            if (count.containsKey(note.getFg())) {
-                                                Occupation occupation = count.get(note.getFg());
-                                                int students = occupation.getStudents();
-                                                int working = occupation.getWorking();
-                                                int self = occupation.getSelf();
-                                                int others = occupation.getOthers();
-
-                                                if (note.getOccupation().equals("Student")) {
-                                                    students++;
-                                                    totalReg++;
-                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
-                                                } else if (note.getOccupation().equals("Working")) {
-                                                    working++;
-                                                    totalCom++;
-                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
-                                                } else if (note.getOccupation().equals("Business/Self Employed")) {
-                                                    self++;
-                                                    totalNotCom++;
-                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
-                                                } else {
-                                                    others++;
-                                                    totalAtt++;
-                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
-                                                }
-                                            } else {
-                                                if (note.getOccupation().equals("Student")) {
-                                                    totalReg++;
-                                                    count.put(note.getFg(), new Occupation(1, 0, 0, 0));
-                                                } else if (note.getOccupation().equals("Working")) {
-                                                    totalCom++;
-                                                    count.put(note.getFg(), new Occupation(0, 1, 0, 0));
-                                                } else if (note.getOccupation().equals("Business/Self Employed")) {
-                                                    totalNotCom++;
-                                                    count.put(note.getFg(), new Occupation(0, 0, 1, 0));
-                                                } else {
-                                                    totalAtt++;
-                                                    count.put(note.getFg(), new Occupation(0, 0, 0, 1));
-                                                }
-                                            }
-                                        }
-
-                                        final OccupationAdapter adapter = new OccupationAdapter(count);
-                                        mListView.setAdapter((ListAdapter) adapter);
-                                        DecimalFormat df = new DecimalFormat("##.#");
-                                        df.setRoundingMode(RoundingMode.DOWN);
-
-                                        Double p1 = ((double) totalReg / total) * 100;
-                                        Double p2 = ((double) totalCom / total) * 100;
-                                        Double p3 = ((double) totalNotCom / total) * 100;
-                                        Double p4 = ((double) totalAtt / total) * 100;
-                                        Double p5 = Double.parseDouble(df.format(p1));
-                                        Double p6 = Double.parseDouble(df.format(p2));
-                                        Double p7 = Double.parseDouble(df.format(p3));
-                                        Double p8 = Double.parseDouble(df.format(p4));
-
-                                        mTextView6.setText(String.valueOf(total));
-                                        mTextView7.setText(String.valueOf(totalReg));
-                                        mTextView8.setText(String.valueOf(totalCom));
-                                        mTextView9.setText(String.valueOf(totalNotCom));
-                                        mTextView10.setText(String.valueOf(totalAtt));
-                                        mTextView12.setText(p5.toString());
-                                        mTextView13.setText(p6.toString());
-                                        mTextView14.setText(p7.toString());
-                                        mTextView15.setText(p8.toString());
-
-//                        headerView = getLayoutInflater().inflate(R.layout.details_header,null);
-//                        mListView.addHeaderView(headerView);
-
-
-                                        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                            @Override
-                                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                                String fg = adapter.getItem(i).getKey();
-                                                Intent intent = new Intent(OccupationActivity.this, OccupationDetails.class);
-                                                Bundle bundle = new Bundle();
-                                                bundle.putLong("Date1",date1);
-                                                bundle.putLong("Date2",date2);
-                                                Log.d("OccupationActivity", "onItemClick: Main: " + spinPrograms);
-                                                bundle.putString("SpinPrograms", spinnerPrograms);
-                                                bundle.putString("SpinCategories", spinnerCategories);
-                                                bundle.putString("SpinSessions", spinnerSessions);
-                                                bundle.putString("Collection",collection);
-                                                intent.putExtras(bundle);
-                                                startActivity(intent);
-                                            }
-                                        });
-                                        count.clear();
-//                        mListView.setAdapter(null);
-                                    }
-                                });
-                    } else {
-                        total=0;totalAtt=0;
-                        totalNotCom=0; totalReg=0; totalCom=0;
-                        fgboys
-//                                .whereEqualTo("zzdate", date)
-                                .whereGreaterThanOrEqualTo("edate", date1)
-                                .whereLessThanOrEqualTo("edate", date2)
-                                .whereEqualTo("session",spinnerSessions)
-                                .whereEqualTo("program",spinnerPrograms)
-                                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                                        if (e != null) {
-                                            return;
-                                        }
-
-                                        String data = "";
-//                                        Log.d(TAG, "onEvent: Out");
-
-                                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                                            Note note = documentSnapshot.toObject(Note.class);
-                                            total++;
-//                                            Log.d(TAG, "onEvent: Occupation"
-//                                                    + note.getOccupation() + " " + note.getZtl());
-
-                                            if (note.getOccupation() == null) {
-                                                note.setOccupation("Not updated");
-                                            }
-
-                                            if (count.containsKey(note.getFg())) {
-                                                Occupation occupation = count.get(note.getFg());
-                                                int students = occupation.getStudents();
-                                                int working = occupation.getWorking();
-                                                int self = occupation.getSelf();
-                                                int others = occupation.getOthers();
-
-                                                if (note.getOccupation().equals("Student")) {
-                                                    students++;
-                                                    totalReg++;
-                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
-                                                } else if (note.getOccupation().equals("Working")) {
-                                                    working++;
-                                                    totalCom++;
-                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
-                                                } else if (note.getOccupation().equals("Business/Self Employed")) {
-                                                    self++;
-                                                    totalNotCom++;
-                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
-                                                } else {
-                                                    others++;
-                                                    totalAtt++;
-                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
-                                                }
-                                            } else {
-                                                if (note.getOccupation().equals("Student")) {
-                                                    totalReg++;
-                                                    count.put(note.getFg(), new Occupation(1, 0, 0, 0));
-                                                } else if (note.getOccupation().equals("Working")) {
-                                                    totalCom++;
-                                                    count.put(note.getFg(), new Occupation(0, 1, 0, 0));
-                                                } else if (note.getOccupation().equals("Business/Self Employed")) {
-                                                    totalNotCom++;
-                                                    count.put(note.getFg(), new Occupation(0, 0, 1, 0));
-                                                } else {
-                                                    totalAtt++;
-                                                    count.put(note.getFg(), new Occupation(0, 0, 0, 1));
-                                                }
-                                            }
-                                        }
-
-                                        final OccupationAdapter adapter = new OccupationAdapter(count);
-                                        mListView.setAdapter((ListAdapter) adapter);
-                                        DecimalFormat df = new DecimalFormat("##.#");
-                                        df.setRoundingMode(RoundingMode.DOWN);
-
-                                        Double p1 = ((double) totalReg / total) * 100;
-                                        Double p2 = ((double) totalCom / total) * 100;
-                                        Double p3 = ((double) totalNotCom / total) * 100;
-                                        Double p4 = ((double) totalAtt / total) * 100;
-                                        Double p5 = Double.parseDouble(df.format(p1));
-                                        Double p6 = Double.parseDouble(df.format(p2));
-                                        Double p7 = Double.parseDouble(df.format(p3));
-                                        Double p8 = Double.parseDouble(df.format(p4));
-
-                                        mTextView6.setText(String.valueOf(total));
-                                        mTextView7.setText(String.valueOf(totalReg));
-                                        mTextView8.setText(String.valueOf(totalCom));
-                                        mTextView9.setText(String.valueOf(totalNotCom));
-                                        mTextView10.setText(String.valueOf(totalAtt));
-                                        mTextView12.setText(p5.toString());
-                                        mTextView13.setText(p6.toString());
-                                        mTextView14.setText(p7.toString());
-                                        mTextView15.setText(p8.toString());
-
-//                        headerView = getLayoutInflater().inflate(R.layout.details_header,null);
-//                        mListView.addHeaderView(headerView);
-
-
-                                        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                            @Override
-                                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                                String fg = adapter.getItem(i).getKey();
-                                                Intent intent = new Intent(OccupationActivity.this, OccupationDetails.class);
-                                                Bundle bundle = new Bundle();
-                                                bundle.putLong("Date1",date1);
-                                                bundle.putLong("Date2",date2);
-                                                bundle.putString("FG", fg);
-                                                Log.d("OccupationActivity", "onItemClick: Main: " + spinPrograms);
-                                                bundle.putString("SpinPrograms", spinnerPrograms);
-                                                bundle.putString("SpinCategories", spinnerCategories);
-                                                bundle.putString("SpinSessions", spinnerSessions);
-                                                bundle.putString("Collection",collection);
-                                                intent.putExtras(bundle);
-                                                startActivity(intent);
-                                            }
-                                        });
-                                        count.clear();
-//                        mListView.setAdapter(null);
-                                    }
-                                });
-                    }
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-
-                }
-            });
-        } else {
-            finalSessions = new ArrayList<String>();
-            sessionsList = Arrays.asList(sessions);
-            finalSessions.addAll(sessionsList);
-
-            adapterSessions = new ArrayAdapter<String>
-                    (this, R.layout.spinner_item, finalSessions);
-            total=0;totalAtt=0;
-            totalNotCom=0; totalReg=0; totalCom=0;
-
-            fgboys
-//                    .whereEqualTo("zzdate", date)
-                    .whereGreaterThanOrEqualTo("edate", date1)
-                    .whereLessThanOrEqualTo("edate", date2)
-                    .whereEqualTo("category",spinnerCategories)
-                    .whereEqualTo("program",spinnerPrograms)
-                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                        @Override
-                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                            if (e != null) {
-                                return;
-                            }
-
-                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                                Note note = documentSnapshot.toObject(Note.class);
-
-                                if (finalSessions.contains(note.getSession())) {
-                                    continue;
-                                } else {
-                                    finalSessions.add(note.getSession());
-                                    adapterSessions.notifyDataSetChanged();
-                                }
-
-                            }
-                        }
-                    });
-
-            adapterSessions.setDropDownViewResource(R.layout.spinner_item);
-            session.setAdapter(adapterSessions);
-
-            session.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    spinnerSessions = parent.getItemAtPosition(position).toString();
-                    posSession = position;
-                    total2 = 0;
-
-                    if (spinnerSessions.equals("ALL")) {
-                        total=0;totalAtt=0;
-                        totalNotCom=0; totalReg=0; totalCom=0;
-                        fgboys
-//                                .whereEqualTo("zzdate", date)
-                                .whereGreaterThanOrEqualTo("edate", date1)
-                                .whereLessThanOrEqualTo("edate", date2)
-                                .whereEqualTo("category",spinnerCategories)
-                                .whereEqualTo("program",spinnerPrograms)
-                                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                                        if (e != null) {
-                                            return;
-                                        }
-
-                                        String data = "";
-//                                        Log.d(TAG, "onEvent: Out");
-
-                                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                                            Note note = documentSnapshot.toObject(Note.class);
-                                            total++;
-//                                            Log.d(TAG, "onEvent: Occupation"
-//                                                    + note.getOccupation() + " " + note.getZtl());
-
-                                            if (note.getOccupation() == null) {
-                                                note.setOccupation("Not updated");
-                                            }
-
-                                            if (count.containsKey(note.getFg())) {
-                                                Occupation occupation = count.get(note.getFg());
-                                                int students = occupation.getStudents();
-                                                int working = occupation.getWorking();
-                                                int self = occupation.getSelf();
-                                                int others = occupation.getOthers();
-
-                                                if (note.getOccupation().equals("Student")) {
-                                                    students++;
-                                                    totalReg++;
-                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
-                                                } else if (note.getOccupation().equals("Working")) {
-                                                    working++;
-                                                    totalCom++;
-                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
-                                                } else if (note.getOccupation().equals("Business/Self Employed")) {
-                                                    self++;
-                                                    totalNotCom++;
-                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
-                                                } else {
-                                                    others++;
-                                                    totalAtt++;
-                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
-                                                }
-                                            } else {
-                                                if (note.getOccupation().equals("Student")) {
-                                                    totalReg++;
-                                                    count.put(note.getFg(), new Occupation(1, 0, 0, 0));
-                                                } else if (note.getOccupation().equals("Working")) {
-                                                    totalCom++;
-                                                    count.put(note.getFg(), new Occupation(0, 1, 0, 0));
-                                                } else if (note.getOccupation().equals("Business/Self Employed")) {
-                                                    totalNotCom++;
-                                                    count.put(note.getFg(), new Occupation(0, 0, 1, 0));
-                                                } else {
-                                                    totalAtt++;
-                                                    count.put(note.getFg(), new Occupation(0, 0, 0, 1));
-                                                }
-                                            }
-                                        }
-
-                                        final OccupationAdapter adapter = new OccupationAdapter(count);
-                                        mListView.setAdapter((ListAdapter) adapter);
-                                        DecimalFormat df = new DecimalFormat("##.#");
-                                        df.setRoundingMode(RoundingMode.DOWN);
-
-                                        Double p1 = ((double) totalReg / total) * 100;
-                                        Double p2 = ((double) totalCom / total) * 100;
-                                        Double p3 = ((double) totalNotCom / total) * 100;
-                                        Double p4 = ((double) totalAtt / total) * 100;
-                                        Double p5 = Double.parseDouble(df.format(p1));
-                                        Double p6 = Double.parseDouble(df.format(p2));
-                                        Double p7 = Double.parseDouble(df.format(p3));
-                                        Double p8 = Double.parseDouble(df.format(p4));
-
-                                        mTextView6.setText(String.valueOf(total));
-                                        mTextView7.setText(String.valueOf(totalReg));
-                                        mTextView8.setText(String.valueOf(totalCom));
-                                        mTextView9.setText(String.valueOf(totalNotCom));
-                                        mTextView10.setText(String.valueOf(totalAtt));
-                                        mTextView12.setText(p5.toString());
-                                        mTextView13.setText(p6.toString());
-                                        mTextView14.setText(p7.toString());
-                                        mTextView15.setText(p8.toString());
-
-//                        headerView = getLayoutInflater().inflate(R.layout.details_header,null);
-//                        mListView.addHeaderView(headerView);
-
-
-                                        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                            @Override
-                                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                                String fg = adapter.getItem(i).getKey();
-                                                Intent intent = new Intent(OccupationActivity.this, OccupationDetails.class);
-                                                Bundle bundle = new Bundle();
-                                                bundle.putLong("Date1",date1);
-                                                bundle.putLong("Date2",date2);
-                                                bundle.putString("FG", fg);
-                                                Log.d("OccupationActivity", "onItemClick: Main: " + spinPrograms);
-                                                bundle.putString("SpinPrograms", spinnerPrograms);
-                                                bundle.putString("SpinCategories", spinnerCategories);
-                                                bundle.putString("SpinSessions", spinnerSessions);
-                                                bundle.putString("Collection",collection);
-                                                intent.putExtras(bundle);
-                                                startActivity(intent);
-                                            }
-                                        });
-                                        count.clear();
-//                        mListView.setAdapter(null);
-                                    }
-                                });
-                    } else {
-                        total=0;totalAtt=0;
-                        totalNotCom=0; totalReg=0; totalCom=0;
-                        fgboys
-//                                .whereEqualTo("zzdate", date)
-                                .whereGreaterThanOrEqualTo("edate", date1)
-                                .whereLessThanOrEqualTo("edate", date2)
-                                .whereEqualTo("session",spinnerSessions)
-                                .whereEqualTo("category",spinnerCategories)
-                                .whereEqualTo("program",spinnerPrograms)
-                                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                                        if (e != null) {
-                                            return;
-                                        }
-
-                                        String data = "";
-//                                        Log.d(TAG, "onEvent: Out");
-
-                                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                                            Note note = documentSnapshot.toObject(Note.class);
-                                            total++;
-//                                            Log.d(TAG, "onEvent: Occupation"
-//                                                    + note.getOccupation() + " " + note.getZtl());
-
-                                            if (note.getOccupation() == null) {
-                                                note.setOccupation("Not updated");
-                                            }
-
-                                            if (count.containsKey(note.getFg())) {
-                                                Occupation occupation = count.get(note.getFg());
-                                                int students = occupation.getStudents();
-                                                int working = occupation.getWorking();
-                                                int self = occupation.getSelf();
-                                                int others = occupation.getOthers();
-
-                                                if (note.getOccupation().equals("Student")) {
-                                                    students++;
-                                                    totalReg++;
-                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
-                                                } else if (note.getOccupation().equals("Working")) {
-                                                    working++;
-                                                    totalCom++;
-                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
-                                                } else if (note.getOccupation().equals("Business/Self Employed")) {
-                                                    self++;
-                                                    totalNotCom++;
-                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
-                                                } else {
-                                                    others++;
-                                                    totalAtt++;
-                                                    count.put(note.getFg(), new Occupation(students, working, self, others));
-                                                }
-                                            } else {
-                                                if (note.getOccupation().equals("Student")) {
-                                                    totalReg++;
-                                                    count.put(note.getFg(), new Occupation(1, 0, 0, 0));
-                                                } else if (note.getOccupation().equals("Working")) {
-                                                    totalCom++;
-                                                    count.put(note.getFg(), new Occupation(0, 1, 0, 0));
-                                                } else if (note.getOccupation().equals("Business/Self Employed")) {
-                                                    totalNotCom++;
-                                                    count.put(note.getFg(), new Occupation(0, 0, 1, 0));
-                                                } else {
-                                                    totalAtt++;
-                                                    count.put(note.getFg(), new Occupation(0, 0, 0, 1));
-                                                }
-                                            }
-                                        }
-
-                                        final OccupationAdapter adapter = new OccupationAdapter(count);
-                                        mListView.setAdapter((ListAdapter) adapter);
-                                        DecimalFormat df = new DecimalFormat("##.#");
-                                        df.setRoundingMode(RoundingMode.DOWN);
-
-                                        Double p1 = ((double) totalReg / total) * 100;
-                                        Double p2 = ((double) totalCom / total) * 100;
-                                        Double p3 = ((double) totalNotCom / total) * 100;
-                                        Double p4 = ((double) totalAtt / total) * 100;
-                                        Double p5 = Double.parseDouble(df.format(p1));
-                                        Double p6 = Double.parseDouble(df.format(p2));
-                                        Double p7 = Double.parseDouble(df.format(p3));
-                                        Double p8 = Double.parseDouble(df.format(p4));
-
-                                        mTextView6.setText(String.valueOf(total));
-                                        mTextView7.setText(String.valueOf(totalReg));
-                                        mTextView8.setText(String.valueOf(totalCom));
-                                        mTextView9.setText(String.valueOf(totalNotCom));
-                                        mTextView10.setText(String.valueOf(totalAtt));
-                                        mTextView12.setText(p5.toString());
-                                        mTextView13.setText(p6.toString());
-                                        mTextView14.setText(p7.toString());
-                                        mTextView15.setText(p8.toString());
-
-//                        headerView = getLayoutInflater().inflate(R.layout.details_header,null);
-//                        mListView.addHeaderView(headerView);
-
-
-                                        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                            @Override
-                                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                                String fg = adapter.getItem(i).getKey();
-                                                Intent intent = new Intent(OccupationActivity.this, OccupationDetails.class);
-                                                Bundle bundle = new Bundle();
-                                                bundle.putLong("Date1",date1);
-                                                bundle.putLong("Date2",date2);
-                                                bundle.putString("FG", fg);
-                                                Log.d("OccupationActivity", "onItemClick: Main: " + spinPrograms);
-                                                bundle.putString("SpinPrograms", spinnerPrograms);
-                                                bundle.putString("SpinCategories", spinnerCategories);
-                                                bundle.putString("SpinSessions", spinnerSessions);
-                                                bundle.putString("Collection",collection);
-                                                intent.putExtras(bundle);
-                                                startActivity(intent);
-                                            }
-                                        });
-                                        count.clear();
-//                        mListView.setAdapter(null);
-                                    }
-                                });
-                    }
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-
-                }
-            });
-        }
-    }
-
-    public void select1(View v) {
-        Intent intent = new Intent(OccupationActivity.this, DateSelector.class);
-        startActivity(intent);
     }
 }

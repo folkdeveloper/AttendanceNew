@@ -5,32 +5,6 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="82dp"
-        android:layout_marginTop="60dp"
-        android:orientation="horizontal">
-
-        <Spinner
-            android:id="@+id/program"
-            android:layout_width="match_parent"
-            android:layout_height="51dp"
-            android:layout_weight="1"
-            android:minWidth="100dp"
-            android:minHeight="10dp"
-            android:padding="5dp" />
-
-        <Spinner
-            android:id="@+id/category"
-            android:layout_width="match_parent"
-            android:layout_height="49dp"
-            android:layout_weight="1"
-            android:minWidth="100dp"
-            android:minHeight="10dp"
-            android:padding="5dp" />
-
-    </LinearLayout>
-
     <ListView
         android:id="@+id/list_item"
         android:layout_width="match_parent"

@@ -137,16 +137,49 @@
                 android:orientation="vertical"
                 android:weightSum="10">
 
-                <TextView
-                    android:id="@+id/textView1"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@drawable/customborder"
-                    android:gravity="center|center_vertical"
-                    android:text="Name "
-                    android:textSize="17dp"
-                    android:textStyle="bold" />
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/textView39"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="top|left"
+                            android:text="FID"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView1"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_weight="20"
+                            android:gravity="center|center_vertical"
+                            android:text="Name "
+                            android:textSize="17dp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <ImageButton
+                        android:id="@+id/history"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.5"
+                        android:background="@android:color/transparent"
+                        app:srcCompat="@android:drawable/ic_menu_recent_history" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -543,6 +576,16 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="Probability"
+                    android:textSize="17dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textView40"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center"
+                    android:text="AttStatus"
                     android:textSize="17dp"
                     android:textStyle="bold" />
 

@@ -106,6 +106,9 @@ public class AreaDetails extends AppCompatActivity {
                 bundle.putString("TL",adapterD.getItem(position).getZtl());
                 bundle.putString("Level",adapterD.getItem(position).getZfl());
                 bundle.putString("Category",adapterD.getItem(position).getCategory());
+                bundle.putString("FID",adapterD.getItem(position).getFid());
+                bundle.putString("Collection",collection);
+
                 if (adapterD.getItem(position).getRes_interest() != null)
                     bundle.putString("Res",adapterD.getItem(position).getRes_interest());
                 else
@@ -176,6 +179,10 @@ public class AreaDetails extends AppCompatActivity {
                 bundle.putLong("LU",adapterD.getItem(position).getLast_updated());
                 bundle.putString("Date",adapterD.getItem(position).getZzdate());
                 bundle.putString("Mobile",adapterD.getItem(position).getZmob());
+                bundle.putString("FID",adapterD.getItem(position).getFid());
+                bundle.putString("Attended",adapterD.getItem(position).getAttended());
+                bundle.putString("Collection",collection);
+
                 if (adapterD.getItem(position).getRes_interest() != null)
                     bundle.putString("Res",adapterD.getItem(position).getRes_interest());
                 else

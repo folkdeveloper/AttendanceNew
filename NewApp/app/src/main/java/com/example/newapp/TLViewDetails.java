@@ -113,6 +113,8 @@ public class TLViewDetails extends AppCompatActivity {
                 bundle.putString("TL",adapterD.getItem(position).getZtl());
                 bundle.putString("Level",adapterD.getItem(position).getZfl());
                 bundle.putString("Category",adapterD.getItem(position).getCategory());
+                bundle.putString("FID",adapterD.getItem(position).getFid());
+                bundle.putString("Collection",collection);
                 if (adapterD.getItem(position).getRes_interest() != null)
                     bundle.putString("Res",adapterD.getItem(position).getRes_interest());
                 else
@@ -181,6 +183,9 @@ public class TLViewDetails extends AppCompatActivity {
                 bundle.putLong("Edate",adapterD.getItem(position).getEdate());
                 bundle.putLong("Probability",adapterD.getItem(position).getProbability());
                 bundle.putLong("LU",adapterD.getItem(position).getLast_updated());
+                bundle.putString("FID",adapterD.getItem(position).getFid());
+                bundle.putString("Collection",collection);
+                bundle.putString("Attended",adapterD.getItem(position).getAttended());
                 if (adapterD.getItem(position).getRes_interest() != null)
                     bundle.putString("Res",adapterD.getItem(position).getRes_interest());
                 else

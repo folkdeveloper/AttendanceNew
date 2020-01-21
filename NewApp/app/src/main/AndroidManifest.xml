@@ -12,7 +12,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".TurnoutFGDetails"></activity>
+        <activity android:name=".RegToAttendSecond"></activity>
+        <activity android:name=".RegToAttendDetails" />
+        <activity android:name=".HistoryActivity" />
+        <activity android:name=".RegVsAttendedDetails" />
+        <activity android:name=".RegVsAttendedThird" />
+        <activity android:name=".RegVsAttendedSecond" />
+        <activity android:name=".RegToAttendActivity" />
+        <activity android:name=".RegVsAttendedActivity" />
+        <activity android:name=".TurnoutFGDetails" />
         <activity android:name=".TurnoutFGList" />
         <activity android:name=".TurnoutFGActivity" />
         <activity android:name=".UniqueDetails" />

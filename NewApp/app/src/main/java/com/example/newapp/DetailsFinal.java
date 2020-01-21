@@ -42,12 +42,13 @@ public class DetailsFinal extends AppCompatActivity {
     private String res_interest = "";
     private long origin = 0;
     private Context mContext;
-    private ImageButton callButton;
+    private ImageButton callButton, historyButton;
+    private String collection = "", fid = "";
 
     private TextView mTextView1, mTextView2, mTextView3, mTextView4, mTextView5, mTextView6,
             mTextView7, mTextView8, mTextView9, mTextView10, mTextView11, mTextView12, mTextView13,
             mTextView14, mTextView15, mTextView16, mTextView17, mTextView18, mTextView19, mTextView20,
-            mTextView21;
+            mTextView21, mTextView22;
 
     private ImageView mImageView;
 
@@ -77,6 +78,8 @@ public class DetailsFinal extends AppCompatActivity {
         category = getIntent().getStringExtra("Category");
         res_interest = getIntent().getStringExtra("Res");
         origin = getIntent().getLongExtra("Origin",origin);
+        collection = getIntent().getStringExtra("Collection");
+        fid = getIntent().getStringExtra("FID");
 
         mTextView1 = findViewById(R.id.textView1);
         mTextView2 = findViewById(R.id.textView2);
@@ -99,7 +102,9 @@ public class DetailsFinal extends AppCompatActivity {
         mTextView19 = findViewById(R.id.textView19);
         mTextView20 = findViewById(R.id.textView20);
         mTextView21 = findViewById(R.id.textView21);
+        mTextView22 = findViewById(R.id.textView22);
         callButton = findViewById(R.id.call);
+        historyButton = findViewById(R.id.history);
 
         mImageView = findViewById(R.id.imageView);
 
@@ -123,6 +128,7 @@ public class DetailsFinal extends AppCompatActivity {
         mTextView18.setText("Organisation: " + organisation);
         mTextView19.setText("Category: " + category);
         mTextView20.setText("Residency Interest: " + res_interest);
+        mTextView22.setText("FID: " + fid);
         if (res_interest.equals("Yes")) {
             mTextView20.setBackgroundResource(R.color.colorPrimary);
         }
@@ -157,6 +163,18 @@ public class DetailsFinal extends AppCompatActivity {
                 Intent callIntent = new Intent(Intent.ACTION_DIAL);
                 callIntent.setData(Uri.parse("tel:"+phone.trim()));
                 startActivity(callIntent);
+            }
+        });
+
+        historyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent historyIntent = new Intent(DetailsFinal.this,HistoryActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("Collection",collection);
+                bundle.putString("FID",fid);
+                historyIntent.putExtras(bundle);
+                startActivity(historyIntent);
             }
         });
     }

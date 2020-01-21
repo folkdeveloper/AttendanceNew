@@ -60,12 +60,13 @@ public class RegFinalDetails extends AppCompatActivity {
     private String msg_confirm;
     private String status;
     private String comment;
-    private String zzdate, zmob;
+    private String zzdate, zmob, attended;
+    private String collection = "", fid = "";
     private long edate;
     private long probability;
     private long origin = 0;
     private long last_updated;
-    private ImageButton callButton;
+    private ImageButton callButton, historyButton;
     private Button buttonfg_CallYes, buttonfg_CallNo;
     private Button buttonLeave_Yes, buttonLeave_No;
     private Button buttonmsg_Yes, buttonmsg_No;
@@ -77,7 +78,7 @@ public class RegFinalDetails extends AppCompatActivity {
     private TextView mTextView1, mTextView2, mTextView3, mTextView4, mTextView5, mTextView6,
             mTextView7, mTextView8, mTextView9, mTextView10, mTextView11, mTextView12, mTextView13,
             mTextView14, mTextView15, mTextView16, mTextView17, mTextView18, mTextView19, mTextView20,
-            mTextView21, mTextView22, mTextView33, mTextView34;
+            mTextView21, mTextView22, mTextView33, mTextView34, mTextView39, mTextView40;
 
     private EditText mTextView36;
 
@@ -122,6 +123,9 @@ public class RegFinalDetails extends AppCompatActivity {
         last_updated = getIntent().getLongExtra("LU",last_updated);
         zzdate = getIntent().getStringExtra("Date");
         zmob = getIntent().getStringExtra("Mobile");
+        collection = getIntent().getStringExtra("Collection");
+        fid = getIntent().getStringExtra("FID");
+        attended = getIntent().getStringExtra("Attended");
 
         mTextView1 = findViewById(R.id.textView1);
         mTextView2 = findViewById(R.id.textView2);
@@ -148,8 +152,11 @@ public class RegFinalDetails extends AppCompatActivity {
         mTextView33 = findViewById(R.id.textView33);
         mTextView34 = findViewById(R.id.textView34);
         mTextView36 = findViewById(R.id.textView36);
+        mTextView39 = findViewById(R.id.textView39);
+        mTextView40 = findViewById(R.id.textView40);
 
         callButton = findViewById(R.id.call);
+        historyButton = findViewById(R.id.history);
         mImageView = findViewById(R.id.imageView);
         buttonfg_CallYes = findViewById(R.id.button1);
         buttonfg_CallNo = findViewById(R.id.button2);
@@ -181,6 +188,8 @@ public class RegFinalDetails extends AppCompatActivity {
         mTextView18.setText("Organisation: " + organisation);
         mTextView19.setText("Category: " + category);
         mTextView20.setText("Residency Interest: " + res_interest);
+        mTextView39.setText("FID: " + fid);
+        mTextView40.setText("Attended: " + attended);
         if (res_interest.equals("Yes")) {
             mTextView20.setBackgroundResource(R.color.colorPrimary);
         }
@@ -352,7 +361,7 @@ public class RegFinalDetails extends AppCompatActivity {
                 }catch(JSONException e) {
                     e.printStackTrace();
                 }
-                status = "Yes";
+                status = "Coming";
 //                Toast.makeText(RegFinalDetails.this, "" + postData.toString(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -368,7 +377,7 @@ public class RegFinalDetails extends AppCompatActivity {
                 }catch(JSONException e) {
                     e.printStackTrace();
                 }
-                status = "No";
+                status = "Not Coming";
 //                Toast.makeText(RegFinalDetails.this, "" + postData.toString(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -411,7 +420,7 @@ public class RegFinalDetails extends AppCompatActivity {
                             "\"fg_call\"" + ":" + "\"" + fg_call + "\","+
                             "\"msg_confirm\"" + ":" + "\"" + msg_confirm + "\","+
                             "\"comment\"" + ":" + "\"" + comment + "\","+
-                            "\"status\"" + ":" + "\"" + buttonstatus_com.getText().toString() + "\""+
+                            "\"status\"" + ":" + "\"" + status + "\""+
                             "}";
                     Submit(data);
                 }catch(JSONException e) {
@@ -446,6 +455,18 @@ public class RegFinalDetails extends AppCompatActivity {
                 Intent callIntent = new Intent(Intent.ACTION_DIAL);
                 callIntent.setData(Uri.parse("tel:"+phone.trim()));
                 startActivity(callIntent);
+            }
+        });
+
+        historyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent historyIntent = new Intent(RegFinalDetails.this,HistoryActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("Collection",collection);
+                bundle.putString("FID",fid);
+                historyIntent.putExtras(bundle);
+                startActivity(historyIntent);
             }
         });
     }

@@ -5,7 +5,7 @@ import android.util.Log;
 public class Note {
     String area, fg, fid, japa, name, session, time, zfl, zmob, zread, ztl, zzdate, zzone, color,
             url, occupation, program, category, branch, organization, college, source, res_interest,
-            fg_call, leave_agreed, msg_confirm, status, comment;
+            fg_call, leave_agreed, msg_confirm, status, comment, attended;
 
     long edate, probability, last_updated;
 
@@ -283,5 +283,13 @@ public class Note {
 
     public void setLast_updated(long last_updated) {
         this.last_updated = last_updated;
+    }
+
+    public String getAttended() {
+        return attended;
+    }
+
+    public void setAttended(String attended) {
+        this.attended = attended;
     }
 }
