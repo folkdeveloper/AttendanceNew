@@ -61,6 +61,13 @@ public class RegToAttendDetails extends AppCompatActivity {
         mTextView = findViewById(R.id.textView2);
 
         mTextView.setText(spinSessions);
+
+        if (clickedFirst == null) {
+            clickedFirst = "";
+        }
+
+        if (clicked == null)
+            clicked = "";
     }
 
     @Override
@@ -296,10 +303,34 @@ public class RegToAttendDetails extends AppCompatActivity {
                                         details.add(note);
                                 }
 
+                                if (clicked.equals("Not Updated")) {
+                                    if (note.getStatus().equals("unknown")) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Not Attended")) {
+                                    if (note.getAttended().equals("No")) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Attended but Not Updated")) {
+                                    if ((note.getStatus().equals("unknown")) && (note.getAttended().equals("Yes"))) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Coming but not Attended")) {
+                                    if ((note.getStatus().equals("Coming")) && (note.getAttended().equals("No"))) {
+                                        details.add(note);
+                                    }
+                                }
+
                                 Log.d("Details", "onEvent: "+clicked);
 
                                 if (clicked.equals("Attended")) {
-                                    if (note.getAttended().equals("Yes"))
+                                    if ((note.getAttended().equals("Yes")))
                                         details.add(note);
                                 }
                             }
@@ -360,10 +391,34 @@ public class RegToAttendDetails extends AppCompatActivity {
                                         details.add(note);
                                 }
 
+                                if (clicked.equals("Not Updated")) {
+                                    if (note.getStatus().equals("unknown")) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Not Attended")) {
+                                    if (note.getAttended().equals("No")) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Coming but not Attended")) {
+                                    if ((note.getStatus().equals("Coming")) && (note.getAttended().equals("No"))) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Attended but Not Updated")) {
+                                    if ((note.getStatus().equals("unknown")) && (note.getAttended().equals("Yes"))) {
+                                        details.add(note);
+                                    }
+                                }
+
                                 Log.d("Details", "onEvent: "+clicked);
 
                                 if (clicked.equals("Attended")) {
-                                    if (note.getAttended().equals("Yes"))
+                                    if ((note.getAttended().equals("Yes")))
                                         details.add(note);
                                 }
                             }
@@ -416,14 +471,46 @@ public class RegToAttendDetails extends AppCompatActivity {
 
                                 if (clicked.equals("Registered")) {
                                     details.add(note);
-                                } else if (clicked.equals("Coming")) {
+                                }
+
+                                if (clicked.equals("Coming")) {
                                     if (note.getStatus().equals("Coming"))
                                         details.add(note);
-                                } else if (clicked.equals("Not Coming")) {
+                                }
+
+                                if (clicked.equals("Not Coming")) {
                                     if (note.getStatus().equals("Not Coming"))
                                         details.add(note);
-                                } else if (clicked.equals("Attended")) {
-                                    if (note.getAttended().equals("Yes"))
+                                }
+
+                                if (clicked.equals("Not Updated")) {
+                                    if (note.getStatus().equals("unknown")) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Not Attended")) {
+                                    if (note.getAttended().equals("No")) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Coming but not Attended")) {
+                                    if ((note.getStatus().equals("Coming")) && (note.getAttended().equals("No"))) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Attended but Not Updated")) {
+                                    if ((note.getStatus().equals("unknown")) && (note.getAttended().equals("Yes"))) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                Log.d("Details", "onEvent: "+clicked);
+
+                                if (clicked.equals("Attended")) {
+                                    if ((note.getAttended().equals("Yes")))
                                         details.add(note);
                                 }
                             }
@@ -473,14 +560,46 @@ public class RegToAttendDetails extends AppCompatActivity {
 
                                 if (clicked.equals("Registered")) {
                                     details.add(note);
-                                } else if (clicked.equals("Coming")) {
+                                }
+
+                                if (clicked.equals("Coming")) {
                                     if (note.getStatus().equals("Coming"))
                                         details.add(note);
-                                } else if (clicked.equals("Not Coming")) {
+                                }
+
+                                if (clicked.equals("Not Coming")) {
                                     if (note.getStatus().equals("Not Coming"))
                                         details.add(note);
-                                } else if (clicked.equals("Attended")) {
-                                    if (note.getAttended().equals("Yes"))
+                                }
+
+                                if (clicked.equals("Not Updated")) {
+                                    if (note.getStatus().equals("unknown")) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Coming but not Attended")) {
+                                    if ((note.getStatus().equals("Coming")) && (note.getAttended().equals("No"))) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Not Attended")) {
+                                    if (note.getAttended().equals("No")) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Attended but Not Updated")) {
+                                    if ((note.getStatus().equals("unknown")) && (note.getAttended().equals("Yes"))) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                Log.d("Details", "onEvent: "+clicked);
+
+                                if (clicked.equals("Attended")) {
+                                    if ((note.getAttended().equals("Yes")))
                                         details.add(note);
                                 }
                             }
@@ -533,14 +652,46 @@ public class RegToAttendDetails extends AppCompatActivity {
 
                                 if (clicked.equals("Registered")) {
                                     details.add(note);
-                                } else if (clicked.equals("Coming")) {
+                                }
+
+                                if (clicked.equals("Coming")) {
                                     if (note.getStatus().equals("Coming"))
                                         details.add(note);
-                                } else if (clicked.equals("Not Coming")) {
+                                }
+
+                                if (clicked.equals("Not Coming")) {
                                     if (note.getStatus().equals("Not Coming"))
                                         details.add(note);
-                                } else if (clicked.equals("Attended")) {
-                                    if (note.getAttended().equals("Yes"))
+                                }
+
+                                if (clicked.equals("Not Updated")) {
+                                    if (note.getStatus().equals("unknown")) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Not Attended")) {
+                                    if (note.getAttended().equals("No")) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Coming but not Attended")) {
+                                    if ((note.getStatus().equals("Coming")) && (note.getAttended().equals("No"))) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Attended but Not Updated")) {
+                                    if ((note.getStatus().equals("unknown")) && (note.getAttended().equals("Yes"))) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                Log.d("Details", "onEvent: "+clicked);
+
+                                if (clicked.equals("Attended")) {
+                                    if ((note.getAttended().equals("Yes")))
                                         details.add(note);
                                 }
                             }
@@ -590,14 +741,46 @@ public class RegToAttendDetails extends AppCompatActivity {
 
                                 if (clicked.equals("Registered")) {
                                     details.add(note);
-                                } else if (clicked.equals("Coming")) {
+                                }
+
+                                if (clicked.equals("Coming")) {
                                     if (note.getStatus().equals("Coming"))
                                         details.add(note);
-                                } else if (clicked.equals("Not Coming")) {
+                                }
+
+                                if (clicked.equals("Coming but not Attended")) {
+                                    if ((note.getStatus().equals("Coming")) && (note.getAttended().equals("No"))) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Not Coming")) {
                                     if (note.getStatus().equals("Not Coming"))
                                         details.add(note);
-                                } else if (clicked.equals("Attended")) {
-                                    if (note.getAttended().equals("Yes"))
+                                }
+
+                                if (clicked.equals("Not Updated")) {
+                                    if (note.getStatus().equals("unknown")) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Not Attended")) {
+                                    if (note.getAttended().equals("No")) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Attended but Not Updated")) {
+                                    if ((note.getStatus().equals("unknown")) && (note.getAttended().equals("Yes"))) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                Log.d("Details", "onEvent: "+clicked);
+
+                                if (clicked.equals("Attended")) {
+                                    if ((note.getAttended().equals("Yes")))
                                         details.add(note);
                                 }
                             }
@@ -647,16 +830,48 @@ public class RegToAttendDetails extends AppCompatActivity {
                                     note.setStatus("No");
                                 }
 
+                                if (clicked.equals("Coming but not Attended")) {
+                                    if ((note.getStatus().equals("Coming")) && (note.getAttended().equals("No"))) {
+                                        details.add(note);
+                                    }
+                                }
+
                                 if (clicked.equals("Registered")) {
                                     details.add(note);
-                                } else if (clicked.equals("Coming")) {
+                                }
+
+                                if (clicked.equals("Coming")) {
                                     if (note.getStatus().equals("Coming"))
                                         details.add(note);
-                                } else if (clicked.equals("Not Coming")) {
+                                }
+
+                                if (clicked.equals("Not Coming")) {
                                     if (note.getStatus().equals("Not Coming"))
                                         details.add(note);
-                                } else if (clicked.equals("Attended")) {
-                                    if (note.getAttended().equals("Yes"))
+                                }
+
+                                if (clicked.equals("Not Updated")) {
+                                    if (note.getStatus().equals("unknown")) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Not Attended")) {
+                                    if (note.getAttended().equals("No")) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Attended but Not Updated")) {
+                                    if ((note.getStatus().equals("unknown")) && (note.getAttended().equals("Yes"))) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                Log.d("Details", "onEvent: "+clicked);
+
+                                if (clicked.equals("Attended")) {
+                                    if ((note.getAttended().equals("Yes")))
                                         details.add(note);
                                 }
                             }
@@ -705,14 +920,46 @@ public class RegToAttendDetails extends AppCompatActivity {
 
                                 if (clicked.equals("Registered")) {
                                     details.add(note);
-                                } else if (clicked.equals("Coming")) {
+                                }
+
+                                if (clicked.equals("Coming but not Attended")) {
+                                    if ((note.getStatus().equals("Coming")) && (note.getAttended().equals("No"))) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Coming")) {
                                     if (note.getStatus().equals("Coming"))
                                         details.add(note);
-                                } else if (clicked.equals("Not Coming")) {
+                                }
+
+                                if (clicked.equals("Not Coming")) {
                                     if (note.getStatus().equals("Not Coming"))
                                         details.add(note);
-                                } else if (clicked.equals("Attended")) {
-                                    if (note.getAttended().equals("Yes"))
+                                }
+
+                                if (clicked.equals("Not Updated")) {
+                                    if (note.getStatus().equals("unknown")) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Not Attended")) {
+                                    if (note.getAttended().equals("No")) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Attended but Not Updated")) {
+                                    if ((note.getStatus().equals("unknown")) && (note.getAttended().equals("Yes"))) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                Log.d("Details", "onEvent: "+clicked);
+
+                                if (clicked.equals("Attended")) {
+                                    if ((note.getAttended().equals("Yes")))
                                         details.add(note);
                                 }
                             }
@@ -766,14 +1013,46 @@ public class RegToAttendDetails extends AppCompatActivity {
 
                                 if (clicked.equals("Registered")) {
                                     details.add(note);
-                                } else if (clicked.equals("Coming")) {
+                                }
+
+                                if (clicked.equals("Coming")) {
                                     if (note.getStatus().equals("Coming"))
                                         details.add(note);
-                                } else if (clicked.equals("Not Coming")) {
+                                }
+
+                                if (clicked.equals("Not Coming")) {
                                     if (note.getStatus().equals("Not Coming"))
                                         details.add(note);
-                                } else if (clicked.equals("Attended")) {
-                                    if (note.getAttended().equals("Yes"))
+                                }
+
+                                if (clicked.equals("Coming but not Attended")) {
+                                    if ((note.getStatus().equals("Coming")) && (note.getAttended().equals("No"))) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Not Updated")) {
+                                    if (note.getStatus().equals("unknown")) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Not Attended")) {
+                                    if (note.getAttended().equals("No")) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Attended but Not Updated")) {
+                                    if ((note.getStatus().equals("unknown")) && (note.getAttended().equals("Yes"))) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                Log.d("Details", "onEvent: "+clicked);
+
+                                if (clicked.equals("Attended")) {
+                                    if ((note.getAttended().equals("Yes")))
                                         details.add(note);
                                 }
                             }
@@ -824,14 +1103,46 @@ public class RegToAttendDetails extends AppCompatActivity {
 
                                 if (clicked.equals("Registered")) {
                                     details.add(note);
-                                } else if (clicked.equals("Coming")) {
+                                }
+
+                                if (clicked.equals("Coming")) {
                                     if (note.getStatus().equals("Coming"))
                                         details.add(note);
-                                } else if (clicked.equals("Not Coming")) {
+                                }
+
+                                if (clicked.equals("Coming but not Attended")) {
+                                    if ((note.getStatus().equals("Coming")) && (note.getAttended().equals("No"))) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Not Coming")) {
                                     if (note.getStatus().equals("Not Coming"))
                                         details.add(note);
-                                } else if (clicked.equals("Attended")) {
-                                    if (note.getAttended().equals("Yes"))
+                                }
+
+                                if (clicked.equals("Not Updated")) {
+                                    if (note.getStatus().equals("unknown")) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Not Attended")) {
+                                    if (note.getAttended().equals("No")) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Attended but Not Updated")) {
+                                    if ((note.getStatus().equals("unknown")) && (note.getAttended().equals("Yes"))) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                Log.d("Details", "onEvent: "+clicked);
+
+                                if (clicked.equals("Attended")) {
+                                    if ((note.getAttended().equals("Yes")))
                                         details.add(note);
                                 }
                             }
@@ -879,20 +1190,52 @@ public class RegToAttendDetails extends AppCompatActivity {
                                     note.setStatus("Not updated");
                                 }
 
+                                if (clicked.equals("Coming but not Attended")) {
+                                    if ((note.getStatus().equals("Coming")) && (note.getAttended().equals("No"))) {
+                                        details.add(note);
+                                    }
+                                }
+
                                 if (note.getAttended() == null) {
                                     note.setStatus("No");
                                 }
 
                                 if (clicked.equals("Registered")) {
                                     details.add(note);
-                                } else if (clicked.equals("Coming")) {
+                                }
+
+                                if (clicked.equals("Coming")) {
                                     if (note.getStatus().equals("Coming"))
                                         details.add(note);
-                                } else if (clicked.equals("Not Coming")) {
+                                }
+
+                                if (clicked.equals("Not Coming")) {
                                     if (note.getStatus().equals("Not Coming"))
                                         details.add(note);
-                                } else if (clicked.equals("Attended")) {
-                                    if (note.getAttended().equals("Yes"))
+                                }
+
+                                if (clicked.equals("Not Updated")) {
+                                    if (note.getStatus().equals("unknown")) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Not Attended")) {
+                                    if (note.getAttended().equals("No")) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Attended but Not Updated")) {
+                                    if ((note.getStatus().equals("unknown")) && (note.getAttended().equals("Yes"))) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                Log.d("Details", "onEvent: "+clicked);
+
+                                if (clicked.equals("Attended")) {
+                                    if ((note.getAttended().equals("Yes")))
                                         details.add(note);
                                 }
                             }
@@ -937,20 +1280,52 @@ public class RegToAttendDetails extends AppCompatActivity {
                                     note.setStatus("Not updated");
                                 }
 
+                                if (clicked.equals("Coming but not Attended")) {
+                                    if ((note.getStatus().equals("Coming")) && (note.getAttended().equals("No"))) {
+                                        details.add(note);
+                                    }
+                                }
+
                                 if (note.getAttended() == null) {
                                     note.setStatus("No");
                                 }
 
                                 if (clicked.equals("Registered")) {
                                     details.add(note);
-                                } else if (clicked.equals("Coming")) {
+                                }
+
+                                if (clicked.equals("Coming")) {
                                     if (note.getStatus().equals("Coming"))
                                         details.add(note);
-                                } else if (clicked.equals("Not Coming")) {
+                                }
+
+                                if (clicked.equals("Not Coming")) {
                                     if (note.getStatus().equals("Not Coming"))
                                         details.add(note);
-                                } else if (clicked.equals("Attended")) {
-                                    if (note.getAttended().equals("Yes"))
+                                }
+
+                                if (clicked.equals("Not Updated")) {
+                                    if (note.getStatus().equals("unknown")) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Not Attended")) {
+                                    if (note.getAttended().equals("No")) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Attended but Not Updated")) {
+                                    if ((note.getStatus().equals("unknown")) && (note.getAttended().equals("Yes"))) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                Log.d("Details", "onEvent: "+clicked);
+
+                                if (clicked.equals("Attended")) {
+                                    if ((note.getAttended().equals("Yes")))
                                         details.add(note);
                                 }
                             }
@@ -1002,8 +1377,50 @@ public class RegToAttendDetails extends AppCompatActivity {
                                     note.setStatus("No");
                                 }
 
-                                Log.d("Details", "onEvent: Event" + note.occupation + note.fg);
-                                details.add(note);
+                                if (clicked.equals("Registered")) {
+                                    details.add(note);
+                                }
+
+                                if (clicked.equals("Coming")) {
+                                    if (note.getStatus().equals("Coming"))
+                                        details.add(note);
+                                }
+
+                                if (clicked.equals("Coming but not Attended")) {
+                                    if ((note.getStatus().equals("Coming")) && (note.getAttended().equals("No"))) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Not Coming")) {
+                                    if (note.getStatus().equals("Not Coming"))
+                                        details.add(note);
+                                }
+
+                                if (clicked.equals("Not Updated")) {
+                                    if (note.getStatus().equals("unknown")) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Not Attended")) {
+                                    if (note.getAttended().equals("No")) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Attended but Not Updated")) {
+                                    if ((note.getStatus().equals("unknown")) && (note.getAttended().equals("Yes"))) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                Log.d("Details", "onEvent: "+clicked);
+
+                                if (clicked.equals("Attended")) {
+                                    if ((note.getAttended().equals("Yes")))
+                                        details.add(note);
+                                }
                             }
 
                             if (collection.equals("AttendanceDemo")) {
@@ -1050,8 +1467,50 @@ public class RegToAttendDetails extends AppCompatActivity {
                                     note.setStatus("No");
                                 }
 
-                                Log.d("Details", "onEvent: Event" + note.occupation + note.fg);
-                                details.add(note);
+                                if (clicked.equals("Registered")) {
+                                    details.add(note);
+                                }
+
+                                if (clicked.equals("Coming")) {
+                                    if (note.getStatus().equals("Coming"))
+                                        details.add(note);
+                                }
+
+                                if (clicked.equals("Not Coming")) {
+                                    if (note.getStatus().equals("Not Coming"))
+                                        details.add(note);
+                                }
+
+                                if (clicked.equals("Coming but not Attended")) {
+                                    if ((note.getStatus().equals("Coming")) && (note.getAttended().equals("No"))) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Not Updated")) {
+                                    if (note.getStatus().equals("unknown")) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Not Attended")) {
+                                    if (note.getAttended().equals("No")) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Attended but Not Updated")) {
+                                    if ((note.getStatus().equals("unknown")) && (note.getAttended().equals("Yes"))) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                Log.d("Details", "onEvent: "+clicked);
+
+                                if (clicked.equals("Attended")) {
+                                    if ((note.getAttended().equals("Yes")))
+                                        details.add(note);
+                                }
                             }
 
                             if (collection.equals("AttendanceDemo")) {
@@ -1104,14 +1563,46 @@ public class RegToAttendDetails extends AppCompatActivity {
 
                                 if (clicked.equals("Registered")) {
                                     details.add(note);
-                                } else if (clicked.equals("Coming")) {
+                                }
+
+                                if (clicked.equals("Coming")) {
                                     if (note.getStatus().equals("Coming"))
                                         details.add(note);
-                                } else if (clicked.equals("Not Coming")) {
+                                }
+
+                                if (clicked.equals("Not Coming")) {
                                     if (note.getStatus().equals("Not Coming"))
                                         details.add(note);
-                                } else if (clicked.equals("Attended")) {
-                                    if (note.getAttended().equals("Yes"))
+                                }
+
+                                if (clicked.equals("Coming but not Attended")) {
+                                    if ((note.getStatus().equals("Coming")) && (note.getAttended().equals("No"))) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Not Updated")) {
+                                    if (note.getStatus().equals("unknown")) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Not Attended")) {
+                                    if (note.getAttended().equals("No")) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Attended but Not Updated")) {
+                                    if ((note.getStatus().equals("unknown")) && (note.getAttended().equals("Yes"))) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                Log.d("Details", "onEvent: "+clicked);
+
+                                if (clicked.equals("Attended")) {
+                                    if ((note.getAttended().equals("Yes")))
                                         details.add(note);
                                 }
                             }
@@ -1163,14 +1654,46 @@ public class RegToAttendDetails extends AppCompatActivity {
 
                                 if (clicked.equals("Registered")) {
                                     details.add(note);
-                                } else if (clicked.equals("Coming")) {
+                                }
+
+                                if (clicked.equals("Coming")) {
                                     if (note.getStatus().equals("Coming"))
                                         details.add(note);
-                                } else if (clicked.equals("Not Coming")) {
+                                }
+
+                                if (clicked.equals("Coming but not Attended")) {
+                                    if ((note.getStatus().equals("Coming")) && (note.getAttended().equals("No"))) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Not Coming")) {
                                     if (note.getStatus().equals("Not Coming"))
                                         details.add(note);
-                                } else if (clicked.equals("Attended")) {
-                                    if (note.getAttended().equals("Yes"))
+                                }
+
+                                if (clicked.equals("Not Updated")) {
+                                    if (note.getStatus().equals("unknown")) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Not Attended")) {
+                                    if (note.getAttended().equals("No")) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                if (clicked.equals("Attended but Not Updated")) {
+                                    if ((note.getStatus().equals("unknown")) && (note.getAttended().equals("Yes"))) {
+                                        details.add(note);
+                                    }
+                                }
+
+                                Log.d("Details", "onEvent: "+clicked);
+
+                                if (clicked.equals("Attended")) {
+                                    if ((note.getAttended().equals("Yes")))
                                         details.add(note);
                                 }
                             }

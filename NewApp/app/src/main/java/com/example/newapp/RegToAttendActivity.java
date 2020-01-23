@@ -44,7 +44,7 @@ public class RegToAttendActivity extends AppCompatActivity {
     private TextView mTextView;
     private long date1 = 0, date2 = 0;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
-    public int totalReg, totalCom, totalNotCom, totalAtt, total;
+    public int totalReg, totalCom, totalNotCom, totalAtt, totalANU, totalNA, totalCNA, total;
     public int totalNextReg, totalNextCom, totalNextNotCom, totalNextAtt;
     public double p1, p2, p3 ,p4;
     TreeMap<String,RegToAttend> count = null;
@@ -377,6 +377,7 @@ public class RegToAttendActivity extends AppCompatActivity {
                         totalNotCom = 0;
                         totalReg = 0;
                         totalCom = 0;
+                        totalCNA = 0;
                         fgboys
 //                                .whereEqualTo("zzdate", date)
                                 .whereGreaterThanOrEqualTo("edate", date1)
@@ -408,38 +409,78 @@ public class RegToAttendActivity extends AppCompatActivity {
                                                 int com = regToAttend.getCom();
                                                 int notcom = regToAttend.getNotcom();
                                                 int att = regToAttend.getAtt();
+                                                int anu = regToAttend.getAnu();
+                                                int na = regToAttend.getNa();
+                                                int cna = regToAttend.getCna();
 
                                                 reg++;
                                                 totalReg++;
-                                                count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+                                                count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
 
-                                                if (note.getStatus().equals("Coming")) {
-                                                    com++;
-                                                    totalCom++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
-                                                } else if (note.getStatus().equals("Not Coming")) {
-                                                    notcom++;
-                                                    totalNotCom++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
-                                                } else if (note.getAttended().equals("Yes")){
-                                                    att++;
-                                                    totalAtt++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+                                                if ((note.getStatus().equals("Coming")) && (note.getAttended().equals("Yes"))) {
+                                                    com++;att++;
+                                                    totalCom++;totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
+                                                }
+
+                                                else if ((note.getStatus().equals("Coming") && (note.getAttended().equals("No")))) {
+                                                    totalNA++;na++; cna++;
+                                                    totalCom++;com++; totalCNA++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu,na, cna));
+                                                }
+
+                                                else if ((note.getStatus().equals("Not Coming")) && (note.getAttended().equals("No"))) {
+                                                    notcom++;na++;
+                                                    totalNotCom++;totalNA++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
+                                                }
+
+                                                else if ((note.getStatus().equals("Not Coming")) && (note.getAttended().equals("Yes"))) {
+                                                    notcom++;att++;
+                                                    totalNotCom++;totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
+                                                }
+
+                                                if ((note.getAttended().equals("Yes")) && (note.getStatus().equals("unknown"))) {
+                                                    anu++;att++;
+                                                    totalANU++; totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
+                                                } else if ((note.getAttended().equals("No")) && (note.getStatus().equals("unknown"))) {
+                                                    na++; totalNA++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
                                                 }
                                             } else {
                                                 int reg = 1;
 
-                                                if (note.getStatus().equals("Coming")) {
+                                                if ((note.getStatus().equals("Coming")) && (note.getAttended().equals("Yes"))) {
                                                     totalCom++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, 1, 0, 0));
-                                                } else if (note.getStatus().equals("Not Coming")) {
-                                                    totalNotCom++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 1, 0));
-                                                } else if (note.getAttended().equals("Yes")){
                                                     totalAtt++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 0, 1));
-                                                } else {
-                                                    count.put(note.getFg(), new RegToAttend(reg,0,0,0));
+                                                    count.put(note.getFg(), new RegToAttend(reg, 1, 0, 1, 0 ,0, 0));
+                                                }
+                                                else if ((note.getStatus().equals("Coming") && (note.getAttended().equals("No")))) {
+                                                    totalNA++; totalCNA++;
+                                                    totalCom++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 1, 0, 0, 0,1, 1));
+                                                }
+                                                else if ((note.getStatus().equals("Not Coming")) && (note.getAttended().equals("No"))) {
+                                                    totalNotCom++;
+                                                    totalNA++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 1, 0, 0,1,0));
+                                                }
+                                                else if ((note.getStatus().equals("Not Coming")) && (note.getAttended().equals("Yes"))) {
+                                                    totalNotCom++;
+                                                    totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 1, 1, 0,0,0));
+                                                }
+
+                                                if ((note.getAttended().equals("Yes")) && (note.getStatus().equals("unknown"))) {
+                                                    totalANU++;
+                                                    totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 0, 1, 1,0,0));
+                                                }
+                                                else if ((note.getAttended().equals("No")) && (note.getStatus().equals("unknown"))) {
+                                                    totalNA++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 0, 0, 0,1,0));
                                                 }
                                             }
                                         }
@@ -476,11 +517,13 @@ public class RegToAttendActivity extends AppCompatActivity {
                                                 bundle.putLong("Date1", date1);
                                                 bundle.putLong("Date2", date2);
                                                 bundle.putString("FG", fg);
-                                                bundle.putInt("REG",adapter.getItem(position).getValue().getReg());
-                                                bundle.putInt("COM",adapter.getItem(position).getValue().getCom());
-                                                bundle.putInt("NOTCOM",adapter.getItem(position).getValue().getNotcom());
-                                                bundle.putInt("ATT",adapter.getItem(position).getValue().getAtt());
-                                                Log.d("OccupationActivity", "onItemClick: Main: " + spinnerCategories);
+                                                bundle.putInt("REG",adapter.getItem(i).getValue().getReg());
+                                                bundle.putInt("COM",adapter.getItem(i).getValue().getCom());
+                                                bundle.putInt("NOTCOM",adapter.getItem(i).getValue().getNotcom());
+                                                bundle.putInt("ATT",adapter.getItem(i).getValue().getAtt());
+                                                bundle.putInt("ANU",adapter.getItem(i).getValue().getAnu());
+                                                bundle.putInt("NA",adapter.getItem(i).getValue().getNa());
+                                                bundle.putInt("CNA",adapter.getItem(i).getValue().getCna());
                                                 bundle.putString("SpinPrograms", spinnerPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);
@@ -506,7 +549,9 @@ public class RegToAttendActivity extends AppCompatActivity {
                                                 bundle.putInt("COM",totalNextCom);
                                                 bundle.putInt("NOTCOM",totalNextNotCom);
                                                 bundle.putInt("ATT",totalNextAtt);
-                                                Log.d("OccupationActivity", "onItemClick: Main: " + spinnerCategories);
+                                                bundle.putInt("ANU",totalANU);
+                                                bundle.putInt("NA",totalNA);
+                                                bundle.putInt("CNA",totalCNA);
                                                 bundle.putString("SpinPrograms", spinnerPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);
@@ -526,6 +571,8 @@ public class RegToAttendActivity extends AppCompatActivity {
                         totalNotCom = 0;
                         totalReg = 0;
                         totalCom = 0;
+                        totalCNA = 0;
+
                         fgboys
 //                                .whereEqualTo("zzdate", date)
                                 .whereGreaterThanOrEqualTo("edate", date1)
@@ -557,40 +604,79 @@ public class RegToAttendActivity extends AppCompatActivity {
                                                 int com = regToAttend.getCom();
                                                 int notcom = regToAttend.getNotcom();
                                                 int att = regToAttend.getAtt();
+                                                int anu = regToAttend.getAnu();
+                                                int na = regToAttend.getNa();
+                                                int cna = regToAttend.getCna();
 
                                                 reg++;
                                                 totalReg++;
-                                                count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+                                                count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
 
-                                                if (note.getStatus().equals("Coming")) {
-                                                    com++;
-                                                    totalCom++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
-                                                } else if (note.getStatus().equals("Not Coming")) {
-                                                    notcom++;
-                                                    totalNotCom++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
-                                                } else if (note.getAttended().equals("Yes")){
-                                                    att++;
-                                                    totalAtt++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+                                                if ((note.getStatus().equals("Coming")) && (note.getAttended().equals("Yes"))) {
+                                                    com++;att++;
+                                                    totalCom++;totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
+                                                }
+
+                                                else if ((note.getStatus().equals("Coming") && (note.getAttended().equals("No")))) {
+                                                    totalNA++;na++; cna++;
+                                                    totalCom++;com++; totalCNA++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu,na, cna));
+                                                }
+
+                                                else if ((note.getStatus().equals("Not Coming")) && (note.getAttended().equals("No"))) {
+                                                    notcom++;na++;
+                                                    totalNotCom++;totalNA++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
+                                                }
+
+                                                else if ((note.getStatus().equals("Not Coming")) && (note.getAttended().equals("Yes"))) {
+                                                    notcom++;att++;
+                                                    totalNotCom++;totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
+                                                }
+
+                                                if ((note.getAttended().equals("Yes")) && (note.getStatus().equals("unknown"))) {
+                                                    anu++;att++;
+                                                    totalANU++; totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
+                                                } else if ((note.getAttended().equals("No")) && (note.getStatus().equals("unknown"))) {
+                                                    na++; totalNA++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
                                                 }
                                             } else {
                                                 int reg = 1;
 
-                                                if (note.getStatus().equals("Coming")) {
+                                                if ((note.getStatus().equals("Coming")) && (note.getAttended().equals("Yes"))) {
                                                     totalCom++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, 1, 0, 0));
-                                                } else if (note.getStatus().equals("Not Coming")) {
-                                                    totalNotCom++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 1, 0));
-                                                } else if (note.getAttended().equals("Yes")){
                                                     totalAtt++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 0, 1));
-                                                } else {
-                                                    count.put(note.getFg(), new RegToAttend(reg,0,0,0));
+                                                    count.put(note.getFg(), new RegToAttend(reg, 1, 0, 1, 0 ,0, 0));
+                                                }
+                                                else if ((note.getStatus().equals("Coming") && (note.getAttended().equals("No")))) {
+                                                    totalNA++; totalCNA++;
+                                                    totalCom++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 1, 0, 0, 0,1, 1));
+                                                }
+                                                else if ((note.getStatus().equals("Not Coming")) && (note.getAttended().equals("No"))) {
+                                                    totalNotCom++;
+                                                    totalNA++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 1, 0, 0,1,0));
+                                                }
+                                                else if ((note.getStatus().equals("Not Coming")) && (note.getAttended().equals("Yes"))) {
+                                                    totalNotCom++;
+                                                    totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 1, 1, 0,0,0));
                                                 }
 
+                                                if ((note.getAttended().equals("Yes")) && (note.getStatus().equals("unknown"))) {
+                                                    totalANU++;
+                                                    totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 0, 1, 1,0,0));
+                                                }
+                                                else if ((note.getAttended().equals("No")) && (note.getStatus().equals("unknown"))) {
+                                                    totalNA++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 0, 0, 0,1,0));
+                                                }
                                             }
                                         }
 
@@ -626,11 +712,13 @@ public class RegToAttendActivity extends AppCompatActivity {
                                                 bundle.putLong("Date1", date1);
                                                 bundle.putLong("Date2", date2);
                                                 bundle.putString("FG", fg);
-                                                bundle.putInt("REG",adapter.getItem(position).getValue().getReg());
-                                                bundle.putInt("COM",adapter.getItem(position).getValue().getCom());
-                                                bundle.putInt("NOTCOM",adapter.getItem(position).getValue().getNotcom());
-                                                bundle.putInt("ATT",adapter.getItem(position).getValue().getAtt());
-                                                Log.d("OccupationActivity", "onItemClick: Main: " + spinnerCategories);
+                                                bundle.putInt("REG",adapter.getItem(i).getValue().getReg());
+                                                bundle.putInt("COM",adapter.getItem(i).getValue().getCom());
+                                                bundle.putInt("NOTCOM",adapter.getItem(i).getValue().getNotcom());
+                                                bundle.putInt("ATT",adapter.getItem(i).getValue().getAtt());
+                                                bundle.putInt("ANU",adapter.getItem(i).getValue().getAnu());
+                                                bundle.putInt("NA",adapter.getItem(i).getValue().getNa());
+                                                bundle.putInt("CNA",adapter.getItem(i).getValue().getCna());
                                                 bundle.putString("SpinPrograms", spinnerPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);
@@ -656,7 +744,9 @@ public class RegToAttendActivity extends AppCompatActivity {
                                                 bundle.putInt("COM",totalNextCom);
                                                 bundle.putInt("NOTCOM",totalNextNotCom);
                                                 bundle.putInt("ATT",totalNextAtt);
-                                                Log.d("OccupationActivity", "onItemClick: Main: " + spinnerCategories);
+                                                bundle.putInt("ANU",totalANU);
+                                                bundle.putInt("NA",totalNA);
+                                                bundle.putInt("CNA",totalCNA);
                                                 bundle.putString("SpinPrograms", spinnerPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);
@@ -691,6 +781,7 @@ public class RegToAttendActivity extends AppCompatActivity {
             totalNotCom = 0;
             totalReg = 0;
             totalCom = 0;
+            totalCNA = 0;
 
             fgboys
 //                    .whereEqualTo("zzdate", date)
@@ -734,6 +825,7 @@ public class RegToAttendActivity extends AppCompatActivity {
                     totalReg = 0;
                     totalCom = 0;
                     totalAtt = 0;
+                    totalCNA = 0;
 
                     if (spinnerSessions.equals("ALL")) {
                         total = 0;
@@ -741,6 +833,8 @@ public class RegToAttendActivity extends AppCompatActivity {
                         totalNotCom = 0;
                         totalReg = 0;
                         totalCom = 0;
+                        totalCNA = 0;
+
                         fgboys
 //                                .whereEqualTo("zzdate", date)
                                 .whereGreaterThanOrEqualTo("edate", date1)
@@ -773,38 +867,78 @@ public class RegToAttendActivity extends AppCompatActivity {
                                                 int com = regToAttend.getCom();
                                                 int notcom = regToAttend.getNotcom();
                                                 int att = regToAttend.getAtt();
+                                                int anu = regToAttend.getAnu();
+                                                int na = regToAttend.getNa();
+                                                int cna = regToAttend.getCna();
 
                                                 reg++;
                                                 totalReg++;
-                                                count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+                                                count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
 
-                                                if (note.getStatus().equals("Coming")) {
-                                                    com++;
-                                                    totalCom++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
-                                                } else if (note.getStatus().equals("Not Coming")) {
-                                                    notcom++;
-                                                    totalNotCom++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
-                                                } else if (note.getAttended().equals("Yes")){
-                                                    att++;
-                                                    totalAtt++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+                                                if ((note.getStatus().equals("Coming")) && (note.getAttended().equals("Yes"))) {
+                                                    com++;att++;
+                                                    totalCom++;totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
+                                                }
+
+                                                else if ((note.getStatus().equals("Coming") && (note.getAttended().equals("No")))) {
+                                                    totalNA++;na++; cna++;
+                                                    totalCom++;com++; totalCNA++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu,na, cna));
+                                                }
+
+                                                else if ((note.getStatus().equals("Not Coming")) && (note.getAttended().equals("No"))) {
+                                                    notcom++;na++;
+                                                    totalNotCom++;totalNA++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
+                                                }
+
+                                                else if ((note.getStatus().equals("Not Coming")) && (note.getAttended().equals("Yes"))) {
+                                                    notcom++;att++;
+                                                    totalNotCom++;totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
+                                                }
+
+                                                if ((note.getAttended().equals("Yes")) && (note.getStatus().equals("unknown"))) {
+                                                    anu++;att++;
+                                                    totalANU++; totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
+                                                } else if ((note.getAttended().equals("No")) && (note.getStatus().equals("unknown"))) {
+                                                    na++; totalNA++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
                                                 }
                                             } else {
                                                 int reg = 1;
 
-                                                if (note.getStatus().equals("Coming")) {
+                                                if ((note.getStatus().equals("Coming")) && (note.getAttended().equals("Yes"))) {
                                                     totalCom++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, 1, 0, 0));
-                                                } else if (note.getStatus().equals("Not Coming")) {
-                                                    totalNotCom++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 1, 0));
-                                                } else if (note.getAttended().equals("Yes")){
                                                     totalAtt++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 0, 1));
-                                                } else {
-                                                    count.put(note.getFg(), new RegToAttend(reg,0,0,0));
+                                                    count.put(note.getFg(), new RegToAttend(reg, 1, 0, 1, 0 ,0, 0));
+                                                }
+                                                else if ((note.getStatus().equals("Coming") && (note.getAttended().equals("No")))) {
+                                                    totalNA++; totalCNA++;
+                                                    totalCom++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 1, 0, 0, 0,1, 1));
+                                                }
+                                                else if ((note.getStatus().equals("Not Coming")) && (note.getAttended().equals("No"))) {
+                                                    totalNotCom++;
+                                                    totalNA++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 1, 0, 0,1,0));
+                                                }
+                                                else if ((note.getStatus().equals("Not Coming")) && (note.getAttended().equals("Yes"))) {
+                                                    totalNotCom++;
+                                                    totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 1, 1, 0,0,0));
+                                                }
+
+                                                if ((note.getAttended().equals("Yes")) && (note.getStatus().equals("unknown"))) {
+                                                    totalANU++;
+                                                    totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 0, 1, 1,0,0));
+                                                }
+                                                else if ((note.getAttended().equals("No")) && (note.getStatus().equals("unknown"))) {
+                                                    totalNA++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 0, 0, 0,1,0));
                                                 }
                                             }
                                         }
@@ -845,7 +979,9 @@ public class RegToAttendActivity extends AppCompatActivity {
                                                 bundle.putInt("COM",adapter.getItem(i).getValue().getCom());
                                                 bundle.putInt("NOTCOM",adapter.getItem(i).getValue().getNotcom());
                                                 bundle.putInt("ATT",adapter.getItem(i).getValue().getAtt());
-                                                Log.d("OccupationActivity", "onItemClick: Main: " + spinnerCategories);
+                                                bundle.putInt("ANU",adapter.getItem(i).getValue().getAnu());
+                                                bundle.putInt("NA",adapter.getItem(i).getValue().getNa());
+                                                bundle.putInt("CNA",adapter.getItem(i).getValue().getCna());
                                                 bundle.putString("SpinPrograms", spinnerPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);
@@ -871,7 +1007,9 @@ public class RegToAttendActivity extends AppCompatActivity {
                                                 bundle.putInt("COM",totalNextCom);
                                                 bundle.putInt("NOTCOM",totalNextNotCom);
                                                 bundle.putInt("ATT",totalNextAtt);
-                                                Log.d("OccupationActivity", "onItemClick: Main: " + spinnerCategories);
+                                                bundle.putInt("ANU",totalANU);
+                                                bundle.putInt("NA",totalNA);
+                                                bundle.putInt("CNA",totalCNA);
                                                 bundle.putString("SpinPrograms", spinnerPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);
@@ -891,6 +1029,7 @@ public class RegToAttendActivity extends AppCompatActivity {
                         totalNotCom = 0;
                         totalReg = 0;
                         totalCom = 0;
+                        totalCNA = 0;
                         fgboys
 //                                .whereEqualTo("zzdate", date)
                                 .whereGreaterThanOrEqualTo("edate", date1)
@@ -923,38 +1062,78 @@ public class RegToAttendActivity extends AppCompatActivity {
                                                 int com = regToAttend.getCom();
                                                 int notcom = regToAttend.getNotcom();
                                                 int att = regToAttend.getAtt();
+                                                int anu = regToAttend.getAnu();
+                                                int na = regToAttend.getNa();
+                                                int cna = regToAttend.getCna();
 
                                                 reg++;
                                                 totalReg++;
-                                                count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+                                                count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
 
-                                                if (note.getStatus().equals("Coming")) {
-                                                    com++;
-                                                    totalCom++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
-                                                } else if (note.getStatus().equals("Not Coming")) {
-                                                    notcom++;
-                                                    totalNotCom++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
-                                                } else if (note.getAttended().equals("Yes")){
-                                                    att++;
-                                                    totalAtt++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+                                                if ((note.getStatus().equals("Coming")) && (note.getAttended().equals("Yes"))) {
+                                                    com++;att++;
+                                                    totalCom++;totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
+                                                }
+
+                                                else if ((note.getStatus().equals("Coming") && (note.getAttended().equals("No")))) {
+                                                    totalNA++;na++; cna++;
+                                                    totalCom++;com++; totalCNA++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu,na, cna));
+                                                }
+
+                                                else if ((note.getStatus().equals("Not Coming")) && (note.getAttended().equals("No"))) {
+                                                    notcom++;na++;
+                                                    totalNotCom++;totalNA++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
+                                                }
+
+                                                else if ((note.getStatus().equals("Not Coming")) && (note.getAttended().equals("Yes"))) {
+                                                    notcom++;att++;
+                                                    totalNotCom++;totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
+                                                }
+
+                                                if ((note.getAttended().equals("Yes")) && (note.getStatus().equals("unknown"))) {
+                                                    anu++;att++;
+                                                    totalANU++; totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
+                                                } else if ((note.getAttended().equals("No")) && (note.getStatus().equals("unknown"))) {
+                                                    na++; totalNA++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
                                                 }
                                             } else {
                                                 int reg = 1;
 
-                                                if (note.getStatus().equals("Coming")) {
+                                                if ((note.getStatus().equals("Coming")) && (note.getAttended().equals("Yes"))) {
                                                     totalCom++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, 1, 0, 0));
-                                                } else if (note.getStatus().equals("Not Coming")) {
-                                                    totalNotCom++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 1, 0));
-                                                } else if (note.getAttended().equals("Yes")){
                                                     totalAtt++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 0, 1));
-                                                } else {
-                                                    count.put(note.getFg(), new RegToAttend(reg,0,0,0));
+                                                    count.put(note.getFg(), new RegToAttend(reg, 1, 0, 1, 0 ,0, 0));
+                                                }
+                                                else if ((note.getStatus().equals("Coming") && (note.getAttended().equals("No")))) {
+                                                    totalNA++; totalCNA++;
+                                                    totalCom++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 1, 0, 0, 0,1, 1));
+                                                }
+                                                else if ((note.getStatus().equals("Not Coming")) && (note.getAttended().equals("No"))) {
+                                                    totalNotCom++;
+                                                    totalNA++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 1, 0, 0,1,0));
+                                                }
+                                                else if ((note.getStatus().equals("Not Coming")) && (note.getAttended().equals("Yes"))) {
+                                                    totalNotCom++;
+                                                    totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 1, 1, 0,0,0));
+                                                }
+
+                                                if ((note.getAttended().equals("Yes")) && (note.getStatus().equals("unknown"))) {
+                                                    totalANU++;
+                                                    totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 0, 1, 1,0,0));
+                                                }
+                                                else if ((note.getAttended().equals("No")) && (note.getStatus().equals("unknown"))) {
+                                                    totalNA++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 0, 0, 0,1,0));
                                                 }
                                             }
                                         }
@@ -995,7 +1174,9 @@ public class RegToAttendActivity extends AppCompatActivity {
                                                 bundle.putInt("COM",adapter.getItem(i).getValue().getCom());
                                                 bundle.putInt("NOTCOM",adapter.getItem(i).getValue().getNotcom());
                                                 bundle.putInt("ATT",adapter.getItem(i).getValue().getAtt());
-                                                Log.d("OccupationActivity", "onItemClick: Main: " + spinnerCategories);
+                                                bundle.putInt("ANU",adapter.getItem(i).getValue().getAnu());
+                                                bundle.putInt("NA",adapter.getItem(i).getValue().getNa());
+                                                bundle.putInt("CNA",adapter.getItem(i).getValue().getCna());
                                                 bundle.putString("SpinPrograms", spinnerPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);
@@ -1021,7 +1202,9 @@ public class RegToAttendActivity extends AppCompatActivity {
                                                 bundle.putInt("COM",totalNextCom);
                                                 bundle.putInt("NOTCOM",totalNextNotCom);
                                                 bundle.putInt("ATT",totalNextAtt);
-                                                Log.d("OccupationActivity", "onItemClick: Main: " + spinnerCategories);
+                                                bundle.putInt("ANU",totalANU);
+                                                bundle.putInt("NA",totalNA);
+                                                bundle.putInt("CNA",totalCNA);
                                                 bundle.putString("SpinPrograms", spinnerPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);
@@ -1058,11 +1241,6 @@ public class RegToAttendActivity extends AppCompatActivity {
 
             adapterSessions = new ArrayAdapter<String>
                     (this, R.layout.spinner_item, finalSessions);
-            total = 0;
-            totalAtt = 0;
-            totalNotCom = 0;
-            totalReg = 0;
-            totalCom = 0;
 
             fgboys
 //                    .whereEqualTo("zzdate", date)
@@ -1101,10 +1279,6 @@ public class RegToAttendActivity extends AppCompatActivity {
                 public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
                     spinnerSessions = parent.getItemAtPosition(position).toString();
                     posSession = position;
-                    totalNotCom = 0;
-                    totalReg = 0;
-                    totalCom = 0;
-                    totalAtt = 0;
 
                     if (spinnerSessions.equals("ALL")) {
                         total = 0;
@@ -1112,6 +1286,10 @@ public class RegToAttendActivity extends AppCompatActivity {
                         totalNotCom = 0;
                         totalReg = 0;
                         totalCom = 0;
+                        totalANU = 0;
+                        totalNA = 0;
+                        totalCNA = 0;
+
                         fgboys
 //                                .whereEqualTo("zzdate", date)
                                 .whereGreaterThanOrEqualTo("edate", date1)
@@ -1142,38 +1320,78 @@ public class RegToAttendActivity extends AppCompatActivity {
                                                 int com = regToAttend.getCom();
                                                 int notcom = regToAttend.getNotcom();
                                                 int att = regToAttend.getAtt();
+                                                int anu = regToAttend.getAnu();
+                                                int na = regToAttend.getNa();
+                                                int cna = regToAttend.getCna();
 
                                                 reg++;
                                                 totalReg++;
-                                                count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+                                                count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
 
-                                                if (note.getStatus().equals("Coming")) {
-                                                    com++;
-                                                    totalCom++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
-                                                } else if (note.getStatus().equals("Not Coming")) {
-                                                    notcom++;
-                                                    totalNotCom++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
-                                                } else if (note.getAttended().equals("Yes")){
-                                                    att++;
-                                                    totalAtt++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+                                                if ((note.getStatus().equals("Coming")) && (note.getAttended().equals("Yes"))) {
+                                                    com++;att++;
+                                                    totalCom++;totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
+                                                }
+
+                                                else if ((note.getStatus().equals("Coming") && (note.getAttended().equals("No")))) {
+                                                    totalNA++;na++; cna++;
+                                                    totalCom++;com++; totalCNA++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu,na, cna));
+                                                }
+
+                                                else if ((note.getStatus().equals("Not Coming")) && (note.getAttended().equals("No"))) {
+                                                    notcom++;na++;
+                                                    totalNotCom++;totalNA++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
+                                                }
+
+                                                else if ((note.getStatus().equals("Not Coming")) && (note.getAttended().equals("Yes"))) {
+                                                    notcom++;att++;
+                                                    totalNotCom++;totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
+                                                }
+
+                                                if ((note.getAttended().equals("Yes")) && (note.getStatus().equals("unknown"))) {
+                                                    anu++;att++;
+                                                    totalANU++; totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
+                                                } else if ((note.getAttended().equals("No")) && (note.getStatus().equals("unknown"))) {
+                                                    na++; totalNA++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
                                                 }
                                             } else {
                                                 int reg = 1;
 
-                                                if (note.getStatus().equals("Coming")) {
+                                                if ((note.getStatus().equals("Coming")) && (note.getAttended().equals("Yes"))) {
                                                     totalCom++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, 1, 0, 0));
-                                                } else if (note.getStatus().equals("Not Coming")) {
-                                                    totalNotCom++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 1, 0));
-                                                } else if (note.getAttended().equals("Yes")){
                                                     totalAtt++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 0, 1));
-                                                } else {
-                                                    count.put(note.getFg(), new RegToAttend(reg,0,0,0));
+                                                    count.put(note.getFg(), new RegToAttend(reg, 1, 0, 1, 0 ,0, 0));
+                                                }
+                                                else if ((note.getStatus().equals("Coming") && (note.getAttended().equals("No")))) {
+                                                    totalNA++; totalCNA++;
+                                                    totalCom++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 1, 0, 0, 0,1, 1));
+                                                }
+                                                else if ((note.getStatus().equals("Not Coming")) && (note.getAttended().equals("No"))) {
+                                                    totalNotCom++;
+                                                    totalNA++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 1, 0, 0,1,0));
+                                                }
+                                                else if ((note.getStatus().equals("Not Coming")) && (note.getAttended().equals("Yes"))) {
+                                                    totalNotCom++;
+                                                    totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 1, 1, 0,0,0));
+                                                }
+
+                                                if ((note.getAttended().equals("Yes")) && (note.getStatus().equals("unknown"))) {
+                                                    totalANU++;
+                                                    totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 0, 1, 1,0,0));
+                                                }
+                                                else if ((note.getAttended().equals("No")) && (note.getStatus().equals("unknown"))) {
+                                                    totalNA++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 0, 0, 0,1,0));
                                                 }
                                             }
                                         }
@@ -1214,7 +1432,9 @@ public class RegToAttendActivity extends AppCompatActivity {
                                                 bundle.putInt("COM",adapter.getItem(i).getValue().getCom());
                                                 bundle.putInt("NOTCOM",adapter.getItem(i).getValue().getNotcom());
                                                 bundle.putInt("ATT",adapter.getItem(i).getValue().getAtt());
-                                                Log.d("OccupationActivity", "onItemClick: Main: " + spinnerCategories);
+                                                bundle.putInt("ANU",adapter.getItem(i).getValue().getAnu());
+                                                bundle.putInt("NA",adapter.getItem(i).getValue().getNa());
+                                                bundle.putInt("CNA",adapter.getItem(i).getValue().getCna());
                                                 bundle.putString("SpinPrograms", spinnerPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);
@@ -1240,7 +1460,9 @@ public class RegToAttendActivity extends AppCompatActivity {
                                                 bundle.putInt("COM",totalNextCom);
                                                 bundle.putInt("NOTCOM",totalNextNotCom);
                                                 bundle.putInt("ATT",totalNextAtt);
-                                                Log.d("OccupationActivity", "onItemClick: Main: " + spinnerCategories);
+                                                bundle.putInt("ANU",totalANU);
+                                                bundle.putInt("NA",totalNA);
+                                                bundle.putInt("CNA",totalCNA);
                                                 bundle.putString("SpinPrograms", spinnerPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);
@@ -1260,6 +1482,8 @@ public class RegToAttendActivity extends AppCompatActivity {
                         totalNotCom = 0;
                         totalReg = 0;
                         totalCom = 0;
+                        totalCNA = 0;
+
                         fgboys
 //                                .whereEqualTo("zzdate", date)
                                 .whereGreaterThanOrEqualTo("edate", date1)
@@ -1290,38 +1514,78 @@ public class RegToAttendActivity extends AppCompatActivity {
                                                 int com = regToAttend.getCom();
                                                 int notcom = regToAttend.getNotcom();
                                                 int att = regToAttend.getAtt();
+                                                int anu = regToAttend.getAnu();
+                                                int na = regToAttend.getNa();
+                                                int cna = regToAttend.getCna();
 
                                                 reg++;
                                                 totalReg++;
-                                                count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+                                                count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
 
-                                                if (note.getStatus().equals("Coming")) {
-                                                    com++;
-                                                    totalCom++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
-                                                } else if (note.getStatus().equals("Not Coming")) {
-                                                    notcom++;
-                                                    totalNotCom++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
-                                                } else if (note.getAttended().equals("Yes")){
-                                                    att++;
-                                                    totalAtt++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+                                                if ((note.getStatus().equals("Coming")) && (note.getAttended().equals("Yes"))) {
+                                                    com++;att++;
+                                                    totalCom++;totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
+                                                }
+
+                                                else if ((note.getStatus().equals("Coming") && (note.getAttended().equals("No")))) {
+                                                    totalNA++;na++; cna++;
+                                                    totalCom++;com++; totalCNA++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu,na, cna));
+                                                }
+
+                                                else if ((note.getStatus().equals("Not Coming")) && (note.getAttended().equals("No"))) {
+                                                    notcom++;na++;
+                                                    totalNotCom++;totalNA++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
+                                                }
+
+                                                else if ((note.getStatus().equals("Not Coming")) && (note.getAttended().equals("Yes"))) {
+                                                    notcom++;att++;
+                                                    totalNotCom++;totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
+                                                }
+
+                                                if ((note.getAttended().equals("Yes")) && (note.getStatus().equals("unknown"))) {
+                                                    anu++;att++;
+                                                    totalANU++; totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
+                                                } else if ((note.getAttended().equals("No")) && (note.getStatus().equals("unknown"))) {
+                                                    na++; totalNA++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
                                                 }
                                             } else {
                                                 int reg = 1;
 
-                                                if (note.getStatus().equals("Coming")) {
+                                                if ((note.getStatus().equals("Coming")) && (note.getAttended().equals("Yes"))) {
                                                     totalCom++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, 1, 0, 0));
-                                                } else if (note.getStatus().equals("Not Coming")) {
-                                                    totalNotCom++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 1, 0));
-                                                } else if (note.getAttended().equals("Yes")){
                                                     totalAtt++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 0, 1));
-                                                } else {
-                                                    count.put(note.getFg(), new RegToAttend(reg,0,0,0));
+                                                    count.put(note.getFg(), new RegToAttend(reg, 1, 0, 1, 0 ,0, 0));
+                                                }
+                                                else if ((note.getStatus().equals("Coming") && (note.getAttended().equals("No")))) {
+                                                    totalNA++; totalCNA++;
+                                                    totalCom++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 1, 0, 0, 0,1, 1));
+                                                }
+                                                else if ((note.getStatus().equals("Not Coming")) && (note.getAttended().equals("No"))) {
+                                                    totalNotCom++;
+                                                    totalNA++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 1, 0, 0,1,0));
+                                                }
+                                                else if ((note.getStatus().equals("Not Coming")) && (note.getAttended().equals("Yes"))) {
+                                                    totalNotCom++;
+                                                    totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 1, 1, 0,0,0));
+                                                }
+
+                                                if ((note.getAttended().equals("Yes")) && (note.getStatus().equals("unknown"))) {
+                                                    totalANU++;
+                                                    totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 0, 1, 1,0,0));
+                                                }
+                                                else if ((note.getAttended().equals("No")) && (note.getStatus().equals("unknown"))) {
+                                                    totalNA++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 0, 0, 0,1,0));
                                                 }
                                             }
                                         }
@@ -1362,7 +1626,9 @@ public class RegToAttendActivity extends AppCompatActivity {
                                                 bundle.putInt("COM",adapter.getItem(i).getValue().getCom());
                                                 bundle.putInt("NOTCOM",adapter.getItem(i).getValue().getNotcom());
                                                 bundle.putInt("ATT",adapter.getItem(i).getValue().getAtt());
-                                                Log.d("OccupationActivity", "onItemClick: Main: " + spinnerCategories);
+                                                bundle.putInt("ANU",adapter.getItem(i).getValue().getAnu());
+                                                bundle.putInt("NA",adapter.getItem(i).getValue().getNa());
+                                                bundle.putInt("CNA",adapter.getItem(i).getValue().getCna());
                                                 bundle.putString("SpinPrograms", spinnerPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);
@@ -1388,7 +1654,9 @@ public class RegToAttendActivity extends AppCompatActivity {
                                                 bundle.putInt("COM",totalNextCom);
                                                 bundle.putInt("NOTCOM",totalNextNotCom);
                                                 bundle.putInt("ATT",totalNextAtt);
-                                                Log.d("OccupationActivity", "onItemClick: Main: " + spinnerCategories);
+                                                bundle.putInt("ANU",totalANU);
+                                                bundle.putInt("NA",totalNA);
+                                                bundle.putInt("CNA",totalCNA);
                                                 bundle.putString("SpinPrograms", spinnerPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);
@@ -1398,7 +1666,6 @@ public class RegToAttendActivity extends AppCompatActivity {
                                                 startActivity(intent);
                                             }
                                         });
-
                                         count.clear();
 //                        mListView.setAdapter(null);
                                     }
@@ -1423,6 +1690,7 @@ public class RegToAttendActivity extends AppCompatActivity {
             totalNotCom = 0;
             totalReg = 0;
             totalCom = 0;
+            totalCNA = 0;
 
             fgboys
 //                    .whereEqualTo("zzdate", date)
@@ -1472,6 +1740,7 @@ public class RegToAttendActivity extends AppCompatActivity {
                         totalNotCom = 0;
                         totalReg = 0;
                         totalCom = 0;
+                        totalCNA = 0;
                         fgboys
 //                                .whereEqualTo("zzdate", date)
                                 .whereGreaterThanOrEqualTo("edate", date1)
@@ -1503,38 +1772,78 @@ public class RegToAttendActivity extends AppCompatActivity {
                                                 int com = regToAttend.getCom();
                                                 int notcom = regToAttend.getNotcom();
                                                 int att = regToAttend.getAtt();
+                                                int anu = regToAttend.getAnu();
+                                                int na = regToAttend.getNa();
+                                                int cna = regToAttend.getCna();
 
                                                 reg++;
                                                 totalReg++;
-                                                count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+                                                count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
 
-                                                if (note.getStatus().equals("Coming")) {
-                                                    com++;
-                                                    totalCom++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
-                                                } else if (note.getStatus().equals("Not Coming")) {
-                                                    notcom++;
-                                                    totalNotCom++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
-                                                } else if (note.getAttended().equals("Yes")){
-                                                    att++;
-                                                    totalAtt++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+                                                if ((note.getStatus().equals("Coming")) && (note.getAttended().equals("Yes"))) {
+                                                    com++;att++;
+                                                    totalCom++;totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
+                                                }
+
+                                                else if ((note.getStatus().equals("Coming") && (note.getAttended().equals("No")))) {
+                                                    totalNA++;na++; cna++;
+                                                    totalCom++;com++; totalCNA++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu,na, cna));
+                                                }
+
+                                                else if ((note.getStatus().equals("Not Coming")) && (note.getAttended().equals("No"))) {
+                                                    notcom++;na++;
+                                                    totalNotCom++;totalNA++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
+                                                }
+
+                                                else if ((note.getStatus().equals("Not Coming")) && (note.getAttended().equals("Yes"))) {
+                                                    notcom++;att++;
+                                                    totalNotCom++;totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
+                                                }
+
+                                                if ((note.getAttended().equals("Yes")) && (note.getStatus().equals("unknown"))) {
+                                                    anu++;att++;
+                                                    totalANU++; totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
+                                                } else if ((note.getAttended().equals("No")) && (note.getStatus().equals("unknown"))) {
+                                                    na++; totalNA++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
                                                 }
                                             } else {
                                                 int reg = 1;
 
-                                                if (note.getStatus().equals("Coming")) {
+                                                if ((note.getStatus().equals("Coming")) && (note.getAttended().equals("Yes"))) {
                                                     totalCom++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, 1, 0, 0));
-                                                } else if (note.getStatus().equals("Not Coming")) {
-                                                    totalNotCom++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 1, 0));
-                                                } else if (note.getAttended().equals("Yes")){
                                                     totalAtt++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 0, 1));
-                                                } else {
-                                                    count.put(note.getFg(), new RegToAttend(reg,0,0,0));
+                                                    count.put(note.getFg(), new RegToAttend(reg, 1, 0, 1, 0 ,0, 0));
+                                                }
+                                                else if ((note.getStatus().equals("Coming") && (note.getAttended().equals("No")))) {
+                                                    totalNA++; totalCNA++;
+                                                    totalCom++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 1, 0, 0, 0,1, 1));
+                                                }
+                                                else if ((note.getStatus().equals("Not Coming")) && (note.getAttended().equals("No"))) {
+                                                    totalNotCom++;
+                                                    totalNA++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 1, 0, 0,1,0));
+                                                }
+                                                else if ((note.getStatus().equals("Not Coming")) && (note.getAttended().equals("Yes"))) {
+                                                    totalNotCom++;
+                                                    totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 1, 1, 0,0,0));
+                                                }
+
+                                                if ((note.getAttended().equals("Yes")) && (note.getStatus().equals("unknown"))) {
+                                                    totalANU++;
+                                                    totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 0, 1, 1,0,0));
+                                                }
+                                                else if ((note.getAttended().equals("No")) && (note.getStatus().equals("unknown"))) {
+                                                    totalNA++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 0, 0, 0,1,0));
                                                 }
                                             }
                                         }
@@ -1575,7 +1884,9 @@ public class RegToAttendActivity extends AppCompatActivity {
                                                 bundle.putInt("COM",adapter.getItem(i).getValue().getCom());
                                                 bundle.putInt("NOTCOM",adapter.getItem(i).getValue().getNotcom());
                                                 bundle.putInt("ATT",adapter.getItem(i).getValue().getAtt());
-                                                Log.d("OccupationActivity", "onItemClick: Main: " + spinnerCategories);
+                                                bundle.putInt("ANU",adapter.getItem(i).getValue().getAnu());
+                                                bundle.putInt("NA",adapter.getItem(i).getValue().getNa());
+                                                bundle.putInt("CNA",adapter.getItem(i).getValue().getCna());
                                                 bundle.putString("SpinPrograms", spinnerPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);
@@ -1601,7 +1912,9 @@ public class RegToAttendActivity extends AppCompatActivity {
                                                 bundle.putInt("COM",totalNextCom);
                                                 bundle.putInt("NOTCOM",totalNextNotCom);
                                                 bundle.putInt("ATT",totalNextAtt);
-                                                Log.d("OccupationActivity", "onItemClick: Main: " + spinnerCategories);
+                                                bundle.putInt("ANU",totalANU);
+                                                bundle.putInt("NA",totalNA);
+                                                bundle.putInt("CNA",totalCNA);
                                                 bundle.putString("SpinPrograms", spinnerPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);
@@ -1621,6 +1934,7 @@ public class RegToAttendActivity extends AppCompatActivity {
                         totalNotCom = 0;
                         totalReg = 0;
                         totalCom = 0;
+                        totalCNA = 0;
                         fgboys
 //                                .whereEqualTo("zzdate", date)
                                 .whereGreaterThanOrEqualTo("edate", date1)
@@ -1652,38 +1966,78 @@ public class RegToAttendActivity extends AppCompatActivity {
                                                 int com = regToAttend.getCom();
                                                 int notcom = regToAttend.getNotcom();
                                                 int att = regToAttend.getAtt();
+                                                int anu = regToAttend.getAnu();
+                                                int na = regToAttend.getNa();
+                                                int cna = regToAttend.getCna();
 
                                                 reg++;
                                                 totalReg++;
-                                                count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+                                                count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
 
-                                                if (note.getStatus().equals("Coming")) {
-                                                    com++;
-                                                    totalCom++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
-                                                } else if (note.getStatus().equals("Not Coming")) {
-                                                    notcom++;
-                                                    totalNotCom++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
-                                                } else if (note.getAttended().equals("Yes")){
-                                                    att++;
-                                                    totalAtt++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att));
+                                                if ((note.getStatus().equals("Coming")) && (note.getAttended().equals("Yes"))) {
+                                                    com++;att++;
+                                                    totalCom++;totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
+                                                }
+
+                                                else if ((note.getStatus().equals("Coming") && (note.getAttended().equals("No")))) {
+                                                    totalNA++;na++; cna++;
+                                                    totalCom++;com++; totalCNA++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu,na, cna));
+                                                }
+
+                                                else if ((note.getStatus().equals("Not Coming")) && (note.getAttended().equals("No"))) {
+                                                    notcom++;na++;
+                                                    totalNotCom++;totalNA++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
+                                                }
+
+                                                else if ((note.getStatus().equals("Not Coming")) && (note.getAttended().equals("Yes"))) {
+                                                    notcom++;att++;
+                                                    totalNotCom++;totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
+                                                }
+
+                                                if ((note.getAttended().equals("Yes")) && (note.getStatus().equals("unknown"))) {
+                                                    anu++;att++;
+                                                    totalANU++; totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
+                                                } else if ((note.getAttended().equals("No")) && (note.getStatus().equals("unknown"))) {
+                                                    na++; totalNA++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, com, notcom, att, anu, na, cna));
                                                 }
                                             } else {
                                                 int reg = 1;
 
-                                                if (note.getStatus().equals("Coming")) {
+                                                if ((note.getStatus().equals("Coming")) && (note.getAttended().equals("Yes"))) {
                                                     totalCom++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, 1, 0, 0));
-                                                } else if (note.getStatus().equals("Not Coming")) {
-                                                    totalNotCom++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 1, 0));
-                                                } else if (note.getAttended().equals("Yes")){
                                                     totalAtt++;
-                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 0, 1));
-                                                } else {
-                                                    count.put(note.getFg(), new RegToAttend(reg,0,0,0));
+                                                    count.put(note.getFg(), new RegToAttend(reg, 1, 0, 1, 0 ,0, 0));
+                                                }
+                                                else if ((note.getStatus().equals("Coming") && (note.getAttended().equals("No")))) {
+                                                    totalNA++; totalCNA++;
+                                                    totalCom++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 1, 0, 0, 0,1, 1));
+                                                }
+                                                else if ((note.getStatus().equals("Not Coming")) && (note.getAttended().equals("No"))) {
+                                                    totalNotCom++;
+                                                    totalNA++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 1, 0, 0,1,0));
+                                                }
+                                                else if ((note.getStatus().equals("Not Coming")) && (note.getAttended().equals("Yes"))) {
+                                                    totalNotCom++;
+                                                    totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 1, 1, 0,0,0));
+                                                }
+
+                                                if ((note.getAttended().equals("Yes")) && (note.getStatus().equals("unknown"))) {
+                                                    totalANU++;
+                                                    totalAtt++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 0, 1, 1,0,0));
+                                                }
+                                                else if ((note.getAttended().equals("No")) && (note.getStatus().equals("unknown"))) {
+                                                    totalNA++;
+                                                    count.put(note.getFg(), new RegToAttend(reg, 0, 0, 0, 0,1,0));
                                                 }
                                             }
                                         }
@@ -1724,7 +2078,9 @@ public class RegToAttendActivity extends AppCompatActivity {
                                                 bundle.putInt("COM",adapter.getItem(i).getValue().getCom());
                                                 bundle.putInt("NOTCOM",adapter.getItem(i).getValue().getNotcom());
                                                 bundle.putInt("ATT",adapter.getItem(i).getValue().getAtt());
-                                                Log.d("OccupationActivity", "onItemClick: Main: " + spinnerCategories);
+                                                bundle.putInt("ANU",adapter.getItem(i).getValue().getAnu());
+                                                bundle.putInt("NA",adapter.getItem(i).getValue().getNa());
+                                                bundle.putInt("CNA",adapter.getItem(i).getValue().getCna());
                                                 bundle.putString("SpinPrograms", spinnerPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);
@@ -1750,7 +2106,9 @@ public class RegToAttendActivity extends AppCompatActivity {
                                                 bundle.putInt("COM",totalNextCom);
                                                 bundle.putInt("NOTCOM",totalNextNotCom);
                                                 bundle.putInt("ATT",totalNextAtt);
-                                                Log.d("OccupationActivity", "onItemClick: Main: " + spinnerCategories);
+                                                bundle.putInt("ANU",totalANU);
+                                                bundle.putInt("NA",totalNA);
+                                                bundle.putInt("CNA",totalCNA);
                                                 bundle.putString("SpinPrograms", spinnerPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);

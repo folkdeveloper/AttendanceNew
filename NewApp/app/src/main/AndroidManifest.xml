@@ -12,7 +12,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".RegToAttendSecond"></activity>
+        <activity android:name=".MatchRegistrationsGetProgram"></activity>
+        <activity android:name=".MatchRegistrationsOne" />
+        <activity android:name=".RegToAttendSecond" />
         <activity android:name=".RegToAttendDetails" />
         <activity android:name=".HistoryActivity" />
         <activity android:name=".RegVsAttendedDetails" />

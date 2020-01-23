@@ -15,6 +15,8 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class RegToAttendSecond extends AppCompatActivity {
 
@@ -25,7 +27,7 @@ public class RegToAttendSecond extends AppCompatActivity {
     ListView mListView;
     private TextView mTextView;
     private long date1 = 0, date2 = 0;
-    private int reg = 0, com = 0, notcom = 0, att = 0;
+    private int reg = 0, com = 0, notcom = 0, att = 0, nu = 0, na = 0, anu = 0, cna = 0;
     public static String fg = "";
     public static String spinPrograms = "";
     public static String spinCategories = "";
@@ -46,6 +48,9 @@ public class RegToAttendSecond extends AppCompatActivity {
         com = getIntent().getIntExtra("COM",0);
         notcom = getIntent().getIntExtra("NOTCOM",0);
         att = getIntent().getIntExtra("ATT",0);
+        anu = getIntent().getIntExtra("ANU",0);
+        na = getIntent().getIntExtra("NA",0);
+        cna = getIntent().getIntExtra("CNA",0);
         date1 = getIntent().getLongExtra("Date1",date1);
         date2 = getIntent().getLongExtra("Date2",date2);
         fg = getIntent().getStringExtra("FG");
@@ -55,12 +60,19 @@ public class RegToAttendSecond extends AppCompatActivity {
         clickedFirst = getIntent().getStringExtra("ClickedFirst");
         clicked = getIntent().getStringExtra("Clicked");
 
-        HashMap<String,Integer> count = new HashMap<>();
+        nu = reg - (com + notcom);
+//        na = com - att;
+
+        TreeMap<String,Integer> count = new TreeMap<>();
 
         count.put("Registered",reg);
         count.put("Coming",com);
         count.put("Not Coming",notcom);
         count.put("Attended",att);
+        count.put("Not Updated",nu);
+        count.put("Not Attended",na);
+        count.put("Attended but Not Updated",anu);
+        count.put("Coming but not Attended",cna);
 
         final RegToAttendSecondAdapter adapter = new RegToAttendSecondAdapter(count);
         mListView.setAdapter((ListAdapter) adapter);

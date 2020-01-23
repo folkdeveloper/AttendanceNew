@@ -7,12 +7,12 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.TreeMap;
 
 public class RegToAttendSecondAdapter extends BaseAdapter {
     private final ArrayList mData;
 
-    public RegToAttendSecondAdapter(HashMap<String, Integer> map) {
+    public RegToAttendSecondAdapter(TreeMap<String, Integer> map) {
         mData = new ArrayList();
         mData.addAll(map.entrySet());
     }
@@ -23,8 +23,8 @@ public class RegToAttendSecondAdapter extends BaseAdapter {
     }
 
     @Override
-    public HashMap.Entry<String, AmountsNumber> getItem(int position) {
-        return (HashMap.Entry) mData.get(position);
+    public TreeMap.Entry<String, AmountsNumber> getItem(int position) {
+        return (TreeMap.Entry) mData.get(position);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class RegToAttendSecondAdapter extends BaseAdapter {
             result = convertView;
         }
 
-        HashMap.Entry<String, AmountsNumber> item = getItem(position);
+        TreeMap.Entry<String, AmountsNumber> item = getItem(position);
 
         // TODO replace findViewById by ViewHolder
 

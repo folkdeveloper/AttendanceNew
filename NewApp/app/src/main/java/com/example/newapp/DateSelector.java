@@ -407,4 +407,23 @@ public class DateSelector extends AppCompatActivity {
             startActivity(intent);
         }
     }
+
+    public void select15(View v) {
+        if (date1.equals("")) {
+            Toast.makeText(this, "Please select a from date", Toast.LENGTH_SHORT).show();
+        }
+        else if (date2.equals("")) {
+            Toast.makeText(this, "Please select a to date", Toast.LENGTH_SHORT).show();
+        } else {
+            Intent intent = new Intent(DateSelector.this, MatchRegistrationsOne.class);
+            Bundle bundle = new Bundle();
+            bundle.putLong("Date1",epoch1);
+            bundle.putLong("Date2",epoch2);
+            bundle.putString("Date1Str",date1);
+            bundle.putString("Date2Str",date2);
+            bundle.putString("Collection",collection);
+            intent.putExtras(bundle);
+            startActivity(intent);
+        }
+    }
 }

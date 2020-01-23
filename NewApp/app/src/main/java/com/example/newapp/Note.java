@@ -5,7 +5,7 @@ import android.util.Log;
 public class Note {
     String area, fg, fid, japa, name, session, time, zfl, zmob, zread, ztl, zzdate, zzone, color,
             url, occupation, program, category, branch, organization, college, source, res_interest,
-            fg_call, leave_agreed, msg_confirm, status, comment, attended;
+            fg_call, leave_agreed, msg_confirm, status, comment, attended, documentId;
 
     long edate, probability, last_updated;
 
@@ -291,5 +291,13 @@ public class Note {
 
     public void setAttended(String attended) {
         this.attended = attended;
+    }
+
+    public String getDocumentId() {
+        return documentId;
+    }
+
+    public void setDocumentId(String documentId) {
+        this.documentId = documentId;
     }
 }

@@ -103,13 +103,21 @@
                 android:orientation="vertical">
 
                 <Button
+                    android:id="@+id/button17"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="select17"
+                    android:text="Reg to Attend"
+                    android:textSize="20dp"
+                    android:textAllCaps="true"/>
+
+                <Button
                     android:id="@+id/button14"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:onClick="select14"
                     android:text="Unique Attendees"
                     android:textSize="20dp" />
-
 
                 <Button
                     android:id="@+id/button11"
@@ -223,23 +231,16 @@
                     android:text="Res Interest"
                     android:textSize="20dp" />
 
-                <Button
-                    android:id="@+id/button16"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:onClick="select16"
-                    android:text="Reg vs Attended"
-                    android:textSize="20dp"
-                    android:textAllCaps="true"/>
+<!--                <Button-->
+<!--                    android:id="@+id/button16"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:onClick="select16"-->
+<!--                    android:text="Reg vs Attended"-->
+<!--                    android:textAllCaps="true"-->
+<!--                    android:textSize="20dp"-->
+<!--                    android:visibility="invisible" />-->
 
-                <Button
-                    android:id="@+id/button17"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:onClick="select17"
-                    android:text="Reg to Attend"
-                    android:textSize="20dp"
-                    android:textAllCaps="true"/>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
