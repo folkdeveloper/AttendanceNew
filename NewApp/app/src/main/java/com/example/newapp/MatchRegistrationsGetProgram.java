@@ -3,6 +3,7 @@ package com.example.newapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -42,7 +44,7 @@ public class MatchRegistrationsGetProgram extends AppCompatActivity {
     private String collection = "";
     private static final String TAG = "RegistrationsPrograms";
     ListView mListView;
-    private TextView mTextView;
+    private TextView mTextView, mTextView1;
     private long date1 = 0, date2 = 0;
     private int total = 0, total2 = 0;
     String url = "";
@@ -70,20 +72,31 @@ public class MatchRegistrationsGetProgram extends AppCompatActivity {
     private TextView mDisplayDate;
     private String date = "";
     private long epoch = 0;
+    private String fg = "";
+    ArrayList<String> fids = new ArrayList<>();
+    String documentID = "";
+    int reg = 0, notReg = 0, att = 0;
+    private String spinPrograms = "", spinCategories = "", spinSessions = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate: Create");
         setContentView(R.layout.activity_match_registrations_get_program);
         collection = getIntent().getStringExtra("Collection");
         db = FirebaseFirestore.getInstance();
         fgboys = db.collection("ProgramDetails");
-        mTextView = findViewById(R.id.textView3);
+        mTextView = findViewById(R.id.textView2);
+        mTextView1 = findViewById(R.id.textView3);
         mTextView.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
         mListView = findViewById(R.id.list_item);
         date1 = getIntent().getLongExtra("Date1", date1);
         date2 = getIntent().getLongExtra("Date2", date2);
         mDisplayDate = (TextView) findViewById(R.id.tvDate);
+        fg = getIntent().getStringExtra("FG");
+        spinPrograms = getIntent().getStringExtra("SpinPrograms");
+        spinCategories = getIntent().getStringExtra("SpinCategoris");
+        spinSessions = getIntent().getStringExtra("SpinSessions");
 
         mDisplayDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,7 +117,7 @@ public class MatchRegistrationsGetProgram extends AppCompatActivity {
                 cal.add(Calendar.MONTH, -1);
                 long minDate = cal.getTime().getTime();
 //                dialog.getDatePicker().setMinDate(minDate);
-                dialog.getDatePicker().setMaxDate((System.currentTimeMillis()));
+//                dialog.getDatePicker().setMaxDate((System.currentTimeMillis()));
             }
         });
 
@@ -137,11 +150,13 @@ public class MatchRegistrationsGetProgram extends AppCompatActivity {
 
                 mTextView.setText(date);
 
-                populatePrograms();
-
                 mTextView.setText(spinnerPrograms + " " + spinnerCategories + " " + spinnerSessions);
             }
         };
+    }
+
+    public void select(View v) {
+        populatePrograms();
     }
 
     public void populatePrograms() {
@@ -159,6 +174,9 @@ public class MatchRegistrationsGetProgram extends AppCompatActivity {
 
         fgboys
                 .whereEqualTo("date", date)
+//                .whereEqualTo("program",spinPrograms)
+//                .whereEqualTo("category",spinCategories)
+//                .whereEqualTo("session",spinSessions)
                 .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
@@ -263,6 +281,7 @@ public class MatchRegistrationsGetProgram extends AppCompatActivity {
     public void populateSessions() {
         final String spinCategories = spinCategory;
         final String spinPrograms = spinProgram;
+        reg=0;notReg=0;att=0;
 
         finalSessions = new ArrayList<String>();
         sessionsList = Arrays.asList(sessions);
@@ -306,11 +325,12 @@ public class MatchRegistrationsGetProgram extends AppCompatActivity {
             session.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    spinnerSessions = parent.getItemAtPosition(position).toString();
                     fgboys
                             .whereEqualTo("date",date)
                             .whereEqualTo("program",spinnerPrograms)
                             .whereEqualTo("category",spinnerCategories)
-//                            .whereEqualTo("session",spinnerSessions)
+                            .whereEqualTo("session",spinnerSessions)
                             .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                 @Override
                                 public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -321,15 +341,96 @@ public class MatchRegistrationsGetProgram extends AppCompatActivity {
 
                                     for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                         Note note = documentSnapshot.toObject(Note.class);
+
                                         note.setDocumentId(documentSnapshot.getId());
 
                                         Log.d(TAG, "onEvent: InSecond");
 
-                                        String documentId = note.getDocumentId();
+                                        documentID = note.getDocumentId();
 
-                                        data += "Document ID: " + documentId + "\n\n";
+                                        data += "Document ID: " + documentID + "\n\n";
+
+                                    }
+                                    mTextView.setText(documentID);
+                                }
+                            });
+
+                    db.collection("AttendanceDemo")
+                            .whereGreaterThanOrEqualTo("edate",date1)
+                            .whereLessThan("edate",date2)
+                            .whereEqualTo("fg",fg)
+                            .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                @Override
+                                public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                                    if (e != null)
+                                        return;
+
+                                    String data = "";
+
+                                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                        Note note = documentSnapshot.toObject(Note.class);
+
+                                        att++;
+                                        Log.d(TAG, "onEvent: FID: "+note.getFid());
+                                        fids.add(note.getFid());
+                                        data += "FOLK ID: " + note.getFid() + "\n";
+
                                     }
                                     mTextView.setText(data);
+                                }
+                            });
+
+                    db.collection("RegistrationDemo")
+                            .whereEqualTo("pid",documentID)
+                            .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                @Override
+                                public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                                    if (e != null)
+                                        return;
+                                    TreeMap<String, Integer> count = new TreeMap<>();
+                                    Log.d(TAG, "onEvent: Out:Reg");
+
+                                    for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
+                                        Note note = documentSnapshot.toObject(Note.class);
+
+                                        if (note.getFid() == null)
+                                            continue;
+
+                                        if (note.getPid() == null)
+                                            continue;
+
+                                        Log.d(TAG, "onEvent: Reg" + note.getFid());
+                                        if (fids.contains(note.getFid()))
+                                            reg++;
+                                    }
+                                    notReg = att - reg;
+                                    count.put("Registered",reg);
+                                    count.put("Not registered",notReg);
+                                    mTextView1.setText(String.valueOf(reg));
+
+                                    final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
+                                    mListView.setAdapter((ListAdapter) adapter);
+
+                                    mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                        @Override
+                                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                            //                final String fg_name = mListView.getItemAtPosition(i).toString();
+                                            //                TextView fgName = (TextView) findViewById(R.id.text_view_1);
+                                            String level = adapter.getItem(i).getKey();
+                                            Intent intent = new Intent(MatchRegistrationsGetProgram.this, MatchRegistrationsThird.class);
+                                            Bundle bundle = new Bundle();
+                                            bundle.putLong("Date1",date1);
+                                            bundle.putLong("Date2",date2);
+                                            bundle.putString("Level", level);
+                                            Log.d("TLActivity", "onItemClick: Main: " + spinPrograms);
+                                            bundle.putString("SpinPrograms", spinPrograms);
+                                            bundle.putString("SpinCategories", spinnerCategories);
+                                            bundle.putString("SpinSessions", spinnerSessions);
+                                            bundle.putString("Collection",collection);
+                                            intent.putExtras(bundle);
+                                            startActivity(intent);
+                                        }
+                                    });
                                 }
                             });
                 }
@@ -339,6 +440,5 @@ public class MatchRegistrationsGetProgram extends AppCompatActivity {
 
                 }
             });
-
     }
 }
