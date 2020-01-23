@@ -75,6 +75,7 @@ public class MatchRegistrationsGetProgram extends AppCompatActivity {
     private String fg = "";
     ArrayList<String> fids = new ArrayList<>();
     ArrayList<String> fidsReg = new ArrayList<>();
+    ArrayList<String> fidsNotReg = new ArrayList<>();
     String documentID = "";
     int reg = 0, notReg = 0, att = 0;
     private String spinPrograms = "", spinCategories = "", spinSessions = "";
@@ -352,7 +353,7 @@ public class MatchRegistrationsGetProgram extends AppCompatActivity {
                                         data += "Document ID: " + documentID + "\n\n";
 
                                     }
-                                    mTextView.setText(documentID);
+//                                    mTextView.setText(documentID);
                                 }
                             });
 
@@ -377,7 +378,7 @@ public class MatchRegistrationsGetProgram extends AppCompatActivity {
                                         data += "FOLK ID: " + note.getFid() + "\n";
 
                                     }
-                                    mTextView.setText(data);
+//                                    mTextView.setText(data);
                                 }
                             });
 
@@ -409,7 +410,7 @@ public class MatchRegistrationsGetProgram extends AppCompatActivity {
                                     notReg = att - reg;
                                     count.put("Registered",reg);
                                     count.put("Not registered",notReg);
-                                    mTextView1.setText(String.valueOf(reg));
+//                                    mTextView1.setText(String.valueOf(reg));
 
                                     final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
                                     mListView.setAdapter((ListAdapter) adapter);
@@ -419,12 +420,13 @@ public class MatchRegistrationsGetProgram extends AppCompatActivity {
                                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                                             //                final String fg_name = mListView.getItemAtPosition(i).toString();
                                             //                TextView fgName = (TextView) findViewById(R.id.text_view_1);
-                                            String level = adapter.getItem(i).getKey();
+                                            String status = adapter.getItem(i).getKey();
                                             Intent intent = new Intent(MatchRegistrationsGetProgram.this, MatchRegistrationsThird.class);
                                             Bundle bundle = new Bundle();
                                             bundle.putLong("Date1",date1);
                                             bundle.putLong("Date2",date2);
-                                            bundle.putString("Level", level);
+                                            bundle.putString("FG",fg);
+                                            bundle.putString("Reg", status);
                                             Log.d("TLActivity", "onItemClick: Main: " + spinPrograms);
                                             bundle.putString("SpinPrograms", spinPrograms);
                                             bundle.putString("SpinCategories", spinnerCategories);
