@@ -590,6 +590,7 @@ public class MatchRegistrationsOne extends AppCompatActivity {
 
                                         TreeMap<String, Integer> countName = new TreeMap<>();
                                         TreeMap<String, Integer> count = new TreeMap<>();
+                                        ArrayList<String> fids = new ArrayList<>();
 
                                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                             Note note = documentSnapshot.toObject(Note.class);

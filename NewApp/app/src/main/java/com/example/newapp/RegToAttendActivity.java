@@ -366,10 +366,6 @@ public class RegToAttendActivity extends AppCompatActivity {
                 public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
                     spinnerSessions = parent.getItemAtPosition(position).toString();
                     posSession = position;
-                    totalNotCom = 0;
-                    totalReg = 0;
-                    totalCom = 0;
-                    totalAtt = 0;
 
                     if (spinnerSessions.equals("ALL")) {
                         total = 0;
@@ -378,6 +374,9 @@ public class RegToAttendActivity extends AppCompatActivity {
                         totalReg = 0;
                         totalCom = 0;
                         totalCNA = 0;
+                        totalANU = 0;
+                        totalNA = 0;
+
                         fgboys
 //                                .whereEqualTo("zzdate", date)
                                 .whereGreaterThanOrEqualTo("edate", date1)
@@ -572,6 +571,8 @@ public class RegToAttendActivity extends AppCompatActivity {
                         totalReg = 0;
                         totalCom = 0;
                         totalCNA = 0;
+                        totalANU = 0;
+                        totalNA = 0;
 
                         fgboys
 //                                .whereEqualTo("zzdate", date)
@@ -782,6 +783,8 @@ public class RegToAttendActivity extends AppCompatActivity {
             totalReg = 0;
             totalCom = 0;
             totalCNA = 0;
+            totalANU = 0;
+            totalNA = 0;
 
             fgboys
 //                    .whereEqualTo("zzdate", date)
@@ -821,11 +824,14 @@ public class RegToAttendActivity extends AppCompatActivity {
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     spinnerSessions = parent.getItemAtPosition(position).toString();
                     posSession = position;
+                    total = 0;
+                    totalAtt = 0;
                     totalNotCom = 0;
                     totalReg = 0;
                     totalCom = 0;
-                    totalAtt = 0;
                     totalCNA = 0;
+                    totalANU = 0;
+                    totalNA = 0;
 
                     if (spinnerSessions.equals("ALL")) {
                         total = 0;
@@ -834,6 +840,8 @@ public class RegToAttendActivity extends AppCompatActivity {
                         totalReg = 0;
                         totalCom = 0;
                         totalCNA = 0;
+                        totalANU = 0;
+                        totalNA = 0;
 
                         fgboys
 //                                .whereEqualTo("zzdate", date)
@@ -1030,6 +1038,8 @@ public class RegToAttendActivity extends AppCompatActivity {
                         totalReg = 0;
                         totalCom = 0;
                         totalCNA = 0;
+                        totalANU = 0;
+                        totalNA = 0;
                         fgboys
 //                                .whereEqualTo("zzdate", date)
                                 .whereGreaterThanOrEqualTo("edate", date1)
@@ -1286,9 +1296,9 @@ public class RegToAttendActivity extends AppCompatActivity {
                         totalNotCom = 0;
                         totalReg = 0;
                         totalCom = 0;
+                        totalCNA = 0;
                         totalANU = 0;
                         totalNA = 0;
-                        totalCNA = 0;
 
                         fgboys
 //                                .whereEqualTo("zzdate", date)
@@ -1483,6 +1493,8 @@ public class RegToAttendActivity extends AppCompatActivity {
                         totalReg = 0;
                         totalCom = 0;
                         totalCNA = 0;
+                        totalANU = 0;
+                        totalNA = 0;
 
                         fgboys
 //                                .whereEqualTo("zzdate", date)
@@ -1691,6 +1703,8 @@ public class RegToAttendActivity extends AppCompatActivity {
             totalReg = 0;
             totalCom = 0;
             totalCNA = 0;
+            totalANU = 0;
+            totalNA = 0;
 
             fgboys
 //                    .whereEqualTo("zzdate", date)
@@ -1935,6 +1949,8 @@ public class RegToAttendActivity extends AppCompatActivity {
                         totalReg = 0;
                         totalCom = 0;
                         totalCNA = 0;
+                        totalANU = 0;
+                        totalNA = 0;
                         fgboys
 //                                .whereEqualTo("zzdate", date)
                                 .whereGreaterThanOrEqualTo("edate", date1)
