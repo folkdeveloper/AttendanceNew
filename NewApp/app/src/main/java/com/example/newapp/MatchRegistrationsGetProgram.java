@@ -74,6 +74,7 @@ public class MatchRegistrationsGetProgram extends AppCompatActivity {
     private long epoch = 0;
     private String fg = "";
     ArrayList<String> fids = new ArrayList<>();
+    ArrayList<String> fidsReg = new ArrayList<>();
     String documentID = "";
     int reg = 0, notReg = 0, att = 0;
     private String spinPrograms = "", spinCategories = "", spinSessions = "";
@@ -400,8 +401,10 @@ public class MatchRegistrationsGetProgram extends AppCompatActivity {
                                             continue;
 
                                         Log.d(TAG, "onEvent: Reg" + note.getFid());
-                                        if (fids.contains(note.getFid()))
+                                        if (fids.contains(note.getFid())) {
                                             reg++;
+                                            fidsReg.add(note.getFid());
+                                        }
                                     }
                                     notReg = att - reg;
                                     count.put("Registered",reg);
@@ -427,6 +430,7 @@ public class MatchRegistrationsGetProgram extends AppCompatActivity {
                                             bundle.putString("SpinCategories", spinnerCategories);
                                             bundle.putString("SpinSessions", spinnerSessions);
                                             bundle.putString("Collection",collection);
+                                            intent.putExtra("FIDReg",fidsReg);
                                             intent.putExtras(bundle);
                                             startActivity(intent);
                                         }
