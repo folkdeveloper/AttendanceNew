@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -36,7 +37,7 @@ public class UniqueActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private CollectionReference fgboys;
     private String collection = "";
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "UniqueActivity";
     ListView mListView;
     private TextView mTextView;
     private long date1 = 0, date2 = 0;
@@ -95,7 +96,7 @@ public class UniqueActivity extends AppCompatActivity {
 
         fgboys
                 .whereGreaterThanOrEqualTo("edate", date1)
-                .whereLessThanOrEqualTo("edate", date2)
+                .whereLessThan("edate", date2)
                 .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
@@ -307,7 +308,7 @@ public class UniqueActivity extends AppCompatActivity {
 
             fgboys
                     .whereGreaterThanOrEqualTo("edate", date1)
-                    .whereLessThanOrEqualTo("edate", date2)
+                    .whereLessThan("edate", date2)
                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -362,7 +363,7 @@ public class UniqueActivity extends AppCompatActivity {
 
             fgboys
                     .whereGreaterThanOrEqualTo("edate", date1)
-                    .whereLessThanOrEqualTo("edate", date2)
+                    .whereLessThan("edate", date2)
                     .whereEqualTo("program",spinPrograms)
                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
@@ -426,7 +427,7 @@ public class UniqueActivity extends AppCompatActivity {
 
             fgboys
                     .whereGreaterThanOrEqualTo("edate", date1)
-                    .whereLessThanOrEqualTo("edate", date2)
+                    .whereLessThan("edate", date2)
                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -485,7 +486,7 @@ public class UniqueActivity extends AppCompatActivity {
 
             fgboys
                     .whereGreaterThanOrEqualTo("edate", date1)
-                    .whereLessThanOrEqualTo("edate", date2)
+                    .whereLessThan("edate", date2)
                     .whereEqualTo("program",spinPrograms)
                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
@@ -548,7 +549,7 @@ public class UniqueActivity extends AppCompatActivity {
 
             fgboys
                     .whereGreaterThanOrEqualTo("edate", date1)
-                    .whereLessThanOrEqualTo("edate", date2)
+                    .whereLessThan("edate", date2)
                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -582,7 +583,7 @@ public class UniqueActivity extends AppCompatActivity {
                         total = 0;
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate", date1)
-                                .whereLessThanOrEqualTo("edate", date2)
+                                .whereLessThan("edate", date2)
                                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                     @Override
                                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -596,14 +597,16 @@ public class UniqueActivity extends AppCompatActivity {
                                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                             Note note = documentSnapshot.toObject(Note.class);
 
+                                            Log.d(TAG, "onEvent: Out" + note.getFg() + " ; " + note.getName());
+
                                             if (note.getName() == null) {
                                                 continue;
                                             }
-
-                                            if (note.getUrl() == null) {
-                                                note.setUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr");
-                                                url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
-                                            }
+//
+//                                            if (note.getUrl() == null) {
+//                                                note.setUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr");
+//                                                url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
+//                                            }
 
                                             if (countName.containsKey(note.getName())) {
                                                 continue;
@@ -611,14 +614,17 @@ public class UniqueActivity extends AppCompatActivity {
                                                 countName.put(note.getName(), 1);
                                                 total++;
                                                 count.put("ALL", total);
-                                            }
 
-                                            if (count.containsKey(note.getFg())) {
-                                                int number = count.get(note.getFg());
-                                                number++;
-                                                count.put(note.getFg(), number);
-                                            } else {
-                                                count.put(note.getFg(), 1);
+//                                                Log.d(TAG, "onEvent: Out" + note.getFg() + " ; " + note.getName());
+
+                                                if (count.containsKey(note.getFg())) {
+                                                    int number = count.get(note.getFg());
+                                                    number++;
+                                                    count.put(note.getFg(), number);
+//                                                    Log.d(TAG, "onEvent: In " + note.getFg() + " ; "+ note.getName());
+                                                } else {
+                                                    count.put(note.getFg(), 1);
+                                                }
                                             }
                                         }
 
@@ -648,7 +654,7 @@ public class UniqueActivity extends AppCompatActivity {
                         total = 0;
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate", date1)
-                                .whereLessThanOrEqualTo("edate", date2)
+                                .whereLessThan("edate", date2)
                                 .whereEqualTo("session", spinnerSessions)
                                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                     @Override
@@ -730,7 +736,7 @@ public class UniqueActivity extends AppCompatActivity {
 
             fgboys
                     .whereGreaterThanOrEqualTo("edate", date1)
-                    .whereLessThanOrEqualTo("edate", date2)
+                    .whereLessThan("edate", date2)
                     .whereEqualTo("category", spinnerCategories)
                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
@@ -764,7 +770,7 @@ public class UniqueActivity extends AppCompatActivity {
                     if (spinnerSessions.equals("ALL")) {
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate", date1)
-                                .whereLessThanOrEqualTo("edate", date2)
+                                .whereLessThan("edate", date2)
                                 .whereEqualTo("category", spinnerCategories)
                                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                     @Override
@@ -833,7 +839,7 @@ public class UniqueActivity extends AppCompatActivity {
                         total=0;
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate", date1)
-                                .whereLessThanOrEqualTo("edate", date2)
+                                .whereLessThan("edate", date2)
                                 .whereEqualTo("session", spinnerSessions)
                                 .whereEqualTo("category", spinnerCategories)
                                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -924,7 +930,7 @@ public class UniqueActivity extends AppCompatActivity {
 
             fgboys
                     .whereGreaterThanOrEqualTo("edate", date1)
-                    .whereLessThanOrEqualTo("edate", date2)
+                    .whereLessThan("edate", date2)
                     .whereEqualTo("program",spinnerPrograms)
                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
@@ -959,7 +965,7 @@ public class UniqueActivity extends AppCompatActivity {
                         total=0;
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate", date1)
-                                .whereLessThanOrEqualTo("edate", date2)
+                                .whereLessThan("edate", date2)
                                 .whereEqualTo("program",spinnerPrograms)
                                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                     @Override
@@ -1028,7 +1034,7 @@ public class UniqueActivity extends AppCompatActivity {
                         total=0;
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate", date1)
-                                .whereLessThanOrEqualTo("edate", date2)
+                                .whereLessThan("edate", date2)
                                 .whereEqualTo("session", spinnerSessions)
                                 .whereEqualTo("program",spinnerPrograms)
                                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -1112,7 +1118,7 @@ public class UniqueActivity extends AppCompatActivity {
 
             fgboys
                     .whereGreaterThanOrEqualTo("edate", date1)
-                    .whereLessThanOrEqualTo("edate", date2)
+                    .whereLessThan("edate", date2)
                     .whereEqualTo("category", spinnerCategories)
                     .whereEqualTo("program",spinnerPrograms)
                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -1148,7 +1154,7 @@ public class UniqueActivity extends AppCompatActivity {
                         total=0;
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate", date1)
-                                .whereLessThanOrEqualTo("edate", date2)
+                                .whereLessThan("edate", date2)
                                 .whereEqualTo("category", spinnerCategories)
                                 .whereEqualTo("program",spinnerPrograms)
                                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -1218,7 +1224,7 @@ public class UniqueActivity extends AppCompatActivity {
                         total=0;
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate", date1)
-                                .whereLessThanOrEqualTo("edate", date2)
+                                .whereLessThan("edate", date2)
                                 .whereEqualTo("session", spinnerSessions)
                                 .whereEqualTo("category", spinnerCategories)
                                 .whereEqualTo("program",spinnerPrograms)

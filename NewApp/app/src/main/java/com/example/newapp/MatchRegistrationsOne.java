@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -34,7 +35,7 @@ public class MatchRegistrationsOne extends AppCompatActivity {
     private FirebaseFirestore db;
     private CollectionReference fgboys;
     private String collection = "";
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "RegistrationsPrograms";
     ListView mListView;
     private TextView mTextView;
     private long date1 = 0, date2 = 0;
@@ -588,7 +589,7 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                             return;
                                         }
 
-                                        TreeMap<String, Integer> countName = new TreeMap<>();
+                                        ArrayList<String> countName = new ArrayList<>();
                                         TreeMap<String, Integer> count = new TreeMap<>();
                                         ArrayList<String> fids = new ArrayList<>();
 
@@ -604,20 +605,22 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                                 url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                             }
 
-                                            if (countName.containsKey(note.getName())) {
+                                            if (countName.contains(note.getFid())) {
                                                 continue;
                                             } else {
-                                                countName.put(note.getName(), 1);
+                                                countName.add(note.getFid());
                                                 total++;
                                                 count.put("ALL", total);
-                                            }
 
-                                            if (count.containsKey(note.getFg())) {
-                                                int number = count.get(note.getFg());
-                                                number++;
-                                                count.put(note.getFg(), number);
-                                            } else {
-                                                count.put(note.getFg(), 1);
+                                                Log.d(TAG, "onEvent: First" + " ; " + note.getFg() + " ; " + note.getZmob() + " ; " + note.getSession());
+
+                                                if (count.containsKey(note.getFg())) {
+                                                    int number = count.get(note.getFg());
+                                                    number++;
+                                                    count.put(note.getFg(), number);
+                                                } else {
+                                                    count.put(note.getFg(), 1);
+                                                }
                                             }
                                         }
 
@@ -656,7 +659,7 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                             return;
                                         }
 
-                                        TreeMap<String, Integer> countName = new TreeMap<>();
+                                        ArrayList<String> countName = new ArrayList<>();
                                         TreeMap<String, Integer> count = new TreeMap<>();
 
                                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
@@ -671,20 +674,20 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                                 url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                             }
 
-                                            if (countName.containsKey(note.getName())) {
+                                            if (countName.contains(note.getName())) {
                                                 continue;
                                             } else {
-                                                countName.put(note.getName(), 1);
+                                                countName.add(note.getName());
                                                 total++;
                                                 count.put("ALL", total);
-                                            }
 
-                                            if (count.containsKey(note.getFg())) {
-                                                int number = count.get(note.getFg());
-                                                number++;
-                                                count.put(note.getFg(), number);
-                                            } else {
-                                                count.put(note.getFg(), 1);
+                                                if (count.containsKey(note.getFg())) {
+                                                    int number = count.get(note.getFg());
+                                                    number++;
+                                                    count.put(note.getFg(), number);
+                                                } else {
+                                                    count.put(note.getFg(), 1);
+                                                }
                                             }
                                         }
 
@@ -772,7 +775,7 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                             return;
                                         }
 
-                                        TreeMap<String, Integer> countName = new TreeMap<>();
+                                        ArrayList<String> countName = new ArrayList<>();
                                         TreeMap<String, Integer> count = new TreeMap<>();
 
                                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
@@ -787,20 +790,20 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                                 url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                             }
 
-                                            if (countName.containsKey(note.getName())) {
+                                            if (countName.contains(note.getName())) {
                                                 continue;
                                             } else {
-                                                countName.put(note.getName(), 1);
+                                                countName.add(note.getName());
                                                 total++;
-                                                count.put("ALL",total);
-                                            }
+                                                count.put("ALL", total);
 
-                                            if (count.containsKey(note.getFg())) {
-                                                int number = count.get(note.getFg());
-                                                number++;
-                                                count.put(note.getFg(),number);
-                                            } else {
-                                                count.put(note.getFg(),1);
+                                                if (count.containsKey(note.getFg())) {
+                                                    int number = count.get(note.getFg());
+                                                    number++;
+                                                    count.put(note.getFg(), number);
+                                                } else {
+                                                    count.put(note.getFg(), 1);
+                                                }
                                             }
                                         }
 
@@ -842,7 +845,7 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                             return;
                                         }
 
-                                        TreeMap<String, Integer> countName = new TreeMap<>();
+                                        ArrayList<String> countName = new ArrayList<>();
                                         TreeMap<String, Integer> count = new TreeMap<>();
 
                                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
@@ -857,20 +860,20 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                                 url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                             }
 
-                                            if (countName.containsKey(note.getName())) {
+                                            if (countName.contains(note.getName())) {
                                                 continue;
                                             } else {
-                                                countName.put(note.getName(), 1);
+                                                countName.add(note.getName());
                                                 total++;
-                                                count.put("ALL",total);
-                                            }
+                                                count.put("ALL", total);
 
-                                            if (count.containsKey(note.getFg())) {
-                                                int number = count.get(note.getFg());
-                                                number++;
-                                                count.put(note.getFg(),number);
-                                            } else {
-                                                count.put(note.getFg(),1);
+                                                if (count.containsKey(note.getFg())) {
+                                                    int number = count.get(note.getFg());
+                                                    number++;
+                                                    count.put(note.getFg(), number);
+                                                } else {
+                                                    count.put(note.getFg(), 1);
+                                                }
                                             }
                                         }
 
@@ -967,7 +970,7 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                             return;
                                         }
 
-                                        TreeMap<String, Integer> countName = new TreeMap<>();
+                                        ArrayList<String> countName = new ArrayList<>();
                                         TreeMap<String, Integer> count = new TreeMap<>();
 
                                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
@@ -982,20 +985,20 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                                 url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                             }
 
-                                            if (countName.containsKey(note.getName())) {
+                                            if (countName.contains(note.getName())) {
                                                 continue;
                                             } else {
-                                                countName.put(note.getName(), 1);
+                                                countName.add(note.getName());
                                                 total++;
-                                                count.put("ALL",total);
-                                            }
+                                                count.put("ALL", total);
 
-                                            if (count.containsKey(note.getFg())) {
-                                                int number = count.get(note.getFg());
-                                                number++;
-                                                count.put(note.getFg(),number);
-                                            } else {
-                                                count.put(note.getFg(),1);
+                                                if (count.containsKey(note.getFg())) {
+                                                    int number = count.get(note.getFg());
+                                                    number++;
+                                                    count.put(note.getFg(), number);
+                                                } else {
+                                                    count.put(note.getFg(), 1);
+                                                }
                                             }
                                         }
 
@@ -1037,7 +1040,7 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                             return;
                                         }
 
-                                        TreeMap<String, Integer> countName = new TreeMap<>();
+                                        ArrayList<String> countName = new ArrayList<>();
                                         TreeMap<String, Integer> count = new TreeMap<>();
 
                                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
@@ -1052,20 +1055,20 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                                 url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                             }
 
-                                            if (countName.containsKey(note.getName())) {
+                                            if (countName.contains(note.getName())) {
                                                 continue;
                                             } else {
-                                                countName.put(note.getName(), 1);
+                                                countName.add(note.getName());
                                                 total++;
-                                                count.put("ALL",total);
-                                            }
+                                                count.put("ALL", total);
 
-                                            if (count.containsKey(note.getFg())) {
-                                                int number = count.get(note.getFg());
-                                                number++;
-                                                count.put(note.getFg(),number);
-                                            } else {
-                                                count.put(note.getFg(),1);
+                                                if (count.containsKey(note.getFg())) {
+                                                    int number = count.get(note.getFg());
+                                                    number++;
+                                                    count.put(note.getFg(), number);
+                                                } else {
+                                                    count.put(note.getFg(), 1);
+                                                }
                                             }
                                         }
 
@@ -1157,7 +1160,7 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                             return;
                                         }
 
-                                        TreeMap<String, Integer> countName = new TreeMap<>();
+                                        ArrayList<String> countName = new ArrayList<>();
                                         TreeMap<String, Integer> count = new TreeMap<>();
 
                                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
@@ -1172,20 +1175,20 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                                 url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                             }
 
-                                            if (countName.containsKey(note.getName())) {
+                                            if (countName.contains(note.getName())) {
                                                 continue;
                                             } else {
-                                                countName.put(note.getName(), 1);
+                                                countName.add(note.getName());
                                                 total++;
-                                                count.put("ALL",total);
-                                            }
+                                                count.put("ALL", total);
 
-                                            if (count.containsKey(note.getFg())) {
-                                                int number = count.get(note.getFg());
-                                                number++;
-                                                count.put(note.getFg(),number);
-                                            } else {
-                                                count.put(note.getFg(),1);
+                                                if (count.containsKey(note.getFg())) {
+                                                    int number = count.get(note.getFg());
+                                                    number++;
+                                                    count.put(note.getFg(), number);
+                                                } else {
+                                                    count.put(note.getFg(), 1);
+                                                }
                                             }
                                         }
 
@@ -1228,7 +1231,7 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                             return;
                                         }
 
-                                        TreeMap<String, Integer> countName = new TreeMap<>();
+                                        ArrayList<String> countName = new ArrayList<>();
                                         TreeMap<String, Integer> count = new TreeMap<>();
 
                                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
@@ -1243,20 +1246,20 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                                 url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                             }
 
-                                            if (countName.containsKey(note.getName())) {
+                                            if (countName.contains(note.getName())) {
                                                 continue;
                                             } else {
-                                                countName.put(note.getName(), 1);
+                                                countName.add(note.getName());
                                                 total++;
-                                                count.put("ALL",total);
-                                            }
+                                                count.put("ALL", total);
 
-                                            if (count.containsKey(note.getFg())) {
-                                                int number = count.get(note.getFg());
-                                                number++;
-                                                count.put(note.getFg(),number);
-                                            } else {
-                                                count.put(note.getFg(),1);
+                                                if (count.containsKey(note.getFg())) {
+                                                    int number = count.get(note.getFg());
+                                                    number++;
+                                                    count.put(note.getFg(), number);
+                                                } else {
+                                                    count.put(note.getFg(), 1);
+                                                }
                                             }
                                         }
 

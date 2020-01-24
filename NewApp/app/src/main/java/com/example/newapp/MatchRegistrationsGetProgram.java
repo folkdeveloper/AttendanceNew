@@ -76,7 +76,6 @@ public class MatchRegistrationsGetProgram extends AppCompatActivity {
     private String fg = "";
     ArrayList<String> fids = new ArrayList<>();
     ArrayList<String> fidsReg = new ArrayList<>();
-    ArrayList<String> fidsNotReg = new ArrayList<>();
     String documentID = "";
     int reg = 0, notReg = 0, att = 0;
     private String spinPrograms = "", spinCategories = "", spinSessions = "";
@@ -310,7 +309,7 @@ public class MatchRegistrationsGetProgram extends AppCompatActivity {
                                 if (note.getSession() == null)
                                     continue;
 
-                                Log.d(TAG, "onEvent: In");
+//                                Log.d(TAG, "onEvent: In");
 
                                 if (finalSessions.contains(note.getSession())) {
                                     continue;
@@ -347,7 +346,7 @@ public class MatchRegistrationsGetProgram extends AppCompatActivity {
 
                                         note.setDocumentId(documentSnapshot.getId());
 
-                                        Log.d(TAG, "onEvent: InSecond");
+//                                        Log.d(TAG, "onEvent: InSecond");
 
                                         documentID = note.getDocumentId();
 
@@ -370,14 +369,22 @@ public class MatchRegistrationsGetProgram extends AppCompatActivity {
 
                                     String data = "";
 
+                                    ArrayList<String> countName = new ArrayList<>();
+
                                     for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                         Note note = documentSnapshot.toObject(Note.class);
 
-                                        att++;
-                                        Log.d(TAG, "onEvent: FID: "+note.getFid());
-                                        fids.add(note.getFid());
-                                        data += "FOLK ID: " + note.getFid() + "\n";
+//                                        Log.d(TAG, "onEvent: Out"+note.getName());
 
+                                        if (countName.contains(note.getFid())) {
+                                            continue;
+                                        } else {
+                                            countName.add(note.getFid());
+                                            att++;
+                                            Log.d(TAG, "onEvent: In"+" ; " + note.getZmob() + " ; " +note.getSession());
+                                            fids.add(note.getFid());
+                                            data += "FOLK ID: " + note.getFid() + "\n";
+                                        }
                                     }
 //                                    mTextView.setText(data);
                                 }
@@ -391,7 +398,6 @@ public class MatchRegistrationsGetProgram extends AppCompatActivity {
                                     if (e != null)
                                         return;
                                     TreeMap<String, Integer> count = new TreeMap<>();
-                                    Log.d(TAG, "onEvent: Out:Reg");
 
                                     for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
                                         Note note = documentSnapshot.toObject(Note.class);
@@ -402,7 +408,7 @@ public class MatchRegistrationsGetProgram extends AppCompatActivity {
                                         if (note.getPid() == null)
                                             continue;
 
-                                        Log.d(TAG, "onEvent: Reg" + note.getFid());
+//                                        Log.d(TAG, "onEvent: Reg" + note.getFid());
                                         if (fids.contains(note.getFid())) {
                                             reg++;
                                             fidsReg.add(note.getFid());
@@ -428,7 +434,7 @@ public class MatchRegistrationsGetProgram extends AppCompatActivity {
                                             bundle.putLong("Date2",date2);
                                             bundle.putString("FG",fg);
                                             bundle.putString("Reg", status);
-                                            Log.d("TLActivity", "onItemClick: Main: " + spinPrograms);
+//                                            Log.d("TLActivity", "onItemClick: Main: " + spinPrograms);
                                             bundle.putString("SpinPrograms", spinPrograms);
                                             bundle.putString("SpinCategories", spinnerCategories);
                                             bundle.putString("SpinSessions", spinnerSessions);

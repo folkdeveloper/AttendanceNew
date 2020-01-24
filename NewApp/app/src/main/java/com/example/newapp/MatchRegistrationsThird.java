@@ -20,6 +20,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 import javax.annotation.Nullable;
 
@@ -49,6 +50,7 @@ public class MatchRegistrationsThird extends AppCompatActivity {
         fg = getIntent().getStringExtra("FG");
         mListView = findViewById(R.id.list_view);
         status = getIntent().getStringExtra("Reg");
+        collection = getIntent().getStringExtra("Collection");
 
         db.collection("AttendanceDemo")
                 .whereGreaterThanOrEqualTo("edate",date1)
@@ -62,6 +64,8 @@ public class MatchRegistrationsThird extends AppCompatActivity {
 
                         ArrayList<Note> details1 = new ArrayList<>();
                         ArrayList<Note> details2 = new ArrayList<>();
+                        TreeMap<String, Integer> countName = new TreeMap<>();
+
                         Log.d("Details", "onEvent: Out");
 
                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
@@ -74,10 +78,15 @@ public class MatchRegistrationsThird extends AppCompatActivity {
                                 url = note.getUrl();
                             }
 
-                            if (fidsReg.contains(note.getFid())) {
-                                details1.add(note);
+                            if (countName.containsKey(note.getName())) {
+                                continue;
                             } else {
-                                details2.add(note);
+                                countName.put(note.getName(),1);
+                                if (fidsReg.contains(note.getFid())) {
+                                    details1.add(note);
+                                } else {
+                                    details2.add(note);
+                                }
                             }
                         }
 
@@ -128,6 +137,23 @@ public class MatchRegistrationsThird extends AppCompatActivity {
                                         bundle.putLong("Origin", 0);
                                     intent.putExtras(bundle);
                                     startActivity(intent);
+                                }
+                            });
+
+                            searchFilter.addTextChangedListener(new TextWatcher() {
+                                @Override
+                                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                                }
+
+                                @Override
+                                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                    adapterD.getFilter().filter(s.toString());
+                                }
+
+                                @Override
+                                public void afterTextChanged(Editable s) {
+
                                 }
                             });
                         }
