@@ -37,6 +37,7 @@ public class TLViewDetails extends AppCompatActivity {
     public static String spinCategories = "";
     public static String spinSessions = "";
     EditText searchFilter;
+    private ArrayList<String> fid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +55,7 @@ public class TLViewDetails extends AppCompatActivity {
         spinCategories = getIntent().getStringExtra("SpinCategories");
         spinSessions = getIntent().getStringExtra("SpinSessions");
         searchFilter = findViewById(R.id.searchFilter);
+        fid = (ArrayList<String>) getIntent().getSerializableExtra("FID");
     }
 
     @Override
@@ -270,11 +272,13 @@ public class TLViewDetails extends AppCompatActivity {
                                     url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                 }
 
-                                if (count.containsKey(note.getName())) {
+                                if (count.containsKey(note.getFid())) {
                                     continue;
                                 } else {
-                                    count.put(note.getName(),1);
-                                    details.add(note);
+                                    count.put(note.getFid(), 1);
+                                    if (fid.contains(note.getFid())) {
+                                        details.add(note);
+                                    }
                                 }
                             }
 
@@ -314,11 +318,13 @@ public class TLViewDetails extends AppCompatActivity {
                                     url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                 }
 
-                                if (count.containsKey(note.getName())) {
+                                if (count.containsKey(note.getFid())) {
                                     continue;
                                 } else {
-                                    count.put(note.getName(),1);
-                                    details.add(note);
+                                    count.put(note.getFid(), 1);
+                                    if (fid.contains(note.getFid())) {
+                                        details.add(note);
+                                    }
                                 }
                             }
 
@@ -362,11 +368,13 @@ public class TLViewDetails extends AppCompatActivity {
                                     url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                 }
 
-                                if (count.containsKey(note.getName())) {
+                                if (count.containsKey(note.getFid())) {
                                     continue;
                                 } else {
-                                    count.put(note.getName(),1);
-                                    details.add(note);
+                                    count.put(note.getFid(), 1);
+                                    if (fid.contains(note.getFid())) {
+                                        details.add(note);
+                                    }
                                 }
                             }
 
@@ -407,11 +415,13 @@ public class TLViewDetails extends AppCompatActivity {
                                     url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                 }
 
-                                if (count.containsKey(note.getName())) {
+                                if (count.containsKey(note.getFid())) {
                                     continue;
                                 } else {
-                                    count.put(note.getName(),1);
-                                    details.add(note);
+                                    count.put(note.getFid(), 1);
+                                    if (fid.contains(note.getFid())) {
+                                        details.add(note);
+                                    }
                                 }
                             }
 
@@ -455,11 +465,13 @@ public class TLViewDetails extends AppCompatActivity {
                                     url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                 }
 
-                                if (count.containsKey(note.getName())) {
+                                if (count.containsKey(note.getFid())) {
                                     continue;
                                 } else {
-                                    count.put(note.getName(),1);
-                                    details.add(note);
+                                    count.put(note.getFid(), 1);
+                                    if (fid.contains(note.getFid())) {
+                                        details.add(note);
+                                    }
                                 }
                             }
 
@@ -500,11 +512,13 @@ public class TLViewDetails extends AppCompatActivity {
                                     url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                 }
 
-                                if (count.containsKey(note.getName())) {
+                                if (count.containsKey(note.getFid())) {
                                     continue;
                                 } else {
-                                    count.put(note.getName(),1);
-                                    details.add(note);
+                                    count.put(note.getFid(), 1);
+                                    if (fid.contains(note.getFid())) {
+                                        details.add(note);
+                                    }
                                 }
                             }
 
@@ -548,11 +562,13 @@ public class TLViewDetails extends AppCompatActivity {
                                     url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                 }
 
-                                if (count.containsKey(note.getName())) {
+                                if (count.containsKey(note.getFid())) {
                                     continue;
                                 } else {
-                                    count.put(note.getName(),1);
-                                    details.add(note);
+                                    count.put(note.getFid(), 1);
+                                    if (fid.contains(note.getFid())) {
+                                        details.add(note);
+                                    }
                                 }
                             }
 
@@ -593,11 +609,13 @@ public class TLViewDetails extends AppCompatActivity {
                                     url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                 }
 
-                                if (count.containsKey(note.getName())) {
+                                if (count.containsKey(note.getFid())) {
                                     continue;
                                 } else {
-                                    count.put(note.getName(),1);
-                                    details.add(note);
+                                    count.put(note.getFid(), 1);
+                                    if (fid.contains(note.getFid())) {
+                                        details.add(note);
+                                    }
                                 }
                             }
 
@@ -642,11 +660,13 @@ public class TLViewDetails extends AppCompatActivity {
                                     url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                 }
 
-                                if (count.containsKey(note.getName())) {
+                                if (count.containsKey(note.getFid())) {
                                     continue;
                                 } else {
-                                    count.put(note.getName(),1);
-                                    details.add(note);
+                                    count.put(note.getFid(), 1);
+                                    if (fid.contains(note.getFid())) {
+                                        details.add(note);
+                                    }
                                 }
                             }
 
@@ -688,11 +708,13 @@ public class TLViewDetails extends AppCompatActivity {
                                     url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                 }
 
-                                if (count.containsKey(note.getName())) {
+                                if (count.containsKey(note.getFid())) {
                                     continue;
                                 } else {
-                                    count.put(note.getName(),1);
-                                    details.add(note);
+                                    count.put(note.getFid(), 1);
+                                    if (fid.contains(note.getFid())) {
+                                        details.add(note);
+                                    }
                                 }
                             }
 
@@ -737,11 +759,13 @@ public class TLViewDetails extends AppCompatActivity {
                                     url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                 }
 
-                                if (count.containsKey(note.getName())) {
+                                if (count.containsKey(note.getFid())) {
                                     continue;
                                 } else {
-                                    count.put(note.getName(),1);
-                                    details.add(note);
+                                    count.put(note.getFid(), 1);
+                                    if (fid.contains(note.getFid())) {
+                                        details.add(note);
+                                    }
                                 }
                             }
 
@@ -783,11 +807,13 @@ public class TLViewDetails extends AppCompatActivity {
                                     url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                 }
 
-                                if (count.containsKey(note.getName())) {
+                                if (count.containsKey(note.getFid())) {
                                     continue;
                                 } else {
-                                    count.put(note.getName(),1);
-                                    details.add(note);
+                                    count.put(note.getFid(), 1);
+                                    if (fid.contains(note.getFid())) {
+                                        details.add(note);
+                                    }
                                 }
                             }
 
@@ -832,11 +858,13 @@ public class TLViewDetails extends AppCompatActivity {
                                     url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                 }
 
-                                if (count.containsKey(note.getName())) {
+                                if (count.containsKey(note.getFid())) {
                                     continue;
                                 } else {
-                                    count.put(note.getName(),1);
-                                    details.add(note);
+                                    count.put(note.getFid(), 1);
+                                    if (fid.contains(note.getFid())) {
+                                        details.add(note);
+                                    }
                                 }
                             }
 
@@ -878,11 +906,13 @@ public class TLViewDetails extends AppCompatActivity {
                                     url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                 }
 
-                                if (count.containsKey(note.getName())) {
+                                if (count.containsKey(note.getFid())) {
                                     continue;
                                 } else {
-                                    count.put(note.getName(),1);
-                                    details.add(note);
+                                    count.put(note.getFid(), 1);
+                                    if (fid.contains(note.getFid())) {
+                                        details.add(note);
+                                    }
                                 }
                             }
 
@@ -928,11 +958,13 @@ public class TLViewDetails extends AppCompatActivity {
                                     url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                 }
 
-                                if (count.containsKey(note.getName())) {
+                                if (count.containsKey(note.getFid())) {
                                     continue;
                                 } else {
-                                    count.put(note.getName(),1);
-                                    details.add(note);
+                                    count.put(note.getFid(), 1);
+                                    if (fid.contains(note.getFid())) {
+                                        details.add(note);
+                                    }
                                 }
                             }
 
@@ -975,11 +1007,13 @@ public class TLViewDetails extends AppCompatActivity {
                                     url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                 }
 
-                                if (count.containsKey(note.getName())) {
+                                if (count.containsKey(note.getFid())) {
                                     continue;
                                 } else {
-                                    count.put(note.getName(),1);
-                                    details.add(note);
+                                    count.put(note.getFid(), 1);
+                                    if (fid.contains(note.getFid())) {
+                                        details.add(note);
+                                    }
                                 }
                             }
 

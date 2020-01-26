@@ -19,6 +19,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.TreeMap;
 
 import javax.annotation.Nullable;
@@ -39,6 +40,9 @@ public class TLViewFG extends AppCompatActivity {
     public static String spinPrograms = "";
     public static String spinCategories = "";
     public static String spinSessions = "";
+    private ArrayList<String> fid;
+    ArrayList<String> countName = new ArrayList<>();
+    TreeMap<String, ArrayList<String>> count = new TreeMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +60,7 @@ public class TLViewFG extends AppCompatActivity {
         spinPrograms= getIntent().getStringExtra("SpinPrograms");
         spinCategories= getIntent().getStringExtra("SpinCategories");
         spinSessions= getIntent().getStringExtra("SpinSessions");
+        fid = (ArrayList<String>) getIntent().getSerializableExtra("FID");
     }
 
     @Override
@@ -83,7 +88,7 @@ public class TLViewFG extends AppCompatActivity {
 
     public void populateListProgramsAndCategoriesAndSessions() {
         if (tl.equals("ALL")) {
-            total=0;
+            total=0;count.clear();countName.clear();
             fgboys
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
@@ -93,9 +98,6 @@ public class TLViewFG extends AppCompatActivity {
                             if (e != null) {
                                 return;
                             }
-
-                            TreeMap<String, Integer> countName = new TreeMap<>();
-                            TreeMap<String, Integer> count = new TreeMap<>();
 
                             for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                 Note note = documentSnapshot.toObject(Note.class);
@@ -109,24 +111,30 @@ public class TLViewFG extends AppCompatActivity {
                                     url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                 }
 
-                                if (countName.containsKey(note.getName())) {
+                                if (countName.contains(note.getFid())) {
                                     continue;
-                                } else {
-                                    countName.put(note.getName(), 1);
-//                                    total++;
-//                                    count.put("ALL",total);
                                 }
 
+                                countName.add(note.getFid());
+//                                count.put("ALL",total);
+
                                 if (count.containsKey(note.getFg())) {
-                                    int number = count.get(note.getFg());
-                                    number++;
-                                    count.put(note.getFg(),number);
+                                    ArrayList<String> list = count.get(note.getFg());
+//                                                    ArrayList<String> listAll = count.get("ALL");
+                                    list.add(note.getFid());
+//                                                    listAll.add(note.getFid());
+                                    count.put(note.getFg(), list);
+//                                                    count.put("ALL", listAll);
                                 } else {
-                                    count.put(note.getFg(),1);
+                                    ArrayList<String> newList = new ArrayList<>();
+                                    newList.add(note.getFid());
+                                    count.put(note.getFg(), newList);
+//                                                    count.put("ALL", newList);
+//                                }
                                 }
                             }
 
-                            final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
+                            final MatchRegistrationsAdapter adapter = new MatchRegistrationsAdapter(count);
                             mListView.setAdapter((ListAdapter) adapter);
 
                             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -135,15 +143,16 @@ public class TLViewFG extends AppCompatActivity {
                                     String fg = adapter.getItem(i).getKey();
                                     Intent intent = new Intent(TLViewFG.this, TLViewDetails.class);
                                     Bundle bundle = new Bundle();
-                                    bundle.putLong("Date1",date1);
-                                    bundle.putLong("Date2",date2);
-                                    bundle.putString("TL",tl);
-                                    bundle.putString("FG",fg);
+                                    bundle.putLong("Date1", date1);
+                                    bundle.putLong("Date2", date2);
+                                    bundle.putString("TL", tl);
+                                    bundle.putString("FG", fg);
                                     bundle.putString("SpinPrograms", spinPrograms);
                                     bundle.putString("SpinCategories", spinCategories);
                                     bundle.putString("SpinSessions", spinSessions);
-                                    bundle.putString("Collection",collection);
+                                    bundle.putString("Collection", collection);
                                     intent.putExtras(bundle);
+                                    intent.putExtra("FID",count.get(tl));
                                     startActivity(intent);
                                 }
                             });
@@ -151,7 +160,7 @@ public class TLViewFG extends AppCompatActivity {
                     });
         }
         else {
-            total=0;
+            total=0;count.clear();countName.clear();
             fgboys
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
@@ -163,9 +172,6 @@ public class TLViewFG extends AppCompatActivity {
                                 return;
                             }
 
-                            TreeMap<String, Integer> countName = new TreeMap<>();
-                            TreeMap<String, Integer> count = new TreeMap<>();
-
                             for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                 Note note = documentSnapshot.toObject(Note.class);
 
@@ -178,24 +184,30 @@ public class TLViewFG extends AppCompatActivity {
                                     url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                 }
 
-                                if (countName.containsKey(note.getName())) {
+                                if (countName.contains(note.getFid())) {
                                     continue;
-                                } else {
-                                    countName.put(note.getName(), 1);
-//                                    total++;
-//                                    count.put("ALL",total);
                                 }
 
+                                countName.add(note.getFid());
+//                                count.put("ALL",total);
+
                                 if (count.containsKey(note.getFg())) {
-                                    int number = count.get(note.getFg());
-                                    number++;
-                                    count.put(note.getFg(),number);
+                                    ArrayList<String> list = count.get(note.getFg());
+//                                                    ArrayList<String> listAll = count.get("ALL");
+                                    list.add(note.getFid());
+//                                                    listAll.add(note.getFid());
+                                    count.put(note.getFg(), list);
+//                                                    count.put("ALL", listAll);
                                 } else {
-                                    count.put(note.getFg(),1);
+                                    ArrayList<String> newList = new ArrayList<>();
+                                    newList.add(note.getFid());
+                                    count.put(note.getFg(), newList);
+//                                                    count.put("ALL", newList);
+//                                }
                                 }
                             }
 
-                            final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
+                            final MatchRegistrationsAdapter adapter = new MatchRegistrationsAdapter(count);
                             mListView.setAdapter((ListAdapter) adapter);
 
                             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -204,15 +216,16 @@ public class TLViewFG extends AppCompatActivity {
                                     String fg = adapter.getItem(i).getKey();
                                     Intent intent = new Intent(TLViewFG.this, TLViewDetails.class);
                                     Bundle bundle = new Bundle();
-                                    bundle.putLong("Date1",date1);
-                                    bundle.putLong("Date2",date2);
-                                    bundle.putString("TL",tl);
-                                    bundle.putString("FG",fg);
+                                    bundle.putLong("Date1", date1);
+                                    bundle.putLong("Date2", date2);
+                                    bundle.putString("TL", tl);
+                                    bundle.putString("FG", fg);
                                     bundle.putString("SpinPrograms", spinPrograms);
                                     bundle.putString("SpinCategories", spinCategories);
                                     bundle.putString("SpinSessions", spinSessions);
-                                    bundle.putString("Collection",collection);
+                                    bundle.putString("Collection", collection);
                                     intent.putExtras(bundle);
+                                    intent.putExtra("FID",count.get(fg));
                                     startActivity(intent);
                                 }
                             });
@@ -223,7 +236,7 @@ public class TLViewFG extends AppCompatActivity {
 
     public void populateListProgramsAndCategories() {
         if (tl.equals("ALL")) {
-            total=0;
+            total=0;count.clear();countName.clear();
             fgboys
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
@@ -235,8 +248,6 @@ public class TLViewFG extends AppCompatActivity {
                                 return;
                             }
 
-                            TreeMap<String, Integer> countName = new TreeMap<>();
-                            TreeMap<String, Integer> count = new TreeMap<>();
 
                             for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                 Note note = documentSnapshot.toObject(Note.class);
@@ -250,24 +261,30 @@ public class TLViewFG extends AppCompatActivity {
                                     url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                 }
 
-                                if (countName.containsKey(note.getName())) {
+                                if (countName.contains(note.getFid())) {
                                     continue;
-                                } else {
-                                    countName.put(note.getName(), 1);
-//                                    total++;
-//                                    count.put("ALL",total);
                                 }
 
+                                countName.add(note.getFid());
+//                                count.put("ALL",total);
+
                                 if (count.containsKey(note.getFg())) {
-                                    int number = count.get(note.getFg());
-                                    number++;
-                                    count.put(note.getFg(),number);
+                                    ArrayList<String> list = count.get(note.getFg());
+//                                                    ArrayList<String> listAll = count.get("ALL");
+                                    list.add(note.getFid());
+//                                                    listAll.add(note.getFid());
+                                    count.put(note.getFg(), list);
+//                                                    count.put("ALL", listAll);
                                 } else {
-                                    count.put(note.getFg(),1);
+                                    ArrayList<String> newList = new ArrayList<>();
+                                    newList.add(note.getFid());
+                                    count.put(note.getFg(), newList);
+//                                                    count.put("ALL", newList);
+//                                }
                                 }
                             }
 
-                            final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
+                            final MatchRegistrationsAdapter adapter = new MatchRegistrationsAdapter(count);
                             mListView.setAdapter((ListAdapter) adapter);
 
                             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -276,15 +293,16 @@ public class TLViewFG extends AppCompatActivity {
                                     String fg = adapter.getItem(i).getKey();
                                     Intent intent = new Intent(TLViewFG.this, TLViewDetails.class);
                                     Bundle bundle = new Bundle();
-                                    bundle.putLong("Date1",date1);
-                                    bundle.putLong("Date2",date2);
-                                    bundle.putString("TL",tl);
-                                    bundle.putString("FG",fg);
+                                    bundle.putLong("Date1", date1);
+                                    bundle.putLong("Date2", date2);
+                                    bundle.putString("TL", tl);
+                                    bundle.putString("FG", fg);
                                     bundle.putString("SpinPrograms", spinPrograms);
                                     bundle.putString("SpinCategories", spinCategories);
                                     bundle.putString("SpinSessions", spinSessions);
-                                    bundle.putString("Collection",collection);
+                                    bundle.putString("Collection", collection);
                                     intent.putExtras(bundle);
+                                    intent.putExtra("FID",count.get(fg));
                                     startActivity(intent);
                                 }
                             });
@@ -292,7 +310,7 @@ public class TLViewFG extends AppCompatActivity {
                     });
         }
         else {
-            total=0;
+            total=0;count.clear();countName.clear();
             fgboys
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
@@ -305,9 +323,6 @@ public class TLViewFG extends AppCompatActivity {
                                 return;
                             }
 
-                            TreeMap<String, Integer> countName = new TreeMap<>();
-                            TreeMap<String, Integer> count = new TreeMap<>();
-
                             for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                 Note note = documentSnapshot.toObject(Note.class);
 
@@ -320,24 +335,30 @@ public class TLViewFG extends AppCompatActivity {
                                     url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                 }
 
-                                if (countName.containsKey(note.getName())) {
+                                if (countName.contains(note.getFid())) {
                                     continue;
-                                } else {
-                                    countName.put(note.getName(), 1);
-//                                    total++;
-//                                    count.put("ALL",total);
                                 }
 
+                                countName.add(note.getFid());
+//                                count.put("ALL",total);
+
                                 if (count.containsKey(note.getFg())) {
-                                    int number = count.get(note.getFg());
-                                    number++;
-                                    count.put(note.getFg(),number);
+                                    ArrayList<String> list = count.get(note.getFg());
+//                                                    ArrayList<String> listAll = count.get("ALL");
+                                    list.add(note.getFid());
+//                                                    listAll.add(note.getFid());
+                                    count.put(note.getFg(), list);
+//                                                    count.put("ALL", listAll);
                                 } else {
-                                    count.put(note.getFg(),1);
+                                    ArrayList<String> newList = new ArrayList<>();
+                                    newList.add(note.getFid());
+                                    count.put(note.getFg(), newList);
+//                                                    count.put("ALL", newList);
+//                                }
                                 }
                             }
 
-                            final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
+                            final MatchRegistrationsAdapter adapter = new MatchRegistrationsAdapter(count);
                             mListView.setAdapter((ListAdapter) adapter);
 
                             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -346,15 +367,16 @@ public class TLViewFG extends AppCompatActivity {
                                     String fg = adapter.getItem(i).getKey();
                                     Intent intent = new Intent(TLViewFG.this, TLViewDetails.class);
                                     Bundle bundle = new Bundle();
-                                    bundle.putLong("Date1",date1);
-                                    bundle.putLong("Date2",date2);
-                                    bundle.putString("TL",tl);
-                                    bundle.putString("FG",fg);
+                                    bundle.putLong("Date1", date1);
+                                    bundle.putLong("Date2", date2);
+                                    bundle.putString("TL", tl);
+                                    bundle.putString("FG", fg);
                                     bundle.putString("SpinPrograms", spinPrograms);
                                     bundle.putString("SpinCategories", spinCategories);
                                     bundle.putString("SpinSessions", spinSessions);
-                                    bundle.putString("Collection",collection);
+                                    bundle.putString("Collection", collection);
                                     intent.putExtras(bundle);
+                                    intent.putExtra("FID",count.get(fg));
                                     startActivity(intent);
                                 }
                             });
@@ -365,7 +387,7 @@ public class TLViewFG extends AppCompatActivity {
 
     public void populateListProgramsAndSessions() {
         if (tl.equals("ALL")) {
-            total=0;
+            total=0;count.clear();countName.clear();
             fgboys
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
@@ -376,9 +398,6 @@ public class TLViewFG extends AppCompatActivity {
                             if (e != null) {
                                 return;
                             }
-
-                            TreeMap<String, Integer> countName = new TreeMap<>();
-                            TreeMap<String, Integer> count = new TreeMap<>();
 
                             for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                 Note note = documentSnapshot.toObject(Note.class);
@@ -392,24 +411,30 @@ public class TLViewFG extends AppCompatActivity {
                                     url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                 }
 
-                                if (countName.containsKey(note.getName())) {
+                                if (countName.contains(note.getFid())) {
                                     continue;
-                                } else {
-                                    countName.put(note.getName(), 1);
-//                                    total++;
-//                                    count.put("ALL",total);
                                 }
 
+                                countName.add(note.getFid());
+//                                count.put("ALL",total);
+
                                 if (count.containsKey(note.getFg())) {
-                                    int number = count.get(note.getFg());
-                                    number++;
-                                    count.put(note.getFg(),number);
+                                    ArrayList<String> list = count.get(note.getFg());
+//                                                    ArrayList<String> listAll = count.get("ALL");
+                                    list.add(note.getFid());
+//                                                    listAll.add(note.getFid());
+                                    count.put(note.getFg(), list);
+//                                                    count.put("ALL", listAll);
                                 } else {
-                                    count.put(note.getFg(),1);
+                                    ArrayList<String> newList = new ArrayList<>();
+                                    newList.add(note.getFid());
+                                    count.put(note.getFg(), newList);
+//                                                    count.put("ALL", newList);
+//                                }
                                 }
                             }
 
-                            final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
+                            final MatchRegistrationsAdapter adapter = new MatchRegistrationsAdapter(count);
                             mListView.setAdapter((ListAdapter) adapter);
 
                             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -418,15 +443,16 @@ public class TLViewFG extends AppCompatActivity {
                                     String fg = adapter.getItem(i).getKey();
                                     Intent intent = new Intent(TLViewFG.this, TLViewDetails.class);
                                     Bundle bundle = new Bundle();
-                                    bundle.putLong("Date1",date1);
-                                    bundle.putLong("Date2",date2);
-                                    bundle.putString("TL",tl);
-                                    bundle.putString("FG",fg);
+                                    bundle.putLong("Date1", date1);
+                                    bundle.putLong("Date2", date2);
+                                    bundle.putString("TL", tl);
+                                    bundle.putString("FG", fg);
                                     bundle.putString("SpinPrograms", spinPrograms);
                                     bundle.putString("SpinCategories", spinCategories);
                                     bundle.putString("SpinSessions", spinSessions);
-                                    bundle.putString("Collection",collection);
+                                    bundle.putString("Collection", collection);
                                     intent.putExtras(bundle);
+                                    intent.putExtra("FID",count.get(fg));
                                     startActivity(intent);
                                 }
                             });
@@ -434,7 +460,7 @@ public class TLViewFG extends AppCompatActivity {
                     });
         }
         else {
-            total=0;
+            total=0;count.clear();countName.clear();
             fgboys
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
@@ -447,9 +473,6 @@ public class TLViewFG extends AppCompatActivity {
                                 return;
                             }
 
-                            TreeMap<String, Integer> countName = new TreeMap<>();
-                            TreeMap<String, Integer> count = new TreeMap<>();
-
                             for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                 Note note = documentSnapshot.toObject(Note.class);
 
@@ -462,24 +485,30 @@ public class TLViewFG extends AppCompatActivity {
                                     url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                 }
 
-                                if (countName.containsKey(note.getName())) {
+                                if (countName.contains(note.getFid())) {
                                     continue;
-                                } else {
-                                    countName.put(note.getName(), 1);
-//                                    total++;
-//                                    count.put("ALL",total);
                                 }
 
+                                countName.add(note.getFid());
+//                                count.put("ALL",total);
+
                                 if (count.containsKey(note.getFg())) {
-                                    int number = count.get(note.getFg());
-                                    number++;
-                                    count.put(note.getFg(),number);
+                                    ArrayList<String> list = count.get(note.getFg());
+//                                                    ArrayList<String> listAll = count.get("ALL");
+                                    list.add(note.getFid());
+//                                                    listAll.add(note.getFid());
+                                    count.put(note.getFg(), list);
+//                                                    count.put("ALL", listAll);
                                 } else {
-                                    count.put(note.getFg(),1);
+                                    ArrayList<String> newList = new ArrayList<>();
+                                    newList.add(note.getFid());
+                                    count.put(note.getFg(), newList);
+//                                                    count.put("ALL", newList);
+//                                }
                                 }
                             }
 
-                            final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
+                            final MatchRegistrationsAdapter adapter = new MatchRegistrationsAdapter(count);
                             mListView.setAdapter((ListAdapter) adapter);
 
                             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -488,15 +517,16 @@ public class TLViewFG extends AppCompatActivity {
                                     String fg = adapter.getItem(i).getKey();
                                     Intent intent = new Intent(TLViewFG.this, TLViewDetails.class);
                                     Bundle bundle = new Bundle();
-                                    bundle.putLong("Date1",date1);
-                                    bundle.putLong("Date2",date2);
-                                    bundle.putString("TL",tl);
-                                    bundle.putString("FG",fg);
+                                    bundle.putLong("Date1", date1);
+                                    bundle.putLong("Date2", date2);
+                                    bundle.putString("TL", tl);
+                                    bundle.putString("FG", fg);
                                     bundle.putString("SpinPrograms", spinPrograms);
                                     bundle.putString("SpinCategories", spinCategories);
                                     bundle.putString("SpinSessions", spinSessions);
-                                    bundle.putString("Collection",collection);
+                                    bundle.putString("Collection", collection);
                                     intent.putExtras(bundle);
+                                    intent.putExtra("FID",count.get(fg));
                                     startActivity(intent);
                                 }
                             });
@@ -507,7 +537,7 @@ public class TLViewFG extends AppCompatActivity {
 
     public void populateListCategoriesAndSessions() {
         if (tl.equals("ALL")) {
-            total=0;
+            total=0;count.clear();countName.clear();
             fgboys
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
@@ -518,9 +548,6 @@ public class TLViewFG extends AppCompatActivity {
                             if (e != null) {
                                 return;
                             }
-
-                            TreeMap<String, Integer> countName = new TreeMap<>();
-                            TreeMap<String, Integer> count = new TreeMap<>();
 
                             for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                 Note note = documentSnapshot.toObject(Note.class);
@@ -534,24 +561,30 @@ public class TLViewFG extends AppCompatActivity {
                                     url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                 }
 
-                                if (countName.containsKey(note.getName())) {
+                                if (countName.contains(note.getFid())) {
                                     continue;
-                                } else {
-                                    countName.put(note.getName(), 1);
-//                                    total++;
-//                                    count.put("ALL",total);
                                 }
 
+                                countName.add(note.getFid());
+//                                count.put("ALL",total);
+
                                 if (count.containsKey(note.getFg())) {
-                                    int number = count.get(note.getFg());
-                                    number++;
-                                    count.put(note.getFg(),number);
+                                    ArrayList<String> list = count.get(note.getFg());
+//                                                    ArrayList<String> listAll = count.get("ALL");
+                                    list.add(note.getFid());
+//                                                    listAll.add(note.getFid());
+                                    count.put(note.getFg(), list);
+//                                                    count.put("ALL", listAll);
                                 } else {
-                                    count.put(note.getFg(),1);
+                                    ArrayList<String> newList = new ArrayList<>();
+                                    newList.add(note.getFid());
+                                    count.put(note.getFg(), newList);
+//                                                    count.put("ALL", newList);
+//                                }
                                 }
                             }
 
-                            final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
+                            final MatchRegistrationsAdapter adapter = new MatchRegistrationsAdapter(count);
                             mListView.setAdapter((ListAdapter) adapter);
 
                             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -560,15 +593,16 @@ public class TLViewFG extends AppCompatActivity {
                                     String fg = adapter.getItem(i).getKey();
                                     Intent intent = new Intent(TLViewFG.this, TLViewDetails.class);
                                     Bundle bundle = new Bundle();
-                                    bundle.putLong("Date1",date1);
-                                    bundle.putLong("Date2",date2);
-                                    bundle.putString("TL",tl);
-                                    bundle.putString("FG",fg);
+                                    bundle.putLong("Date1", date1);
+                                    bundle.putLong("Date2", date2);
+                                    bundle.putString("TL", tl);
+                                    bundle.putString("FG", fg);
                                     bundle.putString("SpinPrograms", spinPrograms);
                                     bundle.putString("SpinCategories", spinCategories);
                                     bundle.putString("SpinSessions", spinSessions);
-                                    bundle.putString("Collection",collection);
+                                    bundle.putString("Collection", collection);
                                     intent.putExtras(bundle);
+                                    intent.putExtra("FID",count.get(fg));
                                     startActivity(intent);
                                 }
                             });
@@ -576,7 +610,7 @@ public class TLViewFG extends AppCompatActivity {
                     });
         }
         else {
-            total=0;
+            total=0;count.clear();countName.clear();
             fgboys
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
@@ -589,9 +623,6 @@ public class TLViewFG extends AppCompatActivity {
                                 return;
                             }
 
-                            TreeMap<String, Integer> countName = new TreeMap<>();
-                            TreeMap<String, Integer> count = new TreeMap<>();
-
                             for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                 Note note = documentSnapshot.toObject(Note.class);
 
@@ -604,24 +635,30 @@ public class TLViewFG extends AppCompatActivity {
                                     url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                 }
 
-                                if (countName.containsKey(note.getName())) {
+                                if (countName.contains(note.getFid())) {
                                     continue;
-                                } else {
-                                    countName.put(note.getName(), 1);
-//                                    total++;
-//                                    count.put("ALL",total);
                                 }
 
+                                countName.add(note.getFid());
+//                                count.put("ALL",total);
+
                                 if (count.containsKey(note.getFg())) {
-                                    int number = count.get(note.getFg());
-                                    number++;
-                                    count.put(note.getFg(),number);
+                                    ArrayList<String> list = count.get(note.getFg());
+//                                                    ArrayList<String> listAll = count.get("ALL");
+                                    list.add(note.getFid());
+//                                                    listAll.add(note.getFid());
+                                    count.put(note.getFg(), list);
+//                                                    count.put("ALL", listAll);
                                 } else {
-                                    count.put(note.getFg(),1);
+                                    ArrayList<String> newList = new ArrayList<>();
+                                    newList.add(note.getFid());
+                                    count.put(note.getFg(), newList);
+//                                                    count.put("ALL", newList);
+//                                }
                                 }
                             }
 
-                            final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
+                            final MatchRegistrationsAdapter adapter = new MatchRegistrationsAdapter(count);
                             mListView.setAdapter((ListAdapter) adapter);
 
                             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -630,15 +667,16 @@ public class TLViewFG extends AppCompatActivity {
                                     String fg = adapter.getItem(i).getKey();
                                     Intent intent = new Intent(TLViewFG.this, TLViewDetails.class);
                                     Bundle bundle = new Bundle();
-                                    bundle.putLong("Date1",date1);
-                                    bundle.putLong("Date2",date2);
-                                    bundle.putString("TL",tl);
-                                    bundle.putString("FG",fg);
+                                    bundle.putLong("Date1", date1);
+                                    bundle.putLong("Date2", date2);
+                                    bundle.putString("TL", tl);
+                                    bundle.putString("FG", fg);
                                     bundle.putString("SpinPrograms", spinPrograms);
                                     bundle.putString("SpinCategories", spinCategories);
                                     bundle.putString("SpinSessions", spinSessions);
-                                    bundle.putString("Collection",collection);
+                                    bundle.putString("Collection", collection);
                                     intent.putExtras(bundle);
+                                    intent.putExtra("FID",count.get(fg));
                                     startActivity(intent);
                                 }
                             });
@@ -649,7 +687,7 @@ public class TLViewFG extends AppCompatActivity {
 
     public void populateListPrograms() {
         if (tl.equals("ALL")) {
-            total=0;
+            total=0;count.clear();countName.clear();
             fgboys
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
@@ -661,9 +699,6 @@ public class TLViewFG extends AppCompatActivity {
                             if (e != null) {
                                 return;
                             }
-
-                            TreeMap<String, Integer> countName = new TreeMap<>();
-                            TreeMap<String, Integer> count = new TreeMap<>();
 
                             for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                 Note note = documentSnapshot.toObject(Note.class);
@@ -677,24 +712,30 @@ public class TLViewFG extends AppCompatActivity {
                                     url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                 }
 
-                                if (countName.containsKey(note.getName())) {
+                                if (countName.contains(note.getFid())) {
                                     continue;
-                                } else {
-                                    countName.put(note.getName(), 1);
-//                                    total++;
-//                                    count.put("ALL",total);
                                 }
 
+                                countName.add(note.getFid());
+//                                count.put("ALL",total);
+
                                 if (count.containsKey(note.getFg())) {
-                                    int number = count.get(note.getFg());
-                                    number++;
-                                    count.put(note.getFg(),number);
+                                    ArrayList<String> list = count.get(note.getFg());
+//                                                    ArrayList<String> listAll = count.get("ALL");
+                                    list.add(note.getFid());
+//                                                    listAll.add(note.getFid());
+                                    count.put(note.getFg(), list);
+//                                                    count.put("ALL", listAll);
                                 } else {
-                                    count.put(note.getFg(),1);
+                                    ArrayList<String> newList = new ArrayList<>();
+                                    newList.add(note.getFid());
+                                    count.put(note.getFg(), newList);
+//                                                    count.put("ALL", newList);
+//                                }
                                 }
                             }
 
-                            final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
+                            final MatchRegistrationsAdapter adapter = new MatchRegistrationsAdapter(count);
                             mListView.setAdapter((ListAdapter) adapter);
 
                             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -703,15 +744,16 @@ public class TLViewFG extends AppCompatActivity {
                                     String fg = adapter.getItem(i).getKey();
                                     Intent intent = new Intent(TLViewFG.this, TLViewDetails.class);
                                     Bundle bundle = new Bundle();
-                                    bundle.putLong("Date1",date1);
-                                    bundle.putLong("Date2",date2);
-                                    bundle.putString("TL",tl);
-                                    bundle.putString("FG",fg);
+                                    bundle.putLong("Date1", date1);
+                                    bundle.putLong("Date2", date2);
+                                    bundle.putString("TL", tl);
+                                    bundle.putString("FG", fg);
                                     bundle.putString("SpinPrograms", spinPrograms);
                                     bundle.putString("SpinCategories", spinCategories);
                                     bundle.putString("SpinSessions", spinSessions);
-                                    bundle.putString("Collection",collection);
+                                    bundle.putString("Collection", collection);
                                     intent.putExtras(bundle);
+                                    intent.putExtra("FID",count.get(fg));
                                     startActivity(intent);
                                 }
                             });
@@ -719,7 +761,7 @@ public class TLViewFG extends AppCompatActivity {
                     });
         }
         else {
-            total=0;
+            total=0;count.clear();countName.clear();
             fgboys
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
@@ -733,9 +775,6 @@ public class TLViewFG extends AppCompatActivity {
                                 return;
                             }
 
-                            TreeMap<String, Integer> countName = new TreeMap<>();
-                            TreeMap<String, Integer> count = new TreeMap<>();
-
                             for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                 Note note = documentSnapshot.toObject(Note.class);
 
@@ -748,24 +787,30 @@ public class TLViewFG extends AppCompatActivity {
                                     url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                 }
 
-                                if (countName.containsKey(note.getName())) {
+                                if (countName.contains(note.getFid())) {
                                     continue;
-                                } else {
-                                    countName.put(note.getName(), 1);
-//                                    total++;
-//                                    count.put("ALL",total);
                                 }
 
+                                countName.add(note.getFid());
+//                                count.put("ALL",total);
+
                                 if (count.containsKey(note.getFg())) {
-                                    int number = count.get(note.getFg());
-                                    number++;
-                                    count.put(note.getFg(),number);
+                                    ArrayList<String> list = count.get(note.getFg());
+//                                                    ArrayList<String> listAll = count.get("ALL");
+                                    list.add(note.getFid());
+//                                                    listAll.add(note.getFid());
+                                    count.put(note.getFg(), list);
+//                                                    count.put("ALL", listAll);
                                 } else {
-                                    count.put(note.getFg(),1);
+                                    ArrayList<String> newList = new ArrayList<>();
+                                    newList.add(note.getFid());
+                                    count.put(note.getFg(), newList);
+//                                                    count.put("ALL", newList);
+//                                }
                                 }
                             }
 
-                            final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
+                            final MatchRegistrationsAdapter adapter = new MatchRegistrationsAdapter(count);
                             mListView.setAdapter((ListAdapter) adapter);
 
                             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -774,15 +819,16 @@ public class TLViewFG extends AppCompatActivity {
                                     String fg = adapter.getItem(i).getKey();
                                     Intent intent = new Intent(TLViewFG.this, TLViewDetails.class);
                                     Bundle bundle = new Bundle();
-                                    bundle.putLong("Date1",date1);
-                                    bundle.putLong("Date2",date2);
-                                    bundle.putString("TL",tl);
-                                    bundle.putString("FG",fg);
+                                    bundle.putLong("Date1", date1);
+                                    bundle.putLong("Date2", date2);
+                                    bundle.putString("TL", tl);
+                                    bundle.putString("FG", fg);
                                     bundle.putString("SpinPrograms", spinPrograms);
                                     bundle.putString("SpinCategories", spinCategories);
                                     bundle.putString("SpinSessions", spinSessions);
-                                    bundle.putString("Collection",collection);
+                                    bundle.putString("Collection", collection);
                                     intent.putExtras(bundle);
+                                    intent.putExtra("FID",count.get(fg));
                                     startActivity(intent);
                                 }
                             });
@@ -793,7 +839,7 @@ public class TLViewFG extends AppCompatActivity {
 
     public void populateListCategories() {
         if (tl.equals("ALL")) {
-            total=0;
+            total=0;count.clear();countName.clear();
             fgboys
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
@@ -805,9 +851,6 @@ public class TLViewFG extends AppCompatActivity {
                             if (e != null) {
                                 return;
                             }
-
-                            TreeMap<String, Integer> countName = new TreeMap<>();
-                            TreeMap<String, Integer> count = new TreeMap<>();
 
                             for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                 Note note = documentSnapshot.toObject(Note.class);
@@ -821,24 +864,30 @@ public class TLViewFG extends AppCompatActivity {
                                     url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                 }
 
-                                if (countName.containsKey(note.getName())) {
+                                if (countName.contains(note.getFid())) {
                                     continue;
-                                } else {
-                                    countName.put(note.getName(), 1);
-//                                    total++;
-//                                    count.put("ALL",total);
                                 }
 
+                                countName.add(note.getFid());
+//                                count.put("ALL",total);
+
                                 if (count.containsKey(note.getFg())) {
-                                    int number = count.get(note.getFg());
-                                    number++;
-                                    count.put(note.getFg(),number);
+                                    ArrayList<String> list = count.get(note.getFg());
+//                                                    ArrayList<String> listAll = count.get("ALL");
+                                    list.add(note.getFid());
+//                                                    listAll.add(note.getFid());
+                                    count.put(note.getFg(), list);
+//                                                    count.put("ALL", listAll);
                                 } else {
-                                    count.put(note.getFg(),1);
+                                    ArrayList<String> newList = new ArrayList<>();
+                                    newList.add(note.getFid());
+                                    count.put(note.getFg(), newList);
+//                                                    count.put("ALL", newList);
+//                                }
                                 }
                             }
 
-                            final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
+                            final MatchRegistrationsAdapter adapter = new MatchRegistrationsAdapter(count);
                             mListView.setAdapter((ListAdapter) adapter);
 
                             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -847,15 +896,16 @@ public class TLViewFG extends AppCompatActivity {
                                     String fg = adapter.getItem(i).getKey();
                                     Intent intent = new Intent(TLViewFG.this, TLViewDetails.class);
                                     Bundle bundle = new Bundle();
-                                    bundle.putLong("Date1",date1);
-                                    bundle.putLong("Date2",date2);
-                                    bundle.putString("TL",tl);
-                                    bundle.putString("FG",fg);
+                                    bundle.putLong("Date1", date1);
+                                    bundle.putLong("Date2", date2);
+                                    bundle.putString("TL", tl);
+                                    bundle.putString("FG", fg);
                                     bundle.putString("SpinPrograms", spinPrograms);
                                     bundle.putString("SpinCategories", spinCategories);
                                     bundle.putString("SpinSessions", spinSessions);
-                                    bundle.putString("Collection",collection);
+                                    bundle.putString("Collection", collection);
                                     intent.putExtras(bundle);
+                                    intent.putExtra("FID",count.get(fg));
                                     startActivity(intent);
                                 }
                             });
@@ -863,7 +913,7 @@ public class TLViewFG extends AppCompatActivity {
                     });
         }
         else {
-            total=0;
+            total=0;count.clear();countName.clear();
             fgboys
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
@@ -877,9 +927,6 @@ public class TLViewFG extends AppCompatActivity {
                                 return;
                             }
 
-                            TreeMap<String, Integer> countName = new TreeMap<>();
-                            TreeMap<String, Integer> count = new TreeMap<>();
-
                             for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                 Note note = documentSnapshot.toObject(Note.class);
 
@@ -892,24 +939,30 @@ public class TLViewFG extends AppCompatActivity {
                                     url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                 }
 
-                                if (countName.containsKey(note.getName())) {
+                                if (countName.contains(note.getFid())) {
                                     continue;
-                                } else {
-                                    countName.put(note.getName(), 1);
-//                                    total++;
-//                                    count.put("ALL",total);
                                 }
 
+                                countName.add(note.getFid());
+//                                count.put("ALL",total);
+
                                 if (count.containsKey(note.getFg())) {
-                                    int number = count.get(note.getFg());
-                                    number++;
-                                    count.put(note.getFg(),number);
+                                    ArrayList<String> list = count.get(note.getFg());
+//                                                    ArrayList<String> listAll = count.get("ALL");
+                                    list.add(note.getFid());
+//                                                    listAll.add(note.getFid());
+                                    count.put(note.getFg(), list);
+//                                                    count.put("ALL", listAll);
                                 } else {
-                                    count.put(note.getFg(),1);
+                                    ArrayList<String> newList = new ArrayList<>();
+                                    newList.add(note.getFid());
+                                    count.put(note.getFg(), newList);
+//                                                    count.put("ALL", newList);
+//                                }
                                 }
                             }
 
-                            final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
+                            final MatchRegistrationsAdapter adapter = new MatchRegistrationsAdapter(count);
                             mListView.setAdapter((ListAdapter) adapter);
 
                             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -918,15 +971,16 @@ public class TLViewFG extends AppCompatActivity {
                                     String fg = adapter.getItem(i).getKey();
                                     Intent intent = new Intent(TLViewFG.this, TLViewDetails.class);
                                     Bundle bundle = new Bundle();
-                                    bundle.putLong("Date1",date1);
-                                    bundle.putLong("Date2",date2);
-                                    bundle.putString("TL",tl);
-                                    bundle.putString("FG",fg);
+                                    bundle.putLong("Date1", date1);
+                                    bundle.putLong("Date2", date2);
+                                    bundle.putString("TL", tl);
+                                    bundle.putString("FG", fg);
                                     bundle.putString("SpinPrograms", spinPrograms);
                                     bundle.putString("SpinCategories", spinCategories);
                                     bundle.putString("SpinSessions", spinSessions);
-                                    bundle.putString("Collection",collection);
+                                    bundle.putString("Collection", collection);
                                     intent.putExtras(bundle);
+                                    intent.putExtra("FID",count.get(fg));
                                     startActivity(intent);
                                 }
                             });
@@ -937,7 +991,7 @@ public class TLViewFG extends AppCompatActivity {
 
     public void populateListSessions() {
         if (tl.equals("ALL")) {
-            total=0;
+            total=0;count.clear();countName.clear();
             fgboys
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
@@ -949,9 +1003,6 @@ public class TLViewFG extends AppCompatActivity {
                             if (e != null) {
                                 return;
                             }
-
-                            TreeMap<String, Integer> countName = new TreeMap<>();
-                            TreeMap<String, Integer> count = new TreeMap<>();
 
                             for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                 Note note = documentSnapshot.toObject(Note.class);
@@ -965,24 +1016,30 @@ public class TLViewFG extends AppCompatActivity {
                                     url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                 }
 
-                                if (countName.containsKey(note.getName())) {
+                                if (countName.contains(note.getFid())) {
                                     continue;
-                                } else {
-                                    countName.put(note.getName(), 1);
-//                                    total++;
-//                                    count.put("ALL",total);
                                 }
 
+                                countName.add(note.getFid());
+//                                count.put("ALL",total);
+
                                 if (count.containsKey(note.getFg())) {
-                                    int number = count.get(note.getFg());
-                                    number++;
-                                    count.put(note.getFg(),number);
+                                    ArrayList<String> list = count.get(note.getFg());
+//                                                    ArrayList<String> listAll = count.get("ALL");
+                                    list.add(note.getFid());
+//                                                    listAll.add(note.getFid());
+                                    count.put(note.getFg(), list);
+//                                                    count.put("ALL", listAll);
                                 } else {
-                                    count.put(note.getFg(),1);
+                                    ArrayList<String> newList = new ArrayList<>();
+                                    newList.add(note.getFid());
+                                    count.put(note.getFg(), newList);
+//                                                    count.put("ALL", newList);
+//                                }
                                 }
                             }
 
-                            final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
+                            final MatchRegistrationsAdapter adapter = new MatchRegistrationsAdapter(count);
                             mListView.setAdapter((ListAdapter) adapter);
 
                             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -991,15 +1048,16 @@ public class TLViewFG extends AppCompatActivity {
                                     String fg = adapter.getItem(i).getKey();
                                     Intent intent = new Intent(TLViewFG.this, TLViewDetails.class);
                                     Bundle bundle = new Bundle();
-                                    bundle.putLong("Date1",date1);
-                                    bundle.putLong("Date2",date2);
-                                    bundle.putString("TL",tl);
-                                    bundle.putString("FG",fg);
+                                    bundle.putLong("Date1", date1);
+                                    bundle.putLong("Date2", date2);
+                                    bundle.putString("TL", tl);
+                                    bundle.putString("FG", fg);
                                     bundle.putString("SpinPrograms", spinPrograms);
                                     bundle.putString("SpinCategories", spinCategories);
                                     bundle.putString("SpinSessions", spinSessions);
-                                    bundle.putString("Collection",collection);
+                                    bundle.putString("Collection", collection);
                                     intent.putExtras(bundle);
+                                    intent.putExtra("FID",count.get(fg));
                                     startActivity(intent);
                                 }
                             });
@@ -1007,7 +1065,7 @@ public class TLViewFG extends AppCompatActivity {
                     });
         }
         else {
-            total=0;
+            total=0;count.clear();countName.clear();
             fgboys
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
@@ -1021,9 +1079,6 @@ public class TLViewFG extends AppCompatActivity {
                                 return;
                             }
 
-                            TreeMap<String, Integer> countName = new TreeMap<>();
-                            TreeMap<String, Integer> count = new TreeMap<>();
-
                             for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                 Note note = documentSnapshot.toObject(Note.class);
 
@@ -1036,24 +1091,30 @@ public class TLViewFG extends AppCompatActivity {
                                     url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                 }
 
-                                if (countName.containsKey(note.getName())) {
+                                if (countName.contains(note.getFid())) {
                                     continue;
-                                } else {
-                                    countName.put(note.getName(), 1);
-//                                    total++;
-//                                    count.put("ALL",total);
                                 }
 
+                                countName.add(note.getFid());
+//                                count.put("ALL",total);
+
                                 if (count.containsKey(note.getFg())) {
-                                    int number = count.get(note.getFg());
-                                    number++;
-                                    count.put(note.getFg(),number);
+                                    ArrayList<String> list = count.get(note.getFg());
+//                                                    ArrayList<String> listAll = count.get("ALL");
+                                    list.add(note.getFid());
+//                                                    listAll.add(note.getFid());
+                                    count.put(note.getFg(), list);
+//                                                    count.put("ALL", listAll);
                                 } else {
-                                    count.put(note.getFg(),1);
+                                    ArrayList<String> newList = new ArrayList<>();
+                                    newList.add(note.getFid());
+                                    count.put(note.getFg(), newList);
+//                                                    count.put("ALL", newList);
+//                                }
                                 }
                             }
 
-                            final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
+                            final MatchRegistrationsAdapter adapter = new MatchRegistrationsAdapter(count);
                             mListView.setAdapter((ListAdapter) adapter);
 
                             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -1062,15 +1123,16 @@ public class TLViewFG extends AppCompatActivity {
                                     String fg = adapter.getItem(i).getKey();
                                     Intent intent = new Intent(TLViewFG.this, TLViewDetails.class);
                                     Bundle bundle = new Bundle();
-                                    bundle.putLong("Date1",date1);
-                                    bundle.putLong("Date2",date2);
-                                    bundle.putString("TL",tl);
-                                    bundle.putString("FG",fg);
+                                    bundle.putLong("Date1", date1);
+                                    bundle.putLong("Date2", date2);
+                                    bundle.putString("TL", tl);
+                                    bundle.putString("FG", fg);
                                     bundle.putString("SpinPrograms", spinPrograms);
                                     bundle.putString("SpinCategories", spinCategories);
                                     bundle.putString("SpinSessions", spinSessions);
-                                    bundle.putString("Collection",collection);
+                                    bundle.putString("Collection", collection);
                                     intent.putExtras(bundle);
+                                    intent.putExtra("FID",count.get(fg));
                                     startActivity(intent);
                                 }
                             });
@@ -1081,7 +1143,7 @@ public class TLViewFG extends AppCompatActivity {
 
     public void populateList() {
         if (tl.equals("ALL")) {
-            total=0;
+            total=0;count.clear();countName.clear();
             fgboys
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
@@ -1095,9 +1157,6 @@ public class TLViewFG extends AppCompatActivity {
                                 return;
                             }
 
-                            TreeMap<String, Integer> countName = new TreeMap<>();
-                            TreeMap<String, Integer> count = new TreeMap<>();
-
                             for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                 Note note = documentSnapshot.toObject(Note.class);
 
@@ -1110,24 +1169,30 @@ public class TLViewFG extends AppCompatActivity {
                                     url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                 }
 
-                                if (countName.containsKey(note.getName())) {
+                                if (countName.contains(note.getFid())) {
                                     continue;
-                                } else {
-                                    countName.put(note.getName(), 1);
-//                                    total++;
-//                                    count.put("ALL",total);
                                 }
 
+                                countName.add(note.getFid());
+//                                count.put("ALL",total);
+
                                 if (count.containsKey(note.getFg())) {
-                                    int number = count.get(note.getFg());
-                                    number++;
-                                    count.put(note.getFg(),number);
+                                    ArrayList<String> list = count.get(note.getFg());
+//                                                    ArrayList<String> listAll = count.get("ALL");
+                                    list.add(note.getFid());
+//                                                    listAll.add(note.getFid());
+                                    count.put(note.getFg(), list);
+//                                                    count.put("ALL", listAll);
                                 } else {
-                                    count.put(note.getFg(),1);
+                                    ArrayList<String> newList = new ArrayList<>();
+                                    newList.add(note.getFid());
+                                    count.put(note.getFg(), newList);
+//                                                    count.put("ALL", newList);
+//                                }
                                 }
                             }
 
-                            final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
+                            final MatchRegistrationsAdapter adapter = new MatchRegistrationsAdapter(count);
                             mListView.setAdapter((ListAdapter) adapter);
 
                             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -1136,15 +1201,16 @@ public class TLViewFG extends AppCompatActivity {
                                     String fg = adapter.getItem(i).getKey();
                                     Intent intent = new Intent(TLViewFG.this, TLViewDetails.class);
                                     Bundle bundle = new Bundle();
-                                    bundle.putLong("Date1",date1);
-                                    bundle.putLong("Date2",date2);
-                                    bundle.putString("TL",tl);
-                                    bundle.putString("FG",fg);
+                                    bundle.putLong("Date1", date1);
+                                    bundle.putLong("Date2", date2);
+                                    bundle.putString("TL", tl);
+                                    bundle.putString("FG", fg);
                                     bundle.putString("SpinPrograms", spinPrograms);
                                     bundle.putString("SpinCategories", spinCategories);
                                     bundle.putString("SpinSessions", spinSessions);
-                                    bundle.putString("Collection",collection);
+                                    bundle.putString("Collection", collection);
                                     intent.putExtras(bundle);
+                                    intent.putExtra("FID",count.get(fg));
                                     startActivity(intent);
                                 }
                             });
@@ -1152,7 +1218,7 @@ public class TLViewFG extends AppCompatActivity {
                     });
         }
         else {
-            total=0;
+            total=0;count.clear();countName.clear();
             fgboys
                     .whereGreaterThanOrEqualTo("edate", date1)
                     .whereLessThanOrEqualTo("edate", date2)
@@ -1167,9 +1233,6 @@ public class TLViewFG extends AppCompatActivity {
                                 return;
                             }
 
-                            TreeMap<String, Integer> countName = new TreeMap<>();
-                            TreeMap<String, Integer> count = new TreeMap<>();
-
                             for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                 Note note = documentSnapshot.toObject(Note.class);
 
@@ -1182,24 +1245,30 @@ public class TLViewFG extends AppCompatActivity {
                                     url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                 }
 
-                                if (countName.containsKey(note.getName())) {
+                                if (countName.contains(note.getFid())) {
                                     continue;
-                                } else {
-                                    countName.put(note.getName(), 1);
-//                                    total++;
-//                                    count.put("ALL",total);
                                 }
 
+                                countName.add(note.getFid());
+//                                count.put("ALL",total);
+
                                 if (count.containsKey(note.getFg())) {
-                                    int number = count.get(note.getFg());
-                                    number++;
-                                    count.put(note.getFg(),number);
+                                    ArrayList<String> list = count.get(note.getFg());
+//                                                    ArrayList<String> listAll = count.get("ALL");
+                                    list.add(note.getFid());
+//                                                    listAll.add(note.getFid());
+                                    count.put(note.getFg(), list);
+//                                                    count.put("ALL", listAll);
                                 } else {
-                                    count.put(note.getFg(),1);
+                                    ArrayList<String> newList = new ArrayList<>();
+                                    newList.add(note.getFid());
+                                    count.put(note.getFg(), newList);
+//                                                    count.put("ALL", newList);
+//                                }
                                 }
                             }
 
-                            final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
+                            final MatchRegistrationsAdapter adapter = new MatchRegistrationsAdapter(count);
                             mListView.setAdapter((ListAdapter) adapter);
 
                             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -1208,15 +1277,16 @@ public class TLViewFG extends AppCompatActivity {
                                     String fg = adapter.getItem(i).getKey();
                                     Intent intent = new Intent(TLViewFG.this, TLViewDetails.class);
                                     Bundle bundle = new Bundle();
-                                    bundle.putLong("Date1",date1);
-                                    bundle.putLong("Date2",date2);
-                                    bundle.putString("TL",tl);
-                                    bundle.putString("FG",fg);
+                                    bundle.putLong("Date1", date1);
+                                    bundle.putLong("Date2", date2);
+                                    bundle.putString("TL", tl);
+                                    bundle.putString("FG", fg);
                                     bundle.putString("SpinPrograms", spinPrograms);
                                     bundle.putString("SpinCategories", spinCategories);
                                     bundle.putString("SpinSessions", spinSessions);
-                                    bundle.putString("Collection",collection);
+                                    bundle.putString("Collection", collection);
                                     intent.putExtras(bundle);
+                                    intent.putExtra("FID",count.get(fg));
                                     startActivity(intent);
                                 }
                             });

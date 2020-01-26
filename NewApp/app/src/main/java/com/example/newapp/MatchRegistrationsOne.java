@@ -63,6 +63,9 @@ public class MatchRegistrationsOne extends AppCompatActivity {
     Spinner program, category, session;
     int posProgram, posCategory, posSession;
     Button include, notInclude;
+    ArrayList<String> countName = new ArrayList<>();
+    TreeMap<String, ArrayList<String>> count = new TreeMap<>();
+    ArrayList<String> fids = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,7 +146,7 @@ public class MatchRegistrationsOne extends AppCompatActivity {
     }
 
     public void select1(View v) {
-        total=0;
+        total=0;count.clear();countName.clear();
         notInclude.setBackgroundResource(R.drawable.button_selected);
         include.setBackgroundResource(R.drawable.button_notselected);
 
@@ -157,9 +160,6 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                             return;
                         }
 
-                        TreeMap<String, Integer> countName = new TreeMap<>();
-                        TreeMap<String, Integer> count = new TreeMap<>();
-
                         for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
                             Note note = documentSnapshot.toObject(Note.class);
 
@@ -172,51 +172,55 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                 url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                             }
 
-                            if (countName.containsKey(note.getName())) {
+                            if (countName.contains(note.getFid())) {
                                 continue;
-                            } else if ((note.getCategory().equals("FOLK Intro"))
+                            }
+
+                            if ((note.getCategory().equals("FOLK Intro"))
                                     || (note.getCategory().equals("FOLK Plus"))) {
                                 continue;
                             }
+//                            else {
+                                countName.add(note.getFid());
+//                                count.put("ALL",total);
 
-                            else {
-                                countName.put(note.getName(), 1);
-                                total++;
-                                count.put("ALL",total);
+                                if (count.containsKey(note.getFg())) {
+                                    ArrayList<String> list = count.get(note.getFg());
+//                                                    ArrayList<String> listAll = count.get("ALL");
+                                    list.add(note.getFid());
+//                                                    listAll.add(note.getFid());
+                                    count.put(note.getFg(), list);
+//                                                    count.put("ALL", listAll);
+                                } else {
+                                    ArrayList<String> newList = new ArrayList<>();
+                                    newList.add(note.getFid());
+                                    count.put(note.getFg(), newList);
+//                                                    count.put("ALL", newList);
+//                                }
+                                }
                             }
 
-                            if (count.containsKey(note.getFg())) {
-                                int number = count.get(note.getFg());
-                                number++;
-                                count.put(note.getFg(),number);
-                            } else if ((note.getCategory().equals("FOLK Intro"))
-                                    || (note.getCategory().equals("FOLK Plus"))){
-                                continue;
-                            } else {
-                                count.put(note.getFg(),1);
-                            }
+                        final MatchRegistrationsAdapter adapter = new MatchRegistrationsAdapter(count);
+                        mListView.setAdapter((ListAdapter) adapter);
 
-                            final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
-                            mListView.setAdapter((ListAdapter) adapter);
-
-                            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                    String fg = adapter.getItem(i).getKey();
-                                    Intent intent = new Intent(MatchRegistrationsOne.this, MatchRegistrationsGetProgram.class);
-                                    Bundle bundle = new Bundle();
-                                    bundle.putLong("Date1",date1);
-                                    bundle.putLong("Date2",date2);
-                                    bundle.putString("FG", fg);
-                                    bundle.putString("SpinPrograms", spinnerPrograms);
-                                    bundle.putString("SpinCategories", spinnerCategories);
-                                    bundle.putString("SpinSessions", spinnerSessions);
-                                    bundle.putString("Collection",collection);
-                                    intent.putExtras(bundle);
-                                    startActivity(intent);
+                        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                String fg = adapter.getItem(i).getKey();
+                                Intent intent = new Intent(MatchRegistrationsOne.this, MatchRegistrationsGetProgram.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putLong("Date1", date1);
+                                bundle.putLong("Date2", date2);
+                                bundle.putString("FG", fg);
+                                bundle.putString("SpinPrograms", spinnerPrograms);
+                                bundle.putString("SpinCategories", spinnerCategories);
+                                bundle.putString("SpinSessions", spinnerSessions);
+                                bundle.putString("Collection", collection);
+                                intent.putExtras(bundle);
+                                intent.putExtra("FID",count.get(fg));
+                                startActivity(intent);
                                 }
                             });
-                        }
                     }
                 });
     }
@@ -236,10 +240,7 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                             return;
                         }
 
-                        TreeMap<String, Integer> countName = new TreeMap<>();
-                        TreeMap<String, Integer> count = new TreeMap<>();
-
-                        for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
+                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                             Note note = documentSnapshot.toObject(Note.class);
 
                             if (note.getName() == null) {
@@ -251,44 +252,50 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                 url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                             }
 
-                            if (countName.containsKey(note.getName())) {
+                            if (countName.contains(note.getFid())) {
                                 continue;
-                            }
-                            else {
-                                countName.put(note.getName(), 1);
-                                total++;
-                                count.put("ALL",total);
-                            }
-
-                            if (count.containsKey(note.getFg())) {
-                                int number = count.get(note.getFg());
-                                number++;
-                                count.put(note.getFg(),number);
                             } else {
-                                count.put(note.getFg(),1);
-                            }
+                                countName.add(note.getFid());
 
-                            final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
-                            mListView.setAdapter((ListAdapter) adapter);
+                                Log.d(TAG, "onEvent: First" + " ; " + note.getFg() + " ; " + note.getZmob() + " ; " + note.getSession());
 
-                            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                    String fg = adapter.getItem(i).getKey();
-                                    Intent intent = new Intent(MatchRegistrationsOne.this, MatchRegistrationsGetProgram.class);
-                                    Bundle bundle = new Bundle();
-                                    bundle.putLong("Date1",date1);
-                                    bundle.putLong("Date2",date2);
-                                    bundle.putString("FG", fg);
-                                    bundle.putString("SpinPrograms", spinnerPrograms);
-                                    bundle.putString("SpinCategories", spinnerCategories);
-                                    bundle.putString("SpinSessions", spinnerSessions);
-                                    bundle.putString("Collection",collection);
-                                    intent.putExtras(bundle);
-                                    startActivity(intent);
+                                if (count.containsKey(note.getFg())) {
+                                    ArrayList<String> list = count.get(note.getFg());
+//                                                    ArrayList<String> listAll = count.get("ALL");
+                                    list.add(note.getFid());
+//                                                    listAll.add(note.getFid());
+                                    count.put(note.getFg(), list);
+//                                                    count.put("ALL", listAll);
+                                } else {
+                                    ArrayList<String> newList = new ArrayList<>();
+                                    newList.add(note.getFid());
+                                    count.put(note.getFg(), newList);
+//                                                    count.put("ALL", newList);
                                 }
-                            });
+                            }
                         }
+
+                        final MatchRegistrationsAdapter adapter = new MatchRegistrationsAdapter(count);
+                        mListView.setAdapter((ListAdapter) adapter);
+
+                        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                String fg = adapter.getItem(i).getKey();
+                                Intent intent = new Intent(MatchRegistrationsOne.this, MatchRegistrationsGetProgram.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putLong("Date1", date1);
+                                bundle.putLong("Date2", date2);
+                                bundle.putString("FG", fg);
+                                bundle.putString("SpinPrograms", spinnerPrograms);
+                                bundle.putString("SpinCategories", spinnerCategories);
+                                bundle.putString("SpinSessions", spinnerSessions);
+                                bundle.putString("Collection", collection);
+                                intent.putExtras(bundle);
+                                intent.putExtra("FID",count.get(fg));
+                                startActivity(intent);
+                            }
+                        });
                     }
                 });
     }
@@ -578,7 +585,7 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                     posSession = position;
 
                     if (spinnerSessions.equals("ALL")) {
-                        total = 0;
+                        total = 0;count.clear();countName.clear();
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate", date1)
                                 .whereLessThanOrEqualTo("edate", date2)
@@ -588,10 +595,6 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                         if (e != null) {
                                             return;
                                         }
-
-                                        ArrayList<String> countName = new ArrayList<>();
-                                        TreeMap<String, Integer> count = new TreeMap<>();
-                                        ArrayList<String> fids = new ArrayList<>();
 
                                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                             Note note = documentSnapshot.toObject(Note.class);
@@ -609,22 +612,26 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                                 continue;
                                             } else {
                                                 countName.add(note.getFid());
-                                                total++;
-                                                count.put("ALL", total);
 
                                                 Log.d(TAG, "onEvent: First" + " ; " + note.getFg() + " ; " + note.getZmob() + " ; " + note.getSession());
 
                                                 if (count.containsKey(note.getFg())) {
-                                                    int number = count.get(note.getFg());
-                                                    number++;
-                                                    count.put(note.getFg(), number);
+                                                    ArrayList<String> list = count.get(note.getFg());
+//                                                    ArrayList<String> listAll = count.get("ALL");
+                                                    list.add(note.getFid());
+//                                                    listAll.add(note.getFid());
+                                                    count.put(note.getFg(), list);
+//                                                    count.put("ALL", listAll);
                                                 } else {
-                                                    count.put(note.getFg(), 1);
+                                                    ArrayList<String> newList = new ArrayList<>();
+                                                    newList.add(note.getFid());
+                                                    count.put(note.getFg(), newList);
+//                                                    count.put("ALL", newList);
                                                 }
                                             }
                                         }
 
-                                        final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
+                                        final MatchRegistrationsAdapter adapter = new MatchRegistrationsAdapter(count);
                                         mListView.setAdapter((ListAdapter) adapter);
 
                                         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -641,13 +648,14 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                                 bundle.putString("SpinSessions", spinnerSessions);
                                                 bundle.putString("Collection", collection);
                                                 intent.putExtras(bundle);
+                                                intent.putExtra("FID",count.get(fg));
                                                 startActivity(intent);
                                             }
                                         });
                                     }
                                 });
                     } else {
-                        total = 0;
+                        total = 0;count.clear();countName.clear();
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate", date1)
                                 .whereLessThanOrEqualTo("edate", date2)
@@ -658,9 +666,6 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                         if (e != null) {
                                             return;
                                         }
-
-                                        ArrayList<String> countName = new ArrayList<>();
-                                        TreeMap<String, Integer> count = new TreeMap<>();
 
                                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                             Note note = documentSnapshot.toObject(Note.class);
@@ -674,24 +679,30 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                                 url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                             }
 
-                                            if (countName.contains(note.getName())) {
+                                            if (countName.contains(note.getFid())) {
                                                 continue;
                                             } else {
-                                                countName.add(note.getName());
-                                                total++;
-                                                count.put("ALL", total);
+                                                countName.add(note.getFid());
+
+                                                Log.d(TAG, "onEvent: First" + " ; " + note.getFg() + " ; " + note.getZmob() + " ; " + note.getSession());
 
                                                 if (count.containsKey(note.getFg())) {
-                                                    int number = count.get(note.getFg());
-                                                    number++;
-                                                    count.put(note.getFg(), number);
+                                                    ArrayList<String> list = count.get(note.getFg());
+//                                                    ArrayList<String> listAll = count.get("ALL");
+                                                    list.add(note.getFid());
+//                                                    listAll.add(note.getFid());
+                                                    count.put(note.getFg(), list);
+//                                                    count.put("ALL", listAll);
                                                 } else {
-                                                    count.put(note.getFg(), 1);
+                                                    ArrayList<String> newList = new ArrayList<>();
+                                                    newList.add(note.getFid());
+                                                    count.put(note.getFg(), newList);
+//                                                    count.put("ALL", newList);
                                                 }
                                             }
                                         }
 
-                                        final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
+                                        final MatchRegistrationsAdapter adapter = new MatchRegistrationsAdapter(count);
                                         mListView.setAdapter((ListAdapter) adapter);
 
                                         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -708,6 +719,7 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                                 bundle.putString("SpinSessions", spinnerSessions);
                                                 bundle.putString("Collection", collection);
                                                 intent.putExtras(bundle);
+                                                intent.putExtra("FID",count.get(fg));
                                                 startActivity(intent);
                                             }
                                         });
@@ -764,6 +776,7 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                     posSession = position;
 
                     if (spinnerSessions.equals("ALL")) {
+                        count.clear();countName.clear();
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate", date1)
                                 .whereLessThanOrEqualTo("edate", date2)
@@ -774,9 +787,6 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                         if (e != null) {
                                             return;
                                         }
-
-                                        ArrayList<String> countName = new ArrayList<>();
-                                        TreeMap<String, Integer> count = new TreeMap<>();
 
                                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                             Note note = documentSnapshot.toObject(Note.class);
@@ -790,26 +800,30 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                                 url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                             }
 
-                                            if (countName.contains(note.getName())) {
+                                            if (countName.contains(note.getFid())) {
                                                 continue;
                                             } else {
-                                                countName.add(note.getName());
-                                                total++;
-                                                count.put("ALL", total);
+                                                countName.add(note.getFid());
+
+                                                Log.d(TAG, "onEvent: First" + " ; " + note.getFg() + " ; " + note.getZmob() + " ; " + note.getSession());
 
                                                 if (count.containsKey(note.getFg())) {
-                                                    int number = count.get(note.getFg());
-                                                    number++;
-                                                    count.put(note.getFg(), number);
+                                                    ArrayList<String> list = count.get(note.getFg());
+//                                                    ArrayList<String> listAll = count.get("ALL");
+                                                    list.add(note.getFid());
+//                                                    listAll.add(note.getFid());
+                                                    count.put(note.getFg(), list);
+//                                                    count.put("ALL", listAll);
                                                 } else {
-                                                    count.put(note.getFg(), 1);
+                                                    ArrayList<String> newList = new ArrayList<>();
+                                                    newList.add(note.getFid());
+                                                    count.put(note.getFg(), newList);
+//                                                    count.put("ALL", newList);
                                                 }
                                             }
                                         }
 
-//                                        mTextView2.setText(String.valueOf(total));
-
-                                        final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
+                                        final MatchRegistrationsAdapter adapter = new MatchRegistrationsAdapter(count);
                                         mListView.setAdapter((ListAdapter) adapter);
 
                                         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -818,21 +832,22 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                                 String fg = adapter.getItem(i).getKey();
                                                 Intent intent = new Intent(MatchRegistrationsOne.this, MatchRegistrationsGetProgram.class);
                                                 Bundle bundle = new Bundle();
-                                                bundle.putLong("Date1",date1);
-                                                bundle.putLong("Date2",date2);
+                                                bundle.putLong("Date1", date1);
+                                                bundle.putLong("Date2", date2);
                                                 bundle.putString("FG", fg);
                                                 bundle.putString("SpinPrograms", spinPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);
-                                                bundle.putString("Collection",collection);
+                                                bundle.putString("Collection", collection);
                                                 intent.putExtras(bundle);
+                                                intent.putExtra("FID",count.get(fg));
                                                 startActivity(intent);
                                             }
                                         });
                                     }
                                 });
                     } else {
-                        total=0;
+                        total=0; count.clear(); countName.clear();
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate", date1)
                                 .whereLessThanOrEqualTo("edate", date2)
@@ -845,9 +860,6 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                             return;
                                         }
 
-                                        ArrayList<String> countName = new ArrayList<>();
-                                        TreeMap<String, Integer> count = new TreeMap<>();
-
                                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                             Note note = documentSnapshot.toObject(Note.class);
 
@@ -860,26 +872,30 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                                 url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                             }
 
-                                            if (countName.contains(note.getName())) {
+                                            if (countName.contains(note.getFid())) {
                                                 continue;
                                             } else {
-                                                countName.add(note.getName());
-                                                total++;
-                                                count.put("ALL", total);
+                                                countName.add(note.getFid());
+
+                                                Log.d(TAG, "onEvent: First" + " ; " + note.getFg() + " ; " + note.getZmob() + " ; " + note.getSession());
 
                                                 if (count.containsKey(note.getFg())) {
-                                                    int number = count.get(note.getFg());
-                                                    number++;
-                                                    count.put(note.getFg(), number);
+                                                    ArrayList<String> list = count.get(note.getFg());
+//                                                    ArrayList<String> listAll = count.get("ALL");
+                                                    list.add(note.getFid());
+//                                                    listAll.add(note.getFid());
+                                                    count.put(note.getFg(), list);
+//                                                    count.put("ALL", listAll);
                                                 } else {
-                                                    count.put(note.getFg(), 1);
+                                                    ArrayList<String> newList = new ArrayList<>();
+                                                    newList.add(note.getFid());
+                                                    count.put(note.getFg(), newList);
+//                                                    count.put("ALL", newList);
                                                 }
                                             }
                                         }
 
-//                                        mTextView2.setText(String.valueOf(total));
-
-                                        final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
+                                        final MatchRegistrationsAdapter adapter = new MatchRegistrationsAdapter(count);
                                         mListView.setAdapter((ListAdapter) adapter);
 
                                         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -888,14 +904,15 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                                 String fg = adapter.getItem(i).getKey();
                                                 Intent intent = new Intent(MatchRegistrationsOne.this, MatchRegistrationsGetProgram.class);
                                                 Bundle bundle = new Bundle();
-                                                bundle.putLong("Date1",date1);
-                                                bundle.putLong("Date2",date2);
+                                                bundle.putLong("Date1", date1);
+                                                bundle.putLong("Date2", date2);
                                                 bundle.putString("FG", fg);
                                                 bundle.putString("SpinPrograms", spinPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);
-                                                bundle.putString("Collection",collection);
+                                                bundle.putString("Collection", collection);
                                                 intent.putExtras(bundle);
+                                                intent.putExtra("FID",count.get(fg));
                                                 startActivity(intent);
                                             }
                                         });
@@ -958,6 +975,7 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                     posSession = position;
 
                     if (spinnerSessions.equals("ALL")) {
+                        count.clear();countName.clear();
                         total=0;
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate", date1)
@@ -969,9 +987,6 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                         if (e != null) {
                                             return;
                                         }
-
-                                        ArrayList<String> countName = new ArrayList<>();
-                                        TreeMap<String, Integer> count = new TreeMap<>();
 
                                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                             Note note = documentSnapshot.toObject(Note.class);
@@ -985,26 +1000,30 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                                 url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                             }
 
-                                            if (countName.contains(note.getName())) {
+                                            if (countName.contains(note.getFid())) {
                                                 continue;
                                             } else {
-                                                countName.add(note.getName());
-                                                total++;
-                                                count.put("ALL", total);
+                                                countName.add(note.getFid());
+
+                                                Log.d(TAG, "onEvent: First" + " ; " + note.getFg() + " ; " + note.getZmob() + " ; " + note.getSession());
 
                                                 if (count.containsKey(note.getFg())) {
-                                                    int number = count.get(note.getFg());
-                                                    number++;
-                                                    count.put(note.getFg(), number);
+                                                    ArrayList<String> list = count.get(note.getFg());
+//                                                    ArrayList<String> listAll = count.get("ALL");
+                                                    list.add(note.getFid());
+//                                                    listAll.add(note.getFid());
+                                                    count.put(note.getFg(), list);
+//                                                    count.put("ALL", listAll);
                                                 } else {
-                                                    count.put(note.getFg(), 1);
+                                                    ArrayList<String> newList = new ArrayList<>();
+                                                    newList.add(note.getFid());
+                                                    count.put(note.getFg(), newList);
+//                                                    count.put("ALL", newList);
                                                 }
                                             }
                                         }
 
-//                                        mTextView2.setText(String.valueOf(total));
-
-                                        final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
+                                        final MatchRegistrationsAdapter adapter = new MatchRegistrationsAdapter(count);
                                         mListView.setAdapter((ListAdapter) adapter);
 
                                         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -1013,21 +1032,22 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                                 String fg = adapter.getItem(i).getKey();
                                                 Intent intent = new Intent(MatchRegistrationsOne.this, MatchRegistrationsGetProgram.class);
                                                 Bundle bundle = new Bundle();
-                                                bundle.putLong("Date1",date1);
-                                                bundle.putLong("Date2",date2);
+                                                bundle.putLong("Date1", date1);
+                                                bundle.putLong("Date2", date2);
                                                 bundle.putString("FG", fg);
                                                 bundle.putString("SpinPrograms", spinPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);
-                                                bundle.putString("Collection",collection);
+                                                bundle.putString("Collection", collection);
                                                 intent.putExtras(bundle);
+                                                intent.putExtra("FID",count.get(fg));
                                                 startActivity(intent);
                                             }
                                         });
                                     }
                                 });
                     } else {
-                        total=0;
+                        total=0;count.clear();countName.clear();
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate", date1)
                                 .whereLessThanOrEqualTo("edate", date2)
@@ -1040,9 +1060,6 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                             return;
                                         }
 
-                                        ArrayList<String> countName = new ArrayList<>();
-                                        TreeMap<String, Integer> count = new TreeMap<>();
-
                                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                             Note note = documentSnapshot.toObject(Note.class);
 
@@ -1055,26 +1072,30 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                                 url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                             }
 
-                                            if (countName.contains(note.getName())) {
+                                            if (countName.contains(note.getFid())) {
                                                 continue;
                                             } else {
-                                                countName.add(note.getName());
-                                                total++;
-                                                count.put("ALL", total);
+                                                countName.add(note.getFid());
+
+                                                Log.d(TAG, "onEvent: First" + " ; " + note.getFg() + " ; " + note.getZmob() + " ; " + note.getSession());
 
                                                 if (count.containsKey(note.getFg())) {
-                                                    int number = count.get(note.getFg());
-                                                    number++;
-                                                    count.put(note.getFg(), number);
+                                                    ArrayList<String> list = count.get(note.getFg());
+//                                                    ArrayList<String> listAll = count.get("ALL");
+                                                    list.add(note.getFid());
+//                                                    listAll.add(note.getFid());
+                                                    count.put(note.getFg(), list);
+//                                                    count.put("ALL", listAll);
                                                 } else {
-                                                    count.put(note.getFg(), 1);
+                                                    ArrayList<String> newList = new ArrayList<>();
+                                                    newList.add(note.getFid());
+                                                    count.put(note.getFg(), newList);
+//                                                    count.put("ALL", newList);
                                                 }
                                             }
                                         }
 
-//                                        mTextView2.setText(String.valueOf(total));
-
-                                        final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
+                                        final MatchRegistrationsAdapter adapter = new MatchRegistrationsAdapter(count);
                                         mListView.setAdapter((ListAdapter) adapter);
 
                                         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -1083,14 +1104,15 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                                 String fg = adapter.getItem(i).getKey();
                                                 Intent intent = new Intent(MatchRegistrationsOne.this, MatchRegistrationsGetProgram.class);
                                                 Bundle bundle = new Bundle();
-                                                bundle.putLong("Date1",date1);
-                                                bundle.putLong("Date2",date2);
+                                                bundle.putLong("Date1", date1);
+                                                bundle.putLong("Date2", date2);
                                                 bundle.putString("FG", fg);
                                                 bundle.putString("SpinPrograms", spinPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);
-                                                bundle.putString("Collection",collection);
+                                                bundle.putString("Collection", collection);
                                                 intent.putExtras(bundle);
+                                                intent.putExtra("FID",count.get(fg));
                                                 startActivity(intent);
                                             }
                                         });
@@ -1147,7 +1169,7 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                     posSession = position;
 
                     if (spinnerSessions.equals("ALL")) {
-                        total=0;
+                        total=0;count.clear();countName.clear();
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate", date1)
                                 .whereLessThanOrEqualTo("edate", date2)
@@ -1159,9 +1181,6 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                         if (e != null) {
                                             return;
                                         }
-
-                                        ArrayList<String> countName = new ArrayList<>();
-                                        TreeMap<String, Integer> count = new TreeMap<>();
 
                                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                             Note note = documentSnapshot.toObject(Note.class);
@@ -1175,26 +1194,30 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                                 url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                             }
 
-                                            if (countName.contains(note.getName())) {
+                                            if (countName.contains(note.getFid())) {
                                                 continue;
                                             } else {
-                                                countName.add(note.getName());
-                                                total++;
-                                                count.put("ALL", total);
+                                                countName.add(note.getFid());
+
+                                                Log.d(TAG, "onEvent: First" + " ; " + note.getFg() + " ; " + note.getZmob() + " ; " + note.getSession());
 
                                                 if (count.containsKey(note.getFg())) {
-                                                    int number = count.get(note.getFg());
-                                                    number++;
-                                                    count.put(note.getFg(), number);
+                                                    ArrayList<String> list = count.get(note.getFg());
+//                                                    ArrayList<String> listAll = count.get("ALL");
+                                                    list.add(note.getFid());
+//                                                    listAll.add(note.getFid());
+                                                    count.put(note.getFg(), list);
+//                                                    count.put("ALL", listAll);
                                                 } else {
-                                                    count.put(note.getFg(), 1);
+                                                    ArrayList<String> newList = new ArrayList<>();
+                                                    newList.add(note.getFid());
+                                                    count.put(note.getFg(), newList);
+//                                                    count.put("ALL", newList);
                                                 }
                                             }
                                         }
 
-//                                        mTextView2.setText(String.valueOf(total));
-
-                                        final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
+                                        final MatchRegistrationsAdapter adapter = new MatchRegistrationsAdapter(count);
                                         mListView.setAdapter((ListAdapter) adapter);
 
                                         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -1203,21 +1226,22 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                                 String fg = adapter.getItem(i).getKey();
                                                 Intent intent = new Intent(MatchRegistrationsOne.this, MatchRegistrationsGetProgram.class);
                                                 Bundle bundle = new Bundle();
-                                                bundle.putLong("Date1",date1);
-                                                bundle.putLong("Date2",date2);
+                                                bundle.putLong("Date1", date1);
+                                                bundle.putLong("Date2", date2);
                                                 bundle.putString("FG", fg);
                                                 bundle.putString("SpinPrograms", spinPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);
-                                                bundle.putString("Collection",collection);
+                                                bundle.putString("Collection", collection);
                                                 intent.putExtras(bundle);
+                                                intent.putExtra("FID",count.get(fg));
                                                 startActivity(intent);
                                             }
                                         });
                                     }
                                 });
                     } else {
-                        total=0;
+                        total=0;count.clear();countName.clear();
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate", date1)
                                 .whereLessThanOrEqualTo("edate", date2)
@@ -1231,9 +1255,6 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                             return;
                                         }
 
-                                        ArrayList<String> countName = new ArrayList<>();
-                                        TreeMap<String, Integer> count = new TreeMap<>();
-
                                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                             Note note = documentSnapshot.toObject(Note.class);
 
@@ -1246,26 +1267,30 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                                 url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                             }
 
-                                            if (countName.contains(note.getName())) {
+                                            if (countName.contains(note.getFid())) {
                                                 continue;
                                             } else {
-                                                countName.add(note.getName());
-                                                total++;
-                                                count.put("ALL", total);
+                                                countName.add(note.getFid());
+
+                                                Log.d(TAG, "onEvent: First" + " ; " + note.getFg() + " ; " + note.getZmob() + " ; " + note.getSession());
 
                                                 if (count.containsKey(note.getFg())) {
-                                                    int number = count.get(note.getFg());
-                                                    number++;
-                                                    count.put(note.getFg(), number);
+                                                    ArrayList<String> list = count.get(note.getFg());
+//                                                    ArrayList<String> listAll = count.get("ALL");
+                                                    list.add(note.getFid());
+//                                                    listAll.add(note.getFid());
+                                                    count.put(note.getFg(), list);
+//                                                    count.put("ALL", listAll);
                                                 } else {
-                                                    count.put(note.getFg(), 1);
+                                                    ArrayList<String> newList = new ArrayList<>();
+                                                    newList.add(note.getFid());
+                                                    count.put(note.getFg(), newList);
+//                                                    count.put("ALL", newList);
                                                 }
                                             }
                                         }
 
-//                                        mTextView2.setText(String.valueOf(total));
-
-                                        final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
+                                        final MatchRegistrationsAdapter adapter = new MatchRegistrationsAdapter(count);
                                         mListView.setAdapter((ListAdapter) adapter);
 
                                         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -1274,14 +1299,15 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                                 String fg = adapter.getItem(i).getKey();
                                                 Intent intent = new Intent(MatchRegistrationsOne.this, MatchRegistrationsGetProgram.class);
                                                 Bundle bundle = new Bundle();
-                                                bundle.putLong("Date1",date1);
-                                                bundle.putLong("Date2",date2);
+                                                bundle.putLong("Date1", date1);
+                                                bundle.putLong("Date2", date2);
                                                 bundle.putString("FG", fg);
                                                 bundle.putString("SpinPrograms", spinPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);
-                                                bundle.putString("Collection",collection);
+                                                bundle.putString("Collection", collection);
                                                 intent.putExtras(bundle);
+                                                intent.putExtra("FID",count.get(fg));
                                                 startActivity(intent);
                                             }
                                         });

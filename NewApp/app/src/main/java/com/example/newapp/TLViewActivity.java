@@ -62,6 +62,8 @@ public class TLViewActivity extends AppCompatActivity {
     Spinner program, category, session;
     int posProgram, posCategory, posSession;
     Button include, notInclude;
+    ArrayList<String> countName = new ArrayList<>();
+    TreeMap<String, ArrayList<String>> count = new TreeMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,7 +145,7 @@ public class TLViewActivity extends AppCompatActivity {
     }
 
     public void select1(View v) {
-        total=0;
+        total=0;count.clear();countName.clear();
         notInclude.setBackgroundResource(R.drawable.button_selected);
         include.setBackgroundResource(R.drawable.button_notselected);
 
@@ -157,9 +159,6 @@ public class TLViewActivity extends AppCompatActivity {
                             return;
                         }
 
-                        TreeMap<String, Integer> countName = new TreeMap<>();
-                        TreeMap<String, Integer> count = new TreeMap<>();
-
                         for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
                             Note note = documentSnapshot.toObject(Note.class);
 
@@ -172,57 +171,61 @@ public class TLViewActivity extends AppCompatActivity {
                                 url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                             }
 
-                            if (countName.containsKey(note.getName())) {
+                            if (countName.contains(note.getFid())) {
                                 continue;
-                            } else if ((note.getCategory().equals("FOLK Intro"))
+                            }
+
+                            if ((note.getCategory().equals("FOLK Intro"))
                                     || (note.getCategory().equals("FOLK Plus"))) {
                                 continue;
                             }
-
-                            else {
-                                countName.put(note.getName(), 1);
-                                total++;
-                                count.put("ALL",total);
-                            }
+//                            else {
+                            countName.add(note.getFid());
+//                                count.put("ALL",total);
 
                             if (count.containsKey(note.getZtl())) {
-                                int number = count.get(note.getZtl());
-                                number++;
-                                count.put(note.getZtl(),number);
-                            } else if ((note.getCategory().equals("FOLK Intro"))
-                                    || (note.getCategory().equals("FOLK Plus"))){
-                                continue;
+                                ArrayList<String> list = count.get(note.getZtl());
+//                                                    ArrayList<String> listAll = count.get("ALL");
+                                list.add(note.getFid());
+//                                                    listAll.add(note.getFid());
+                                count.put(note.getZtl(), list);
+//                                                    count.put("ALL", listAll);
                             } else {
-                                count.put(note.getZtl(),1);
+                                ArrayList<String> newList = new ArrayList<>();
+                                newList.add(note.getFid());
+                                count.put(note.getZtl(), newList);
+//                                                    count.put("ALL", newList);
+//                                }
                             }
-
-                            final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
-                            mListView.setAdapter((ListAdapter) adapter);
-
-                            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                    String tl = adapter.getItem(i).getKey();
-                                    Intent intent = new Intent(TLViewActivity.this, TLViewFG.class);
-                                    Bundle bundle = new Bundle();
-                                    bundle.putLong("Date1",date1);
-                                    bundle.putLong("Date2",date2);
-                                    bundle.putString("TL",tl);
-                                    bundle.putString("SpinPrograms", spinnerPrograms);
-                                    bundle.putString("SpinCategories", spinnerCategories);
-                                    bundle.putString("SpinSessions", spinnerSessions);
-                                    bundle.putString("Collection",collection);
-                                    intent.putExtras(bundle);
-                                    startActivity(intent);
-                                }
-                            });
                         }
+
+                        final MatchRegistrationsAdapter adapter = new MatchRegistrationsAdapter(count);
+                        mListView.setAdapter((ListAdapter) adapter);
+
+                        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                String tl = adapter.getItem(i).getKey();
+                                Intent intent = new Intent(TLViewActivity.this, TLViewFG.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putLong("Date1", date1);
+                                bundle.putLong("Date2", date2);
+                                bundle.putString("TL", tl);
+                                bundle.putString("SpinPrograms", spinnerPrograms);
+                                bundle.putString("SpinCategories", spinnerCategories);
+                                bundle.putString("SpinSessions", spinnerSessions);
+                                bundle.putString("Collection", collection);
+                                intent.putExtras(bundle);
+                                intent.putExtra("FID",count.get(tl));
+                                startActivity(intent);
+                            }
+                        });
                     }
                 });
     }
 
     public void select2(View v) {
-        total=0;
+        total=0;count.clear();countName.clear();
         include.setBackgroundResource(R.drawable.button_selected);
         notInclude.setBackgroundResource(R.drawable.button_notselected);
 
@@ -236,9 +239,6 @@ public class TLViewActivity extends AppCompatActivity {
                             return;
                         }
 
-                        TreeMap<String, Integer> countName = new TreeMap<>();
-                        TreeMap<String, Integer> count = new TreeMap<>();
-
                         for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
                             Note note = documentSnapshot.toObject(Note.class);
 
@@ -251,44 +251,50 @@ public class TLViewActivity extends AppCompatActivity {
                                 url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                             }
 
-                            if (countName.containsKey(note.getName())) {
+                            if (countName.contains(note.getFid())) {
                                 continue;
                             }
-                            else {
-                                countName.put(note.getName(), 1);
-                                total++;
-                                count.put("ALL",total);
-                            }
+
+                            countName.add(note.getFid());
+//                                count.put("ALL",total);
 
                             if (count.containsKey(note.getZtl())) {
-                                int number = count.get(note.getZtl());
-                                number++;
-                                count.put(note.getZtl(),number);
+                                ArrayList<String> list = count.get(note.getZtl());
+//                                                    ArrayList<String> listAll = count.get("ALL");
+                                list.add(note.getFid());
+//                                                    listAll.add(note.getFid());
+                                count.put(note.getZtl(), list);
+//                                                    count.put("ALL", listAll);
                             } else {
-                                count.put(note.getZtl(),1);
+                                ArrayList<String> newList = new ArrayList<>();
+                                newList.add(note.getFid());
+                                count.put(note.getZtl(), newList);
+//                                                    count.put("ALL", newList);
+//                                }
                             }
-
-                            final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
-                            mListView.setAdapter((ListAdapter) adapter);
-
-                            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                    String tl = adapter.getItem(i).getKey();
-                                    Intent intent = new Intent(TLViewActivity.this, TLViewFG.class);
-                                    Bundle bundle = new Bundle();
-                                    bundle.putLong("Date1",date1);
-                                    bundle.putLong("Date2",date2);
-                                    bundle.putString("TL",tl);
-                                    bundle.putString("SpinPrograms", spinnerPrograms);
-                                    bundle.putString("SpinCategories", spinnerCategories);
-                                    bundle.putString("SpinSessions", spinnerSessions);
-                                    bundle.putString("Collection",collection);
-                                    intent.putExtras(bundle);
-                                    startActivity(intent);
-                                }
-                            });
                         }
+
+                        final MatchRegistrationsAdapter adapter = new MatchRegistrationsAdapter(count);
+                        mListView.setAdapter((ListAdapter) adapter);
+
+                        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                String tl = adapter.getItem(i).getKey();
+                                Intent intent = new Intent(TLViewActivity.this, TLViewFG.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putLong("Date1", date1);
+                                bundle.putLong("Date2", date2);
+                                bundle.putString("TL", tl);
+                                bundle.putString("SpinPrograms", spinnerPrograms);
+                                bundle.putString("SpinCategories", spinnerCategories);
+                                bundle.putString("SpinSessions", spinnerSessions);
+                                bundle.putString("Collection", collection);
+                                intent.putExtras(bundle);
+                                intent.putExtra("FID",count.get(tl));
+                                startActivity(intent);
+                            }
+                        });
                     }
                 });
     }
@@ -459,7 +465,7 @@ public class TLViewActivity extends AppCompatActivity {
                     posSession = position;
 
                     if (spinnerSessions.equals("ALL")) {
-                        total=0;
+                        total=0;count.clear();countName.clear();
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate", date1)
                                 .whereLessThanOrEqualTo("edate", date2)
@@ -470,10 +476,7 @@ public class TLViewActivity extends AppCompatActivity {
                                             return;
                                         }
 
-                                        TreeMap<String, Integer> countName = new TreeMap<>();
-                                        TreeMap<String, Integer> count = new TreeMap<>();
-
-                                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                        for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
                                             Note note = documentSnapshot.toObject(Note.class);
 
                                             if (note.getName() == null) {
@@ -485,26 +488,30 @@ public class TLViewActivity extends AppCompatActivity {
                                                 url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                             }
 
-                                            if (countName.containsKey(note.getName())) {
+                                            if (countName.contains(note.getFid())) {
                                                 continue;
-                                            } else {
-                                                countName.put(note.getName(), 1);
-                                                total++;
-                                                count.put("ALL",total);
                                             }
 
+                                            countName.add(note.getFid());
+//                                count.put("ALL",total);
+
                                             if (count.containsKey(note.getZtl())) {
-                                                int number = count.get(note.getZtl());
-                                                number++;
-                                                count.put(note.getZtl(),number);
+                                                ArrayList<String> list = count.get(note.getZtl());
+//                                                    ArrayList<String> listAll = count.get("ALL");
+                                                list.add(note.getFid());
+//                                                    listAll.add(note.getFid());
+                                                count.put(note.getZtl(), list);
+//                                                    count.put("ALL", listAll);
                                             } else {
-                                                count.put(note.getZtl(),1);
+                                                ArrayList<String> newList = new ArrayList<>();
+                                                newList.add(note.getFid());
+                                                count.put(note.getZtl(), newList);
+//                                                    count.put("ALL", newList);
+//                                }
                                             }
                                         }
 
-//                                        mTextView2.setText(String.valueOf(total));
-
-                                        final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
+                                        final MatchRegistrationsAdapter adapter = new MatchRegistrationsAdapter(count);
                                         mListView.setAdapter((ListAdapter) adapter);
 
                                         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -513,35 +520,22 @@ public class TLViewActivity extends AppCompatActivity {
                                                 String tl = adapter.getItem(i).getKey();
                                                 Intent intent = new Intent(TLViewActivity.this, TLViewFG.class);
                                                 Bundle bundle = new Bundle();
-                                                bundle.putLong("Date1",date1);
-                                                bundle.putLong("Date2",date2);
-                                                bundle.putString("TL",tl);
-                                                bundle.putString("SpinPrograms", spinPrograms);
+                                                bundle.putLong("Date1", date1);
+                                                bundle.putLong("Date2", date2);
+                                                bundle.putString("TL", tl);
+                                                bundle.putString("SpinPrograms", spinnerPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);
-                                                bundle.putString("Collection",collection);
+                                                bundle.putString("Collection", collection);
                                                 intent.putExtras(bundle);
+                                                intent.putExtra("FID",count.get(tl));
                                                 startActivity(intent);
                                             }
                                         });
-
-//                                        button.setOnClickListener(new View.OnClickListener() {
-//                                            @Override
-//                                            public void onClick(View v) {
-//                                                Intent intent = new Intent(TLViewActivity.this,TLViewDetails.class);
-//                                                Bundle bundle = new Bundle();
-//                                                bundle.putString("Date", date);
-//                                                bundle.putString("SpinPrograms", spinPrograms);
-//                                                bundle.putString("SpinCategories", spinnerCategories);
-//                                                bundle.putString("SpinSessions", spinnerSessions);
-//                                                intent.putExtras(bundle);
-//                                                startActivity(intent);
-//                                            }
-//                                        });
                                     }
                                 });
                     } else {
-                        total=0;
+                        total=0;count.clear();countName.clear();
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate", date1)
                                 .whereLessThanOrEqualTo("edate", date2)
@@ -553,10 +547,7 @@ public class TLViewActivity extends AppCompatActivity {
                                             return;
                                         }
 
-                                        TreeMap<String, Integer> countName = new TreeMap<>();
-                                        TreeMap<String, Integer> count = new TreeMap<>();
-
-                                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                        for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
                                             Note note = documentSnapshot.toObject(Note.class);
 
                                             if (note.getName() == null) {
@@ -568,26 +559,30 @@ public class TLViewActivity extends AppCompatActivity {
                                                 url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                             }
 
-                                            if (countName.containsKey(note.getName())) {
+                                            if (countName.contains(note.getFid())) {
                                                 continue;
-                                            } else {
-                                                countName.put(note.getName(), 1);
-                                                total++;
-                                                count.put("ALL",total);
                                             }
 
+                                            countName.add(note.getFid());
+//                                count.put("ALL",total);
+
                                             if (count.containsKey(note.getZtl())) {
-                                                int number = count.get(note.getZtl());
-                                                number++;
-                                                count.put(note.getZtl(),number);
+                                                ArrayList<String> list = count.get(note.getZtl());
+//                                                    ArrayList<String> listAll = count.get("ALL");
+                                                list.add(note.getFid());
+//                                                    listAll.add(note.getFid());
+                                                count.put(note.getZtl(), list);
+//                                                    count.put("ALL", listAll);
                                             } else {
-                                                count.put(note.getZtl(),1);
+                                                ArrayList<String> newList = new ArrayList<>();
+                                                newList.add(note.getFid());
+                                                count.put(note.getZtl(), newList);
+//                                                    count.put("ALL", newList);
+//                                }
                                             }
                                         }
 
-//                                        mTextView2.setText(String.valueOf(total));
-
-                                        final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
+                                        final MatchRegistrationsAdapter adapter = new MatchRegistrationsAdapter(count);
                                         mListView.setAdapter((ListAdapter) adapter);
 
                                         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -596,14 +591,15 @@ public class TLViewActivity extends AppCompatActivity {
                                                 String tl = adapter.getItem(i).getKey();
                                                 Intent intent = new Intent(TLViewActivity.this, TLViewFG.class);
                                                 Bundle bundle = new Bundle();
-                                                bundle.putLong("Date1",date1);
-                                                bundle.putLong("Date2",date2);
-                                                bundle.putString("TL",tl);
-                                                bundle.putString("SpinPrograms", spinPrograms);
+                                                bundle.putLong("Date1", date1);
+                                                bundle.putLong("Date2", date2);
+                                                bundle.putString("TL", tl);
+                                                bundle.putString("SpinPrograms", spinnerPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);
-                                                bundle.putString("Collection",collection);
+                                                bundle.putString("Collection", collection);
                                                 intent.putExtras(bundle);
+                                                intent.putExtra("FID",count.get(tl));
                                                 startActivity(intent);
                                             }
                                         });
@@ -621,7 +617,7 @@ public class TLViewActivity extends AppCompatActivity {
             finalSessions = new ArrayList<String>();
             sessionsList = Arrays.asList(sessions);
             finalSessions.addAll(sessionsList);
-            total=0;
+            total=0;count.clear();countName.clear();
 
             adapterSessions = new ArrayAdapter<String>
                     (this, R.layout.spinner_item, finalSessions);
@@ -671,10 +667,7 @@ public class TLViewActivity extends AppCompatActivity {
                                             return;
                                         }
 
-                                        TreeMap<String, Integer> countName = new TreeMap<>();
-                                        TreeMap<String, Integer> count = new TreeMap<>();
-
-                                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                        for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
                                             Note note = documentSnapshot.toObject(Note.class);
 
                                             if (note.getName() == null) {
@@ -686,26 +679,30 @@ public class TLViewActivity extends AppCompatActivity {
                                                 url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                             }
 
-                                            if (countName.containsKey(note.getName())) {
+                                            if (countName.contains(note.getFid())) {
                                                 continue;
-                                            } else {
-                                                countName.put(note.getName(), 1);
-                                                total++;
-                                                count.put("ALL",total);
                                             }
 
+                                            countName.add(note.getFid());
+//                                count.put("ALL",total);
+
                                             if (count.containsKey(note.getZtl())) {
-                                                int number = count.get(note.getZtl());
-                                                number++;
-                                                count.put(note.getZtl(),number);
+                                                ArrayList<String> list = count.get(note.getZtl());
+//                                                    ArrayList<String> listAll = count.get("ALL");
+                                                list.add(note.getFid());
+//                                                    listAll.add(note.getFid());
+                                                count.put(note.getZtl(), list);
+//                                                    count.put("ALL", listAll);
                                             } else {
-                                                count.put(note.getZtl(),1);
+                                                ArrayList<String> newList = new ArrayList<>();
+                                                newList.add(note.getFid());
+                                                count.put(note.getZtl(), newList);
+//                                                    count.put("ALL", newList);
+//                                }
                                             }
                                         }
 
-//                                        mTextView2.setText(String.valueOf(total));
-
-                                        final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
+                                        final MatchRegistrationsAdapter adapter = new MatchRegistrationsAdapter(count);
                                         mListView.setAdapter((ListAdapter) adapter);
 
                                         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -714,21 +711,22 @@ public class TLViewActivity extends AppCompatActivity {
                                                 String tl = adapter.getItem(i).getKey();
                                                 Intent intent = new Intent(TLViewActivity.this, TLViewFG.class);
                                                 Bundle bundle = new Bundle();
-                                                bundle.putLong("Date1",date1);
-                                                bundle.putLong("Date2",date2);
-                                                bundle.putString("TL",tl);
-                                                bundle.putString("SpinPrograms", spinPrograms);
+                                                bundle.putLong("Date1", date1);
+                                                bundle.putLong("Date2", date2);
+                                                bundle.putString("TL", tl);
+                                                bundle.putString("SpinPrograms", spinnerPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);
-                                                bundle.putString("Collection",collection);
+                                                bundle.putString("Collection", collection);
                                                 intent.putExtras(bundle);
+                                                intent.putExtra("FID",count.get(tl));
                                                 startActivity(intent);
                                             }
                                         });
                                     }
                                 });
                     } else {
-                        total=0;
+                        total=0;count.clear();countName.clear();
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate", date1)
                                 .whereLessThanOrEqualTo("edate", date2)
@@ -741,10 +739,7 @@ public class TLViewActivity extends AppCompatActivity {
                                             return;
                                         }
 
-                                        TreeMap<String, Integer> countName = new TreeMap<>();
-                                        TreeMap<String, Integer> count = new TreeMap<>();
-
-                                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                        for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
                                             Note note = documentSnapshot.toObject(Note.class);
 
                                             if (note.getName() == null) {
@@ -756,26 +751,30 @@ public class TLViewActivity extends AppCompatActivity {
                                                 url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                             }
 
-                                            if (countName.containsKey(note.getName())) {
+                                            if (countName.contains(note.getFid())) {
                                                 continue;
-                                            } else {
-                                                countName.put(note.getName(), 1);
-                                                total++;
-                                                count.put("ALL",total);
                                             }
 
+                                            countName.add(note.getFid());
+//                                count.put("ALL",total);
+
                                             if (count.containsKey(note.getZtl())) {
-                                                int number = count.get(note.getZtl());
-                                                number++;
-                                                count.put(note.getZtl(),number);
+                                                ArrayList<String> list = count.get(note.getZtl());
+//                                                    ArrayList<String> listAll = count.get("ALL");
+                                                list.add(note.getFid());
+//                                                    listAll.add(note.getFid());
+                                                count.put(note.getZtl(), list);
+//                                                    count.put("ALL", listAll);
                                             } else {
-                                                count.put(note.getZtl(),1);
+                                                ArrayList<String> newList = new ArrayList<>();
+                                                newList.add(note.getFid());
+                                                count.put(note.getZtl(), newList);
+//                                                    count.put("ALL", newList);
+//                                }
                                             }
                                         }
 
-//                                        mTextView2.setText(String.valueOf(total));
-
-                                        final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
+                                        final MatchRegistrationsAdapter adapter = new MatchRegistrationsAdapter(count);
                                         mListView.setAdapter((ListAdapter) adapter);
 
                                         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -784,14 +783,15 @@ public class TLViewActivity extends AppCompatActivity {
                                                 String tl = adapter.getItem(i).getKey();
                                                 Intent intent = new Intent(TLViewActivity.this, TLViewFG.class);
                                                 Bundle bundle = new Bundle();
-                                                bundle.putLong("Date1",date1);
-                                                bundle.putLong("Date2",date2);
-                                                bundle.putString("TL",tl);
-                                                bundle.putString("SpinPrograms", spinPrograms);
+                                                bundle.putLong("Date1", date1);
+                                                bundle.putLong("Date2", date2);
+                                                bundle.putString("TL", tl);
+                                                bundle.putString("SpinPrograms", spinnerPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);
-                                                bundle.putString("Collection",collection);
+                                                bundle.putString("Collection", collection);
                                                 intent.putExtras(bundle);
+                                                intent.putExtra("FID",count.get(tl));
                                                 startActivity(intent);
                                             }
                                         });
@@ -854,7 +854,7 @@ public class TLViewActivity extends AppCompatActivity {
                     posSession = position;
 
                     if (spinnerSessions.equals("ALL")) {
-                        total=0;
+                        total=0;count.clear();countName.clear();
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate", date1)
                                 .whereLessThanOrEqualTo("edate", date2)
@@ -866,10 +866,7 @@ public class TLViewActivity extends AppCompatActivity {
                                             return;
                                         }
 
-                                        TreeMap<String, Integer> countName = new TreeMap<>();
-                                        TreeMap<String, Integer> count = new TreeMap<>();
-
-                                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                        for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
                                             Note note = documentSnapshot.toObject(Note.class);
 
                                             if (note.getName() == null) {
@@ -881,26 +878,30 @@ public class TLViewActivity extends AppCompatActivity {
                                                 url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                             }
 
-                                            if (countName.containsKey(note.getName())) {
+                                            if (countName.contains(note.getFid())) {
                                                 continue;
-                                            } else {
-                                                countName.put(note.getName(), 1);
-                                                total++;
-                                                count.put("ALL",total);
                                             }
 
+                                            countName.add(note.getFid());
+//                                count.put("ALL",total);
+
                                             if (count.containsKey(note.getZtl())) {
-                                                int number = count.get(note.getZtl());
-                                                number++;
-                                                count.put(note.getZtl(),number);
+                                                ArrayList<String> list = count.get(note.getZtl());
+//                                                    ArrayList<String> listAll = count.get("ALL");
+                                                list.add(note.getFid());
+//                                                    listAll.add(note.getFid());
+                                                count.put(note.getZtl(), list);
+//                                                    count.put("ALL", listAll);
                                             } else {
-                                                count.put(note.getZtl(),1);
+                                                ArrayList<String> newList = new ArrayList<>();
+                                                newList.add(note.getFid());
+                                                count.put(note.getZtl(), newList);
+//                                                    count.put("ALL", newList);
+//                                }
                                             }
                                         }
 
-//                                        mTextView2.setText(String.valueOf(total));
-
-                                        final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
+                                        final MatchRegistrationsAdapter adapter = new MatchRegistrationsAdapter(count);
                                         mListView.setAdapter((ListAdapter) adapter);
 
                                         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -909,21 +910,22 @@ public class TLViewActivity extends AppCompatActivity {
                                                 String tl = adapter.getItem(i).getKey();
                                                 Intent intent = new Intent(TLViewActivity.this, TLViewFG.class);
                                                 Bundle bundle = new Bundle();
-                                                bundle.putLong("Date1",date1);
-                                                bundle.putLong("Date2",date2);
-                                                bundle.putString("TL",tl);
-                                                bundle.putString("SpinPrograms", spinPrograms);
+                                                bundle.putLong("Date1", date1);
+                                                bundle.putLong("Date2", date2);
+                                                bundle.putString("TL", tl);
+                                                bundle.putString("SpinPrograms", spinnerPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);
-                                                bundle.putString("Collection",collection);
+                                                bundle.putString("Collection", collection);
                                                 intent.putExtras(bundle);
+                                                intent.putExtra("FID",count.get(tl));
                                                 startActivity(intent);
                                             }
                                         });
                                     }
                                 });
                     } else {
-                        total=0;
+                        total=0;count.clear();countName.clear();
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate", date1)
                                 .whereLessThanOrEqualTo("edate", date2)
@@ -936,10 +938,7 @@ public class TLViewActivity extends AppCompatActivity {
                                             return;
                                         }
 
-                                        TreeMap<String, Integer> countName = new TreeMap<>();
-                                        TreeMap<String, Integer> count = new TreeMap<>();
-
-                                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                        for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
                                             Note note = documentSnapshot.toObject(Note.class);
 
                                             if (note.getName() == null) {
@@ -951,26 +950,35 @@ public class TLViewActivity extends AppCompatActivity {
                                                 url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                             }
 
-                                            if (countName.containsKey(note.getName())) {
+                                            if (countName.contains(note.getFid())) {
                                                 continue;
-                                            } else {
-                                                countName.put(note.getName(), 1);
-                                                total++;
-                                                count.put("ALL",total);
                                             }
 
+                                            if ((note.getCategory().equals("FOLK Intro"))
+                                                    || (note.getCategory().equals("FOLK Plus"))) {
+                                                continue;
+                                            }
+//                            else {
+                                            countName.add(note.getFid());
+//                                count.put("ALL",total);
+
                                             if (count.containsKey(note.getZtl())) {
-                                                int number = count.get(note.getZtl());
-                                                number++;
-                                                count.put(note.getZtl(),number);
+                                                ArrayList<String> list = count.get(note.getZtl());
+//                                                    ArrayList<String> listAll = count.get("ALL");
+                                                list.add(note.getFid());
+//                                                    listAll.add(note.getFid());
+                                                count.put(note.getZtl(), list);
+//                                                    count.put("ALL", listAll);
                                             } else {
-                                                count.put(note.getZtl(),1);
+                                                ArrayList<String> newList = new ArrayList<>();
+                                                newList.add(note.getFid());
+                                                count.put(note.getZtl(), newList);
+//                                                    count.put("ALL", newList);
+//                                }
                                             }
                                         }
 
-//                                        mTextView2.setText(String.valueOf(total));
-
-                                        final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
+                                        final MatchRegistrationsAdapter adapter = new MatchRegistrationsAdapter(count);
                                         mListView.setAdapter((ListAdapter) adapter);
 
                                         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -979,14 +987,15 @@ public class TLViewActivity extends AppCompatActivity {
                                                 String tl = adapter.getItem(i).getKey();
                                                 Intent intent = new Intent(TLViewActivity.this, TLViewFG.class);
                                                 Bundle bundle = new Bundle();
-                                                bundle.putLong("Date1",date1);
-                                                bundle.putLong("Date2",date2);
-                                                bundle.putString("TL",tl);
-                                                bundle.putString("SpinPrograms", spinPrograms);
+                                                bundle.putLong("Date1", date1);
+                                                bundle.putLong("Date2", date2);
+                                                bundle.putString("TL", tl);
+                                                bundle.putString("SpinPrograms", spinnerPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);
-                                                bundle.putString("Collection",collection);
+                                                bundle.putString("Collection", collection);
                                                 intent.putExtras(bundle);
+                                                intent.putExtra("FID",count.get(tl));
                                                 startActivity(intent);
                                             }
                                         });
@@ -1043,7 +1052,7 @@ public class TLViewActivity extends AppCompatActivity {
                     posSession = position;
 
                     if (spinnerSessions.equals("ALL")) {
-                        total=0;
+                        total=0;count.clear();countName.clear();
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate", date1)
                                 .whereLessThanOrEqualTo("edate", date2)
@@ -1056,10 +1065,7 @@ public class TLViewActivity extends AppCompatActivity {
                                             return;
                                         }
 
-                                        TreeMap<String, Integer> countName = new TreeMap<>();
-                                        TreeMap<String, Integer> count = new TreeMap<>();
-
-                                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                        for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
                                             Note note = documentSnapshot.toObject(Note.class);
 
                                             if (note.getName() == null) {
@@ -1071,26 +1077,30 @@ public class TLViewActivity extends AppCompatActivity {
                                                 url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                             }
 
-                                            if (countName.containsKey(note.getName())) {
+                                            if (countName.contains(note.getFid())) {
                                                 continue;
-                                            } else {
-                                                countName.put(note.getName(), 1);
-                                                total++;
-                                                count.put("ALL",total);
                                             }
 
+                                            countName.add(note.getFid());
+//                                count.put("ALL",total);
+
                                             if (count.containsKey(note.getZtl())) {
-                                                int number = count.get(note.getZtl());
-                                                number++;
-                                                count.put(note.getZtl(),number);
+                                                ArrayList<String> list = count.get(note.getZtl());
+//                                                    ArrayList<String> listAll = count.get("ALL");
+                                                list.add(note.getFid());
+//                                                    listAll.add(note.getFid());
+                                                count.put(note.getZtl(), list);
+//                                                    count.put("ALL", listAll);
                                             } else {
-                                                count.put(note.getZtl(),1);
+                                                ArrayList<String> newList = new ArrayList<>();
+                                                newList.add(note.getFid());
+                                                count.put(note.getZtl(), newList);
+//                                                    count.put("ALL", newList);
+//                                }
                                             }
                                         }
 
-//                                        mTextView2.setText(String.valueOf(total));
-
-                                        final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
+                                        final MatchRegistrationsAdapter adapter = new MatchRegistrationsAdapter(count);
                                         mListView.setAdapter((ListAdapter) adapter);
 
                                         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -1099,21 +1109,22 @@ public class TLViewActivity extends AppCompatActivity {
                                                 String tl = adapter.getItem(i).getKey();
                                                 Intent intent = new Intent(TLViewActivity.this, TLViewFG.class);
                                                 Bundle bundle = new Bundle();
-                                                bundle.putLong("Date1",date1);
-                                                bundle.putLong("Date2",date2);
-                                                bundle.putString("TL",tl);
-                                                bundle.putString("SpinPrograms", spinPrograms);
+                                                bundle.putLong("Date1", date1);
+                                                bundle.putLong("Date2", date2);
+                                                bundle.putString("TL", tl);
+                                                bundle.putString("SpinPrograms", spinnerPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);
-                                                bundle.putString("Collection",collection);
+                                                bundle.putString("Collection", collection);
                                                 intent.putExtras(bundle);
+                                                intent.putExtra("FID",count.get(tl));
                                                 startActivity(intent);
                                             }
                                         });
                                     }
                                 });
                     } else {
-                        total=0;
+                        total=0;count.clear();countName.clear();
                         fgboys
                                 .whereGreaterThanOrEqualTo("edate", date1)
                                 .whereLessThanOrEqualTo("edate", date2)
@@ -1127,10 +1138,7 @@ public class TLViewActivity extends AppCompatActivity {
                                             return;
                                         }
 
-                                        TreeMap<String, Integer> countName = new TreeMap<>();
-                                        TreeMap<String, Integer> count = new TreeMap<>();
-
-                                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                        for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
                                             Note note = documentSnapshot.toObject(Note.class);
 
                                             if (note.getName() == null) {
@@ -1142,26 +1150,31 @@ public class TLViewActivity extends AppCompatActivity {
                                                 url = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkqmIlxctkcE0ACfSg3aZUNRG8cAj1cYi2TvyT72FH55BTTMEr";
                                             }
 
-                                            if (countName.containsKey(note.getName())) {
+                                            if (countName.contains(note.getFid())) {
                                                 continue;
-                                            } else {
-                                                countName.put(note.getName(), 1);
-                                                total++;
-                                                count.put("ALL",total);
                                             }
 
+
+                                            countName.add(note.getFid());
+//                                count.put("ALL",total);
+
                                             if (count.containsKey(note.getZtl())) {
-                                                int number = count.get(note.getZtl());
-                                                number++;
-                                                count.put(note.getZtl(),number);
+                                                ArrayList<String> list = count.get(note.getZtl());
+//                                                    ArrayList<String> listAll = count.get("ALL");
+                                                list.add(note.getFid());
+//                                                    listAll.add(note.getFid());
+                                                count.put(note.getZtl(), list);
+//                                                    count.put("ALL", listAll);
                                             } else {
-                                                count.put(note.getZtl(),1);
+                                                ArrayList<String> newList = new ArrayList<>();
+                                                newList.add(note.getFid());
+                                                count.put(note.getZtl(), newList);
+//                                                    count.put("ALL", newList);
+//                                }
                                             }
                                         }
 
-//                                        mTextView2.setText(String.valueOf(total));
-
-                                        final AmountsNumberAdapter adapter = new AmountsNumberAdapter(count);
+                                        final MatchRegistrationsAdapter adapter = new MatchRegistrationsAdapter(count);
                                         mListView.setAdapter((ListAdapter) adapter);
 
                                         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -1170,14 +1183,15 @@ public class TLViewActivity extends AppCompatActivity {
                                                 String tl = adapter.getItem(i).getKey();
                                                 Intent intent = new Intent(TLViewActivity.this, TLViewFG.class);
                                                 Bundle bundle = new Bundle();
-                                                bundle.putLong("Date1",date1);
-                                                bundle.putLong("Date2",date2);
-                                                bundle.putString("TL",tl);
-                                                bundle.putString("SpinPrograms", spinPrograms);
+                                                bundle.putLong("Date1", date1);
+                                                bundle.putLong("Date2", date2);
+                                                bundle.putString("TL", tl);
+                                                bundle.putString("SpinPrograms", spinnerPrograms);
                                                 bundle.putString("SpinCategories", spinnerCategories);
                                                 bundle.putString("SpinSessions", spinnerSessions);
-                                                bundle.putString("Collection",collection);
+                                                bundle.putString("Collection", collection);
                                                 intent.putExtras(bundle);
+                                                intent.putExtra("FID",count.get(tl));
                                                 startActivity(intent);
                                             }
                                         });

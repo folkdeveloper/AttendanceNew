@@ -79,6 +79,7 @@ public class MatchRegistrationsGetProgram extends AppCompatActivity {
     String documentID = "";
     int reg = 0, notReg = 0, att = 0;
     private String spinPrograms = "", spinCategories = "", spinSessions = "";
+    private ArrayList<String> fid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +100,8 @@ public class MatchRegistrationsGetProgram extends AppCompatActivity {
         spinPrograms = getIntent().getStringExtra("SpinPrograms");
         spinCategories = getIntent().getStringExtra("SpinCategoris");
         spinSessions = getIntent().getStringExtra("SpinSessions");
+        fid = (ArrayList<String>) getIntent().getSerializableExtra("FID");
+//        mTextView.setText(String.valueOf(fid.size()));
 
         mDisplayDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -374,9 +377,8 @@ public class MatchRegistrationsGetProgram extends AppCompatActivity {
                                     for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                         Note note = documentSnapshot.toObject(Note.class);
 
-//                                        Log.d(TAG, "onEvent: Out"+note.getName());
-
-                                        if (countName.contains(note.getFid())) {
+                                        if (fid.contains(note.getFid())) {
+                                            if (countName.contains(note.getFid())) {
                                             continue;
                                         } else {
                                             countName.add(note.getFid());
@@ -384,6 +386,7 @@ public class MatchRegistrationsGetProgram extends AppCompatActivity {
                                             Log.d(TAG, "onEvent: In"+" ; " + note.getZmob() + " ; " +note.getSession());
                                             fids.add(note.getFid());
                                             data += "FOLK ID: " + note.getFid() + "\n";
+                                        }
                                         }
                                     }
 //                                    mTextView.setText(data);
