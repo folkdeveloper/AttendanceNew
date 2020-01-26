@@ -185,19 +185,24 @@ public class UniqueActivity extends AppCompatActivity {
                             countName.add(note.getFid());
 //                                count.put("ALL",total);
 
+                            if (count.containsKey("ALL")) {
+                                ArrayList<String> listAll = count.get("ALL");
+                                listAll.add(note.getFid());
+                                count.put("ALL", listAll);
+                            } else {
+                                ArrayList<String> newList = new ArrayList<>();
+                                newList.add(note.getFid());
+                                count.put("ALL", newList);
+                            }
+
                             if (count.containsKey(note.getFg())) {
                                 ArrayList<String> list = count.get(note.getFg());
-//                                                    ArrayList<String> listAll = count.get("ALL");
                                 list.add(note.getFid());
-//                                                    listAll.add(note.getFid());
                                 count.put(note.getFg(), list);
-//                                                    count.put("ALL", listAll);
                             } else {
                                 ArrayList<String> newList = new ArrayList<>();
                                 newList.add(note.getFid());
                                 count.put(note.getFg(), newList);
-//                                                    count.put("ALL", newList);
-//                                }
                             }
                         }
 
@@ -241,7 +246,7 @@ public class UniqueActivity extends AppCompatActivity {
                             return;
                         }
 
-                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots) {
                             Note note = documentSnapshot.toObject(Note.class);
 
                             if (note.getName() == null) {
@@ -255,24 +260,29 @@ public class UniqueActivity extends AppCompatActivity {
 
                             if (countName.contains(note.getFid())) {
                                 continue;
+                            }
+
+                            countName.add(note.getFid());
+//                                count.put("ALL",total);
+
+                            if (count.containsKey("ALL")) {
+                                ArrayList<String> listAll = count.get("ALL");
+                                listAll.add(note.getFid());
+                                count.put("ALL", listAll);
                             } else {
-                                countName.add(note.getFid());
+                                ArrayList<String> newList = new ArrayList<>();
+                                newList.add(note.getFid());
+                                count.put("ALL", newList);
+                            }
 
-                                Log.d(TAG, "onEvent: First" + " ; " + note.getFg() + " ; " + note.getZmob() + " ; " + note.getSession());
-
-                                if (count.containsKey(note.getFg())) {
-                                    ArrayList<String> list = count.get(note.getFg());
-//                                                    ArrayList<String> listAll = count.get("ALL");
-                                    list.add(note.getFid());
-//                                                    listAll.add(note.getFid());
-                                    count.put(note.getFg(), list);
-//                                                    count.put("ALL", listAll);
-                                } else {
-                                    ArrayList<String> newList = new ArrayList<>();
-                                    newList.add(note.getFid());
-                                    count.put(note.getFg(), newList);
-//                                                    count.put("ALL", newList);
-                                }
+                            if (count.containsKey(note.getFg())) {
+                                ArrayList<String> list = count.get(note.getFg());
+                                list.add(note.getFid());
+                                count.put(note.getFg(), list);
+                            } else {
+                                ArrayList<String> newList = new ArrayList<>();
+                                newList.add(note.getFid());
+                                count.put(note.getFg(), newList);
                             }
                         }
 
@@ -616,18 +626,24 @@ public class UniqueActivity extends AppCompatActivity {
 
                                                 Log.d(TAG, "onEvent: First" + " ; " + note.getFg() + " ; " + note.getZmob() + " ; " + note.getSession());
 
+                                                if (count.containsKey("ALL")) {
+                                                    ArrayList<String> listAll = count.get("ALL");
+                                                    listAll.add(note.getFid());
+                                                    count.put("ALL", listAll);
+                                                } else {
+                                                    ArrayList<String> newList = new ArrayList<>();
+                                                    newList.add(note.getFid());
+                                                    count.put("ALL", newList);
+                                                }
+
                                                 if (count.containsKey(note.getFg())) {
                                                     ArrayList<String> list = count.get(note.getFg());
-//                                                    ArrayList<String> listAll = count.get("ALL");
                                                     list.add(note.getFid());
-//                                                    listAll.add(note.getFid());
                                                     count.put(note.getFg(), list);
-//                                                    count.put("ALL", listAll);
                                                 } else {
                                                     ArrayList<String> newList = new ArrayList<>();
                                                     newList.add(note.getFid());
                                                     count.put(note.getFg(), newList);
-//                                                    count.put("ALL", newList);
                                                 }
                                             }
                                         }
@@ -687,18 +703,24 @@ public class UniqueActivity extends AppCompatActivity {
 
                                                 Log.d(TAG, "onEvent: First" + " ; " + note.getFg() + " ; " + note.getZmob() + " ; " + note.getSession());
 
+                                                if (count.containsKey("ALL")) {
+                                                    ArrayList<String> listAll = count.get("ALL");
+                                                    listAll.add(note.getFid());
+                                                    count.put("ALL", listAll);
+                                                } else {
+                                                    ArrayList<String> newList = new ArrayList<>();
+                                                    newList.add(note.getFid());
+                                                    count.put("ALL", newList);
+                                                }
+
                                                 if (count.containsKey(note.getFg())) {
                                                     ArrayList<String> list = count.get(note.getFg());
-//                                                    ArrayList<String> listAll = count.get("ALL");
                                                     list.add(note.getFid());
-//                                                    listAll.add(note.getFid());
                                                     count.put(note.getFg(), list);
-//                                                    count.put("ALL", listAll);
                                                 } else {
                                                     ArrayList<String> newList = new ArrayList<>();
                                                     newList.add(note.getFid());
                                                     count.put(note.getFg(), newList);
-//                                                    count.put("ALL", newList);
                                                 }
                                             }
                                         }
@@ -808,18 +830,24 @@ public class UniqueActivity extends AppCompatActivity {
 
                                                 Log.d(TAG, "onEvent: First" + " ; " + note.getFg() + " ; " + note.getZmob() + " ; " + note.getSession());
 
+                                                if (count.containsKey("ALL")) {
+                                                    ArrayList<String> listAll = count.get("ALL");
+                                                    listAll.add(note.getFid());
+                                                    count.put("ALL", listAll);
+                                                } else {
+                                                    ArrayList<String> newList = new ArrayList<>();
+                                                    newList.add(note.getFid());
+                                                    count.put("ALL", newList);
+                                                }
+
                                                 if (count.containsKey(note.getFg())) {
                                                     ArrayList<String> list = count.get(note.getFg());
-//                                                    ArrayList<String> listAll = count.get("ALL");
                                                     list.add(note.getFid());
-//                                                    listAll.add(note.getFid());
                                                     count.put(note.getFg(), list);
-//                                                    count.put("ALL", listAll);
                                                 } else {
                                                     ArrayList<String> newList = new ArrayList<>();
                                                     newList.add(note.getFid());
                                                     count.put(note.getFg(), newList);
-//                                                    count.put("ALL", newList);
                                                 }
                                             }
                                         }
@@ -880,18 +908,24 @@ public class UniqueActivity extends AppCompatActivity {
 
                                                 Log.d(TAG, "onEvent: First" + " ; " + note.getFg() + " ; " + note.getZmob() + " ; " + note.getSession());
 
+                                                if (count.containsKey("ALL")) {
+                                                    ArrayList<String> listAll = count.get("ALL");
+                                                    listAll.add(note.getFid());
+                                                    count.put("ALL", listAll);
+                                                } else {
+                                                    ArrayList<String> newList = new ArrayList<>();
+                                                    newList.add(note.getFid());
+                                                    count.put("ALL", newList);
+                                                }
+
                                                 if (count.containsKey(note.getFg())) {
                                                     ArrayList<String> list = count.get(note.getFg());
-//                                                    ArrayList<String> listAll = count.get("ALL");
                                                     list.add(note.getFid());
-//                                                    listAll.add(note.getFid());
                                                     count.put(note.getFg(), list);
-//                                                    count.put("ALL", listAll);
                                                 } else {
                                                     ArrayList<String> newList = new ArrayList<>();
                                                     newList.add(note.getFid());
                                                     count.put(note.getFg(), newList);
-//                                                    count.put("ALL", newList);
                                                 }
                                             }
                                         }
@@ -1008,18 +1042,24 @@ public class UniqueActivity extends AppCompatActivity {
 
                                                 Log.d(TAG, "onEvent: First" + " ; " + note.getFg() + " ; " + note.getZmob() + " ; " + note.getSession());
 
+                                                if (count.containsKey("ALL")) {
+                                                    ArrayList<String> listAll = count.get("ALL");
+                                                    listAll.add(note.getFid());
+                                                    count.put("ALL", listAll);
+                                                } else {
+                                                    ArrayList<String> newList = new ArrayList<>();
+                                                    newList.add(note.getFid());
+                                                    count.put("ALL", newList);
+                                                }
+
                                                 if (count.containsKey(note.getFg())) {
                                                     ArrayList<String> list = count.get(note.getFg());
-//                                                    ArrayList<String> listAll = count.get("ALL");
                                                     list.add(note.getFid());
-//                                                    listAll.add(note.getFid());
                                                     count.put(note.getFg(), list);
-//                                                    count.put("ALL", listAll);
                                                 } else {
                                                     ArrayList<String> newList = new ArrayList<>();
                                                     newList.add(note.getFid());
                                                     count.put(note.getFg(), newList);
-//                                                    count.put("ALL", newList);
                                                 }
                                             }
                                         }
@@ -1080,18 +1120,24 @@ public class UniqueActivity extends AppCompatActivity {
 
                                                 Log.d(TAG, "onEvent: First" + " ; " + note.getFg() + " ; " + note.getZmob() + " ; " + note.getSession());
 
+                                                if (count.containsKey("ALL")) {
+                                                    ArrayList<String> listAll = count.get("ALL");
+                                                    listAll.add(note.getFid());
+                                                    count.put("ALL", listAll);
+                                                } else {
+                                                    ArrayList<String> newList = new ArrayList<>();
+                                                    newList.add(note.getFid());
+                                                    count.put("ALL", newList);
+                                                }
+
                                                 if (count.containsKey(note.getFg())) {
                                                     ArrayList<String> list = count.get(note.getFg());
-//                                                    ArrayList<String> listAll = count.get("ALL");
                                                     list.add(note.getFid());
-//                                                    listAll.add(note.getFid());
                                                     count.put(note.getFg(), list);
-//                                                    count.put("ALL", listAll);
                                                 } else {
                                                     ArrayList<String> newList = new ArrayList<>();
                                                     newList.add(note.getFid());
                                                     count.put(note.getFg(), newList);
-//                                                    count.put("ALL", newList);
                                                 }
                                             }
                                         }
@@ -1202,18 +1248,24 @@ public class UniqueActivity extends AppCompatActivity {
 
                                                 Log.d(TAG, "onEvent: First" + " ; " + note.getFg() + " ; " + note.getZmob() + " ; " + note.getSession());
 
+                                                if (count.containsKey("ALL")) {
+                                                    ArrayList<String> listAll = count.get("ALL");
+                                                    listAll.add(note.getFid());
+                                                    count.put("ALL", listAll);
+                                                } else {
+                                                    ArrayList<String> newList = new ArrayList<>();
+                                                    newList.add(note.getFid());
+                                                    count.put("ALL", newList);
+                                                }
+
                                                 if (count.containsKey(note.getFg())) {
                                                     ArrayList<String> list = count.get(note.getFg());
-//                                                    ArrayList<String> listAll = count.get("ALL");
                                                     list.add(note.getFid());
-//                                                    listAll.add(note.getFid());
                                                     count.put(note.getFg(), list);
-//                                                    count.put("ALL", listAll);
                                                 } else {
                                                     ArrayList<String> newList = new ArrayList<>();
                                                     newList.add(note.getFid());
                                                     count.put(note.getFg(), newList);
-//                                                    count.put("ALL", newList);
                                                 }
                                             }
                                         }
@@ -1275,18 +1327,24 @@ public class UniqueActivity extends AppCompatActivity {
 
                                                 Log.d(TAG, "onEvent: First" + " ; " + note.getFg() + " ; " + note.getZmob() + " ; " + note.getSession());
 
+                                                if (count.containsKey("ALL")) {
+                                                    ArrayList<String> listAll = count.get("ALL");
+                                                    listAll.add(note.getFid());
+                                                    count.put("ALL", listAll);
+                                                } else {
+                                                    ArrayList<String> newList = new ArrayList<>();
+                                                    newList.add(note.getFid());
+                                                    count.put("ALL", newList);
+                                                }
+
                                                 if (count.containsKey(note.getFg())) {
                                                     ArrayList<String> list = count.get(note.getFg());
-//                                                    ArrayList<String> listAll = count.get("ALL");
                                                     list.add(note.getFid());
-//                                                    listAll.add(note.getFid());
                                                     count.put(note.getFg(), list);
-//                                                    count.put("ALL", listAll);
                                                 } else {
                                                     ArrayList<String> newList = new ArrayList<>();
                                                     newList.add(note.getFid());
                                                     count.put(note.getFg(), newList);
-//                                                    count.put("ALL", newList);
                                                 }
                                             }
                                         }

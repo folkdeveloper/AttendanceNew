@@ -180,25 +180,28 @@ public class MatchRegistrationsOne extends AppCompatActivity {
                                     || (note.getCategory().equals("FOLK Plus"))) {
                                 continue;
                             }
-//                            else {
-                                countName.add(note.getFid());
-//                                count.put("ALL",total);
+                            countName.add(note.getFid());
 
-                                if (count.containsKey(note.getFg())) {
-                                    ArrayList<String> list = count.get(note.getFg());
-//                                                    ArrayList<String> listAll = count.get("ALL");
-                                    list.add(note.getFid());
-//                                                    listAll.add(note.getFid());
-                                    count.put(note.getFg(), list);
-//                                                    count.put("ALL", listAll);
-                                } else {
-                                    ArrayList<String> newList = new ArrayList<>();
-                                    newList.add(note.getFid());
-                                    count.put(note.getFg(), newList);
-//                                                    count.put("ALL", newList);
-//                                }
-                                }
+                            if (count.containsKey("ALL")) {
+                                ArrayList<String> listAll = count.get("ALL");
+                                listAll.add(note.getFid());
+                                count.put("ALL", listAll);
+                            } else {
+                                ArrayList<String> newList = new ArrayList<>();
+                                newList.add(note.getFid());
+                                count.put("ALL", newList);
                             }
+
+                            if (count.containsKey(note.getFg())) {
+                                ArrayList<String> list = count.get(note.getFg());
+                                list.add(note.getFid());
+                                count.put(note.getFg(), list);
+                            } else {
+                                ArrayList<String> newList = new ArrayList<>();
+                                newList.add(note.getFid());
+                                count.put(note.getFg(), newList);
+                            }
+                        }
 
                         final MatchRegistrationsAdapter adapter = new MatchRegistrationsAdapter(count);
                         mListView.setAdapter((ListAdapter) adapter);
@@ -259,18 +262,24 @@ public class MatchRegistrationsOne extends AppCompatActivity {
 
                                 Log.d(TAG, "onEvent: First" + " ; " + note.getFg() + " ; " + note.getZmob() + " ; " + note.getSession());
 
+                                if (count.containsKey("ALL")) {
+                                    ArrayList<String> listAll = count.get("ALL");
+                                    listAll.add(note.getFid());
+                                    count.put("ALL", listAll);
+                                } else {
+                                    ArrayList<String> newList = new ArrayList<>();
+                                    newList.add(note.getFid());
+                                    count.put("ALL", newList);
+                                }
+
                                 if (count.containsKey(note.getFg())) {
                                     ArrayList<String> list = count.get(note.getFg());
-//                                                    ArrayList<String> listAll = count.get("ALL");
                                     list.add(note.getFid());
-//                                                    listAll.add(note.getFid());
                                     count.put(note.getFg(), list);
-//                                                    count.put("ALL", listAll);
                                 } else {
                                     ArrayList<String> newList = new ArrayList<>();
                                     newList.add(note.getFid());
                                     count.put(note.getFg(), newList);
-//                                                    count.put("ALL", newList);
                                 }
                             }
                         }
@@ -615,18 +624,24 @@ public class MatchRegistrationsOne extends AppCompatActivity {
 
                                                 Log.d(TAG, "onEvent: First" + " ; " + note.getFg() + " ; " + note.getZmob() + " ; " + note.getSession());
 
+                                                if (count.containsKey("ALL")) {
+                                                    ArrayList<String> listAll = count.get("ALL");
+                                                    listAll.add(note.getFid());
+                                                    count.put("ALL", listAll);
+                                                } else {
+                                                    ArrayList<String> newList = new ArrayList<>();
+                                                    newList.add(note.getFid());
+                                                    count.put("ALL", newList);
+                                                }
+
                                                 if (count.containsKey(note.getFg())) {
                                                     ArrayList<String> list = count.get(note.getFg());
-//                                                    ArrayList<String> listAll = count.get("ALL");
                                                     list.add(note.getFid());
-//                                                    listAll.add(note.getFid());
                                                     count.put(note.getFg(), list);
-//                                                    count.put("ALL", listAll);
                                                 } else {
                                                     ArrayList<String> newList = new ArrayList<>();
                                                     newList.add(note.getFid());
                                                     count.put(note.getFg(), newList);
-//                                                    count.put("ALL", newList);
                                                 }
                                             }
                                         }
@@ -686,18 +701,24 @@ public class MatchRegistrationsOne extends AppCompatActivity {
 
                                                 Log.d(TAG, "onEvent: First" + " ; " + note.getFg() + " ; " + note.getZmob() + " ; " + note.getSession());
 
+                                                if (count.containsKey("ALL")) {
+                                                    ArrayList<String> listAll = count.get("ALL");
+                                                    listAll.add(note.getFid());
+                                                    count.put("ALL", listAll);
+                                                } else {
+                                                    ArrayList<String> newList = new ArrayList<>();
+                                                    newList.add(note.getFid());
+                                                    count.put("ALL", newList);
+                                                }
+
                                                 if (count.containsKey(note.getFg())) {
                                                     ArrayList<String> list = count.get(note.getFg());
-//                                                    ArrayList<String> listAll = count.get("ALL");
                                                     list.add(note.getFid());
-//                                                    listAll.add(note.getFid());
                                                     count.put(note.getFg(), list);
-//                                                    count.put("ALL", listAll);
                                                 } else {
                                                     ArrayList<String> newList = new ArrayList<>();
                                                     newList.add(note.getFid());
                                                     count.put(note.getFg(), newList);
-//                                                    count.put("ALL", newList);
                                                 }
                                             }
                                         }
@@ -807,18 +828,24 @@ public class MatchRegistrationsOne extends AppCompatActivity {
 
                                                 Log.d(TAG, "onEvent: First" + " ; " + note.getFg() + " ; " + note.getZmob() + " ; " + note.getSession());
 
+                                                if (count.containsKey("ALL")) {
+                                                    ArrayList<String> listAll = count.get("ALL");
+                                                    listAll.add(note.getFid());
+                                                    count.put("ALL", listAll);
+                                                } else {
+                                                    ArrayList<String> newList = new ArrayList<>();
+                                                    newList.add(note.getFid());
+                                                    count.put("ALL", newList);
+                                                }
+
                                                 if (count.containsKey(note.getFg())) {
                                                     ArrayList<String> list = count.get(note.getFg());
-//                                                    ArrayList<String> listAll = count.get("ALL");
                                                     list.add(note.getFid());
-//                                                    listAll.add(note.getFid());
                                                     count.put(note.getFg(), list);
-//                                                    count.put("ALL", listAll);
                                                 } else {
                                                     ArrayList<String> newList = new ArrayList<>();
                                                     newList.add(note.getFid());
                                                     count.put(note.getFg(), newList);
-//                                                    count.put("ALL", newList);
                                                 }
                                             }
                                         }
@@ -879,18 +906,24 @@ public class MatchRegistrationsOne extends AppCompatActivity {
 
                                                 Log.d(TAG, "onEvent: First" + " ; " + note.getFg() + " ; " + note.getZmob() + " ; " + note.getSession());
 
+                                                if (count.containsKey("ALL")) {
+                                                    ArrayList<String> listAll = count.get("ALL");
+                                                    listAll.add(note.getFid());
+                                                    count.put("ALL", listAll);
+                                                } else {
+                                                    ArrayList<String> newList = new ArrayList<>();
+                                                    newList.add(note.getFid());
+                                                    count.put("ALL", newList);
+                                                }
+
                                                 if (count.containsKey(note.getFg())) {
                                                     ArrayList<String> list = count.get(note.getFg());
-//                                                    ArrayList<String> listAll = count.get("ALL");
                                                     list.add(note.getFid());
-//                                                    listAll.add(note.getFid());
                                                     count.put(note.getFg(), list);
-//                                                    count.put("ALL", listAll);
                                                 } else {
                                                     ArrayList<String> newList = new ArrayList<>();
                                                     newList.add(note.getFid());
                                                     count.put(note.getFg(), newList);
-//                                                    count.put("ALL", newList);
                                                 }
                                             }
                                         }
@@ -1007,18 +1040,24 @@ public class MatchRegistrationsOne extends AppCompatActivity {
 
                                                 Log.d(TAG, "onEvent: First" + " ; " + note.getFg() + " ; " + note.getZmob() + " ; " + note.getSession());
 
+                                                if (count.containsKey("ALL")) {
+                                                    ArrayList<String> listAll = count.get("ALL");
+                                                    listAll.add(note.getFid());
+                                                    count.put("ALL", listAll);
+                                                } else {
+                                                    ArrayList<String> newList = new ArrayList<>();
+                                                    newList.add(note.getFid());
+                                                    count.put("ALL", newList);
+                                                }
+
                                                 if (count.containsKey(note.getFg())) {
                                                     ArrayList<String> list = count.get(note.getFg());
-//                                                    ArrayList<String> listAll = count.get("ALL");
                                                     list.add(note.getFid());
-//                                                    listAll.add(note.getFid());
                                                     count.put(note.getFg(), list);
-//                                                    count.put("ALL", listAll);
                                                 } else {
                                                     ArrayList<String> newList = new ArrayList<>();
                                                     newList.add(note.getFid());
                                                     count.put(note.getFg(), newList);
-//                                                    count.put("ALL", newList);
                                                 }
                                             }
                                         }
@@ -1079,18 +1118,24 @@ public class MatchRegistrationsOne extends AppCompatActivity {
 
                                                 Log.d(TAG, "onEvent: First" + " ; " + note.getFg() + " ; " + note.getZmob() + " ; " + note.getSession());
 
+                                                if (count.containsKey("ALL")) {
+                                                    ArrayList<String> listAll = count.get("ALL");
+                                                    listAll.add(note.getFid());
+                                                    count.put("ALL", listAll);
+                                                } else {
+                                                    ArrayList<String> newList = new ArrayList<>();
+                                                    newList.add(note.getFid());
+                                                    count.put("ALL", newList);
+                                                }
+
                                                 if (count.containsKey(note.getFg())) {
                                                     ArrayList<String> list = count.get(note.getFg());
-//                                                    ArrayList<String> listAll = count.get("ALL");
                                                     list.add(note.getFid());
-//                                                    listAll.add(note.getFid());
                                                     count.put(note.getFg(), list);
-//                                                    count.put("ALL", listAll);
                                                 } else {
                                                     ArrayList<String> newList = new ArrayList<>();
                                                     newList.add(note.getFid());
                                                     count.put(note.getFg(), newList);
-//                                                    count.put("ALL", newList);
                                                 }
                                             }
                                         }
@@ -1201,18 +1246,24 @@ public class MatchRegistrationsOne extends AppCompatActivity {
 
                                                 Log.d(TAG, "onEvent: First" + " ; " + note.getFg() + " ; " + note.getZmob() + " ; " + note.getSession());
 
+                                                if (count.containsKey("ALL")) {
+                                                    ArrayList<String> listAll = count.get("ALL");
+                                                    listAll.add(note.getFid());
+                                                    count.put("ALL", listAll);
+                                                } else {
+                                                    ArrayList<String> newList = new ArrayList<>();
+                                                    newList.add(note.getFid());
+                                                    count.put("ALL", newList);
+                                                }
+
                                                 if (count.containsKey(note.getFg())) {
                                                     ArrayList<String> list = count.get(note.getFg());
-//                                                    ArrayList<String> listAll = count.get("ALL");
                                                     list.add(note.getFid());
-//                                                    listAll.add(note.getFid());
                                                     count.put(note.getFg(), list);
-//                                                    count.put("ALL", listAll);
                                                 } else {
                                                     ArrayList<String> newList = new ArrayList<>();
                                                     newList.add(note.getFid());
                                                     count.put(note.getFg(), newList);
-//                                                    count.put("ALL", newList);
                                                 }
                                             }
                                         }
@@ -1274,18 +1325,24 @@ public class MatchRegistrationsOne extends AppCompatActivity {
 
                                                 Log.d(TAG, "onEvent: First" + " ; " + note.getFg() + " ; " + note.getZmob() + " ; " + note.getSession());
 
+                                                if (count.containsKey("ALL")) {
+                                                    ArrayList<String> listAll = count.get("ALL");
+                                                    listAll.add(note.getFid());
+                                                    count.put("ALL", listAll);
+                                                } else {
+                                                    ArrayList<String> newList = new ArrayList<>();
+                                                    newList.add(note.getFid());
+                                                    count.put("ALL", newList);
+                                                }
+
                                                 if (count.containsKey(note.getFg())) {
                                                     ArrayList<String> list = count.get(note.getFg());
-//                                                    ArrayList<String> listAll = count.get("ALL");
                                                     list.add(note.getFid());
-//                                                    listAll.add(note.getFid());
                                                     count.put(note.getFg(), list);
-//                                                    count.put("ALL", listAll);
                                                 } else {
                                                     ArrayList<String> newList = new ArrayList<>();
                                                     newList.add(note.getFid());
                                                     count.put(note.getFg(), newList);
-//                                                    count.put("ALL", newList);
                                                 }
                                             }
                                         }

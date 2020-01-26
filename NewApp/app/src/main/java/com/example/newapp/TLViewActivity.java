@@ -183,6 +183,16 @@ public class TLViewActivity extends AppCompatActivity {
                             countName.add(note.getFid());
 //                                count.put("ALL",total);
 
+                            if (count.containsKey("ALL")) {
+                                ArrayList<String> listAll = count.get("ALL");
+                                listAll.add(note.getFid());
+                                count.put("ALL", listAll);
+                            } else {
+                                ArrayList<String> newList = new ArrayList<>();
+                                newList.add(note.getFid());
+                                count.put("ALL", newList);
+                            }
+
                             if (count.containsKey(note.getZtl())) {
                                 ArrayList<String> list = count.get(note.getZtl());
 //                                                    ArrayList<String> listAll = count.get("ALL");
@@ -257,6 +267,16 @@ public class TLViewActivity extends AppCompatActivity {
 
                             countName.add(note.getFid());
 //                                count.put("ALL",total);
+
+                            if (count.containsKey("ALL")) {
+                                ArrayList<String> listAll = count.get("ALL");
+                                listAll.add(note.getFid());
+                                count.put("ALL", listAll);
+                            } else {
+                                ArrayList<String> newList = new ArrayList<>();
+                                newList.add(note.getFid());
+                                count.put("ALL", newList);
+                            }
 
                             if (count.containsKey(note.getZtl())) {
                                 ArrayList<String> list = count.get(note.getZtl());
@@ -495,6 +515,16 @@ public class TLViewActivity extends AppCompatActivity {
                                             countName.add(note.getFid());
 //                                count.put("ALL",total);
 
+                                            if (count.containsKey("ALL")) {
+                                                ArrayList<String> listAll = count.get("ALL");
+                                                listAll.add(note.getFid());
+                                                count.put("ALL", listAll);
+                                            } else {
+                                                ArrayList<String> newList = new ArrayList<>();
+                                                newList.add(note.getFid());
+                                                count.put("ALL", newList);
+                                            }
+
                                             if (count.containsKey(note.getZtl())) {
                                                 ArrayList<String> list = count.get(note.getZtl());
 //                                                    ArrayList<String> listAll = count.get("ALL");
@@ -565,6 +595,16 @@ public class TLViewActivity extends AppCompatActivity {
 
                                             countName.add(note.getFid());
 //                                count.put("ALL",total);
+
+                                            if (count.containsKey("ALL")) {
+                                                ArrayList<String> listAll = count.get("ALL");
+                                                listAll.add(note.getFid());
+                                                count.put("ALL", listAll);
+                                            } else {
+                                                ArrayList<String> newList = new ArrayList<>();
+                                                newList.add(note.getFid());
+                                                count.put("ALL", newList);
+                                            }
 
                                             if (count.containsKey(note.getZtl())) {
                                                 ArrayList<String> list = count.get(note.getZtl());
@@ -686,6 +726,16 @@ public class TLViewActivity extends AppCompatActivity {
                                             countName.add(note.getFid());
 //                                count.put("ALL",total);
 
+                                            if (count.containsKey("ALL")) {
+                                                ArrayList<String> listAll = count.get("ALL");
+                                                listAll.add(note.getFid());
+                                                count.put("ALL", listAll);
+                                            } else {
+                                                ArrayList<String> newList = new ArrayList<>();
+                                                newList.add(note.getFid());
+                                                count.put("ALL", newList);
+                                            }
+
                                             if (count.containsKey(note.getZtl())) {
                                                 ArrayList<String> list = count.get(note.getZtl());
 //                                                    ArrayList<String> listAll = count.get("ALL");
@@ -757,6 +807,16 @@ public class TLViewActivity extends AppCompatActivity {
 
                                             countName.add(note.getFid());
 //                                count.put("ALL",total);
+
+                                            if (count.containsKey("ALL")) {
+                                                ArrayList<String> listAll = count.get("ALL");
+                                                listAll.add(note.getFid());
+                                                count.put("ALL", listAll);
+                                            } else {
+                                                ArrayList<String> newList = new ArrayList<>();
+                                                newList.add(note.getFid());
+                                                count.put("ALL", newList);
+                                            }
 
                                             if (count.containsKey(note.getZtl())) {
                                                 ArrayList<String> list = count.get(note.getZtl());
@@ -885,6 +945,16 @@ public class TLViewActivity extends AppCompatActivity {
                                             countName.add(note.getFid());
 //                                count.put("ALL",total);
 
+                                            if (count.containsKey("ALL")) {
+                                                ArrayList<String> listAll = count.get("ALL");
+                                                listAll.add(note.getFid());
+                                                count.put("ALL", listAll);
+                                            } else {
+                                                ArrayList<String> newList = new ArrayList<>();
+                                                newList.add(note.getFid());
+                                                count.put("ALL", newList);
+                                            }
+
                                             if (count.containsKey(note.getZtl())) {
                                                 ArrayList<String> list = count.get(note.getZtl());
 //                                                    ArrayList<String> listAll = count.get("ALL");
@@ -961,6 +1031,16 @@ public class TLViewActivity extends AppCompatActivity {
 //                            else {
                                             countName.add(note.getFid());
 //                                count.put("ALL",total);
+
+                                            if (count.containsKey("ALL")) {
+                                                ArrayList<String> listAll = count.get("ALL");
+                                                listAll.add(note.getFid());
+                                                count.put("ALL", listAll);
+                                            } else {
+                                                ArrayList<String> newList = new ArrayList<>();
+                                                newList.add(note.getFid());
+                                                count.put("ALL", newList);
+                                            }
 
                                             if (count.containsKey(note.getZtl())) {
                                                 ArrayList<String> list = count.get(note.getZtl());
@@ -1084,6 +1164,16 @@ public class TLViewActivity extends AppCompatActivity {
                                             countName.add(note.getFid());
 //                                count.put("ALL",total);
 
+                                            if (count.containsKey("ALL")) {
+                                                ArrayList<String> listAll = count.get("ALL");
+                                                listAll.add(note.getFid());
+                                                count.put("ALL", listAll);
+                                            } else {
+                                                ArrayList<String> newList = new ArrayList<>();
+                                                newList.add(note.getFid());
+                                                count.put("ALL", newList);
+                                            }
+
                                             if (count.containsKey(note.getZtl())) {
                                                 ArrayList<String> list = count.get(note.getZtl());
 //                                                    ArrayList<String> listAll = count.get("ALL");
@@ -1157,6 +1247,16 @@ public class TLViewActivity extends AppCompatActivity {
 
                                             countName.add(note.getFid());
 //                                count.put("ALL",total);
+
+                                            if (count.containsKey("ALL")) {
+                                                ArrayList<String> listAll = count.get("ALL");
+                                                listAll.add(note.getFid());
+                                                count.put("ALL", listAll);
+                                            } else {
+                                                ArrayList<String> newList = new ArrayList<>();
+                                                newList.add(note.getFid());
+                                                count.put("ALL", newList);
+                                            }
 
                                             if (count.containsKey(note.getZtl())) {
                                                 ArrayList<String> list = count.get(note.getZtl());
