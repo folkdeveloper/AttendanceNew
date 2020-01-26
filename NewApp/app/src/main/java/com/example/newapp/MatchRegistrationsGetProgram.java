@@ -360,38 +360,74 @@ public class MatchRegistrationsGetProgram extends AppCompatActivity {
                                 }
                             });
 
-                    db.collection("AttendanceDemo")
-                            .whereGreaterThanOrEqualTo("edate",date1)
-                            .whereLessThan("edate",date2)
-                            .whereEqualTo("fg",fg)
-                            .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                                @Override
-                                public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                                    if (e != null)
-                                        return;
+                    if (fg.equals("ALL")) {
+                        db.collection("AttendanceDemo")
+                                .whereGreaterThanOrEqualTo("edate",date1)
+                                .whereLessThan("edate",date2)
+                                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                                        if (e != null)
+                                            return;
 
-                                    String data = "";
+                                        String data = "";
 
-                                    ArrayList<String> countName = new ArrayList<>();
+                                        ArrayList<String> countName = new ArrayList<>();
 
-                                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                                        Note note = documentSnapshot.toObject(Note.class);
+                                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                            Note note = documentSnapshot.toObject(Note.class);
 
-                                        if (fid.contains(note.getFid())) {
-                                            if (countName.contains(note.getFid())) {
-                                            continue;
-                                        } else {
-                                            countName.add(note.getFid());
-                                            att++;
-                                            Log.d(TAG, "onEvent: In"+" ; " + note.getZmob() + " ; " +note.getSession());
-                                            fids.add(note.getFid());
-                                            data += "FOLK ID: " + note.getFid() + "\n";
+                                            if (fid.contains(note.getFid())) {
+                                                if (countName.contains(note.getFid())) {
+                                                    continue;
+                                                } else {
+                                                    countName.add(note.getFid());
+                                                    att++;
+                                                    Log.d(TAG, "onEvent: In"+" ; " + note.getZmob() + " ; " +note.getSession());
+                                                    fids.add(note.getFid());
+                                                    data += "FOLK ID: " + note.getFid() + "\n";
+                                                }
+                                            }
                                         }
-                                        }
-                                    }
 //                                    mTextView.setText(data);
-                                }
-                            });
+                                    }
+                                });
+
+                    } else {
+                        db.collection("AttendanceDemo")
+                                .whereGreaterThanOrEqualTo("edate",date1)
+                                .whereLessThan("edate",date2)
+                                .whereEqualTo("fg",fg)
+                                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                                        if (e != null)
+                                            return;
+
+                                        String data = "";
+
+                                        ArrayList<String> countName = new ArrayList<>();
+
+                                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                            Note note = documentSnapshot.toObject(Note.class);
+
+                                            if (fid.contains(note.getFid())) {
+                                                if (countName.contains(note.getFid())) {
+                                                    continue;
+                                                } else {
+                                                    countName.add(note.getFid());
+                                                    att++;
+                                                    Log.d(TAG, "onEvent: In"+" ; " + note.getZmob() + " ; " +note.getSession());
+                                                    fids.add(note.getFid());
+                                                    data += "FOLK ID: " + note.getFid() + "\n";
+                                                }
+                                            }
+                                        }
+//                                    mTextView.setText(data);
+                                    }
+                                });
+
+                    }
 
                     db.collection("RegistrationDemo")
                             .whereEqualTo("pid",documentID)
